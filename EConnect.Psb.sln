@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EConnect.Psb", "EConnect.Psb\EConnect.Psb.csproj", "{6C03856B-3652-41EA-B234-76521A9FB1D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EConnect.Psb.UnitTests", "EConnect.Psb.UnitTests\EConnect.Psb.UnitTests.csproj", "{23479213-9283-4A67-A232-4638CDFAFDEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C03856B-3652-41EA-B234-76521A9FB1D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C03856B-3652-41EA-B234-76521A9FB1D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C03856B-3652-41EA-B234-76521A9FB1D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C03856B-3652-41EA-B234-76521A9FB1D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23479213-9283-4A67-A232-4638CDFAFDEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23479213-9283-4A67-A232-4638CDFAFDEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23479213-9283-4A67-A232-4638CDFAFDEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23479213-9283-4A67-A232-4638CDFAFDEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37416573-8D54-4153-8388-601EF7614BC0}
+	EndGlobalSection
+EndGlobal
