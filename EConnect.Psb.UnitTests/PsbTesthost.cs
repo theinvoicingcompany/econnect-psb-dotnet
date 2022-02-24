@@ -1,17 +1,23 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Net.Http;
 using EConnect.Psb.Api;
+using EConnect.Psb.Auth;
+using EConnect.Psb.Client.Handlers;
+using EConnect.Psb.Config;
 using EConnect.Psb.Extensions.DependencyInjection;
+using EConnect.Psb.UnitTests.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Options;
+using Moq;
+using Moq.Contrib.HttpClient;
 
 namespace EConnect.Psb.UnitTests;
 
 public abstract class PsbTestContext : IDisposable
 {
     private readonly IHost _host;
+    private readonly Mock<HttpMessageHandler> _httpMock = new();
 
     protected PsbTestContext()
     {
@@ -20,14 +26,17 @@ public abstract class PsbTestContext : IDisposable
             {
                 services.AddPsbService(_ =>
                 {
-                    _.Username = "";
-                    _.Password = "";
-                    _.PsbUrl = "https://accp-psb.econnect.eu";
-                    _.IdentityUrl = "https://accp-identity.econnect.eu";
-                    _.ClientId = "2210f77eed3a4ab2";
-                    _.ClientSecret = "ddded83702534a6c9cadde3d1bf3e94a";
-                    _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
+                    _.Username = "user";
+                    _.Password = "pass";
+                    _.PsbUrl = "https://psb.econnect.mock";
+                    _.IdentityUrl = "https://identity.econnect.mock";
+                    _.ClientId = "client_id";
+                    _.ClientSecret = "client_secret";
+                    _.SubscriptionKey = "Subscription.Mock";
                 });
+
+                services.RemoveImplementationType<IPsbHttpMessageHandlerFactory>()
+                    .AddSingleton<IPsbHttpMessageHandlerFactory>(new MockPsbHttpMessageHandlerFactory(_httpMock));
             });
 
         _host = hostBuilder
@@ -36,7 +45,39 @@ public abstract class PsbTestContext : IDisposable
         _host.Start();
     }
 
-    public IPsbMeApi MeApi => _host.Services.GetRequiredService<IPsbMeApi>();
+    public TService GetRequiredService<TService>() where TService : class
+    {
+        return _host.Services.GetRequiredService<TService>();
+    }
+    public void Configure(string baseUrl, Action<MockHttpMessageBuilder> builder)
+    {
+        builder(new MockHttpMessageBuilder(_httpMock, baseUrl));
+    }
+
+    public void SetAccessToken(string token = "valid_token", int expiresIn = 3600)
+    {
+        var baseUrl = _host.Services.GetRequiredService<IOptions<PsbOptions>>().Value.IdentityUrl;
+
+        Configure(baseUrl, builder =>
+        {
+            var json = @"{""access_token"":""" + token + @""",""expires_in"":" + expiresIn + @",""token_type"":""Bearer""}";
+            builder
+                .SetupFormPost("/connect/token")
+                .Result(json);
+        });
+    }
+
+    public void Configure(Action<MockHttpMessageBuilder> builder)
+    {
+        var baseUrl = _host.Services.GetRequiredService<IOptions<PsbOptions>>().Value.PsbUrl;
+        Configure(baseUrl, builder);
+    }
+
+    public void VerifyAnyRequest(Times? times = null,
+        string? failMessage = null)
+    {
+        _httpMock.VerifyAnyRequest(times, failMessage);
+    }
 
     public void Dispose()
     {

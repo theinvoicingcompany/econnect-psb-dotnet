@@ -13,12 +13,12 @@ namespace EConnect.Psb.Auth;
 public class PsbAuthenticationProvider : IPsbAuthenticationProvider
 {
     private readonly PsbOptions _options;
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public PsbAuthenticationProvider(IOptions<PsbOptions> options, HttpClient httpClient)
+    public PsbAuthenticationProvider(IOptions<PsbOptions> options, IHttpClientFactory httpClientFactory)
     {
         _options = options.Value;
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
     }
 
     private async Task<TokenResponse> RequestAccessToken(string scope, CancellationToken cancellation)
@@ -33,7 +33,8 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
             Password = _options.Password
         };
 
-        var response = await _httpClient.RequestPasswordTokenAsync(request, cancellation);
+        var httpClient = _httpClientFactory.CreateClient(nameof(PsbAuthenticationProvider));
+        var response = await httpClient.RequestPasswordTokenAsync(request, cancellation);
 
         if (response.IsError)
         {
@@ -48,7 +49,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
     public async Task<string> GetAccessToken(string scope, CancellationToken cancellation = default)
     {
         if (_cache.TryGetValue(scope, out var cacheEntry) &&
-            cacheEntry.TokenExpiresAt <= DateTimeOffset.Now - TimeSpan.FromMinutes(1))
+            cacheEntry.TokenExpiresAt >= DateTimeOffset.Now + TimeSpan.FromMinutes(1))
             return cacheEntry.AccessToken;
 
         var tokenResponse = await RequestAccessToken(scope, cancellation);

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Net.Http;
-using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using EConnect.Psb.Api;
 using EConnect.Psb.Auth;
 using EConnect.Psb.Client;
+using EConnect.Psb.Client.Handlers;
 using EConnect.Psb.Config;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,30 +16,28 @@ public static class ServiceCollectionExtensions
         Action<PsbOptions> configureOptions)
     {
         services.Configure(configureOptions);
+        services.AddTransient<IPsbHttpMessageHandlerFactory, PsbHttpMessageHandlerFactory>();
+        services.AddSingleton<IPsbAuthenticationProvider, PsbAuthenticationProvider>();
 
-        services.AddHttpClient<IPsbAuthenticationProvider, PsbAuthenticationProvider>()
-            .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
-            {
-                AllowAutoRedirect = false,
-                UseDefaultCredentials = false,
-                UseCookies = false,
-                SslProtocols = SslProtocols.Tls12
-            });
+        services.AddHttpClient(nameof(PsbAuthenticationProvider))
+            .ConfigurePrimaryHttpMessageHandler(provider =>
+                provider
+                    .GetRequiredService<IPsbHttpMessageHandlerFactory>()
+                    .CreateHttpMessageHandler<IPsbAuthenticationProvider>(provider));
 
         services.AddHttpClient<PsbClient>()
-            .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
-            {
-                AllowAutoRedirect = false,
-                UseDefaultCredentials = false,
-                UseCookies = false,
-                SslProtocols = SslProtocols.Tls12
-            }).AddHttpMessageHandler(provider =>
+            .ConfigurePrimaryHttpMessageHandler(provider =>
+                provider
+                    .GetRequiredService<IPsbHttpMessageHandlerFactory>()
+                    .CreateHttpMessageHandler<PsbClient>(provider))
+            .AddHttpMessageHandler(provider =>
             {
                 var authenticationProvider = provider.GetRequiredService<IPsbAuthenticationProvider>();
                 return new PsbAuthenticationHandler(authenticationProvider);
             });
 
         services.AddSingleton<IPsbMeApi, PsbMeApi>();
+        services.AddSingleton<IPsbSalesInvoiceApi, PsbSalesInvoiceApi>();
 
         return services;
     }
