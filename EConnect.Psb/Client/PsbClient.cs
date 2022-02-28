@@ -41,5 +41,9 @@ public class PsbClient
         return await res.Read<TResponseBody>(cancellation);
     }
 
-    // TODO delete
+    public async Task Delete<TResponseBody>(string? requestUri, CancellationToken cancellation = default)
+    {
+        var res = await _httpClient.DeleteAsync(requestUri, cancellation);
+        await res.Read<TResponseBody>(cancellation);
+    }
 }
