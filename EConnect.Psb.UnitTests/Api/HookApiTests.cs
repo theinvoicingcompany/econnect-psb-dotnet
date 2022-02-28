@@ -15,7 +15,7 @@ public class HookApiTests : PsbTestContext
 {
     public IPsbHookApi HookApi => GetRequiredService<IPsbHookApi>();
 
-    private readonly Hook ExampleHook = new Hook(
+    private readonly Hook _exampleHook = new Hook(
         Id: "1",
         Action: "mailto:techsupport@econnect.eu",
         Name: "mail hook",
@@ -35,81 +35,81 @@ public class HookApiTests : PsbTestContext
     private readonly string ExamplePartyId = "NL:KVK:12345678";
 
     [TestMethod]
-    public async Task GetEnviromentHooksTest()
+    public async Task GetEnvironmentHooksTest()
     {
         // Arrange
         SetAccessToken();
         Configure(builder =>
         {
-            var json = $"[ {JsonConvert.SerializeObject(ExampleHook)} ]";
+            var json = $"[ {JsonConvert.SerializeObject(_exampleHook)} ]";
             builder
                 .Setup(HttpMethod.Get, "/api/v1/hook")
                 .Result(json);
         });
 
         // Act
-        var res = await HookApi.GetEnviromentHooks();
+        var res = await HookApi.GetEnvironmentHooks();
 
         // Assert
         Assert.IsNotNull(res);
         Assert.IsNotNull(res[0]);
-        Assert.AreEqual(ExampleHook.Id, res[0].Id);
-        Assert.AreEqual(ExampleHook.Action, res[0].Action);
-        Assert.AreEqual(ExampleHook.Name, res[0].Name);
-        for (int i = 0; i < ExampleHook.Topics.Length; i++)
+        Assert.AreEqual(_exampleHook.Id, res[0].Id);
+        Assert.AreEqual(_exampleHook.Action, res[0].Action);
+        Assert.AreEqual(_exampleHook.Name, res[0].Name);
+        for (int i = 0; i < _exampleHook.Topics.Length; i++)
         {
-            Assert.AreEqual(ExampleHook.Topics[i], res[0].Topics[i]);
+            Assert.AreEqual(_exampleHook.Topics[i], res[0].Topics[i]);
         }
-        Assert.AreEqual(ExampleHook.IsActive, res[0].IsActive);
+        Assert.AreEqual(_exampleHook.IsActive, res[0].IsActive);
     }
 
     [TestMethod]
-    public async Task PutEnviromentHooksTest()
+    public async Task PutEnvironmentHooksTest()
     {
         // Arrange
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(ExampleHook);
+            var json = JsonConvert.SerializeObject(_exampleHook);
             builder
                 .Setup(HttpMethod.Put, "/api/v1/hook")
                 .Result(json);
         });
 
         // Act
-        var res = await HookApi.SetEnviromentHook(ExampleHook);
+        var res = await HookApi.SetEnvironmentHook(_exampleHook);
 
         // Assert
-        Assert.AreEqual(ExampleHook.Id, res.Id);
-        Assert.AreEqual(ExampleHook.Action, res.Action);
-        Assert.AreEqual(ExampleHook.Name, res.Name);
-        for(int i = 0; i < ExampleHook.Topics.Length; i++)
+        Assert.AreEqual(_exampleHook.Id, res.Id);
+        Assert.AreEqual(_exampleHook.Action, res.Action);
+        Assert.AreEqual(_exampleHook.Name, res.Name);
+        for(int i = 0; i < _exampleHook.Topics.Length; i++)
         {
-            Assert.AreEqual(ExampleHook.Topics[i], res.Topics[i]);
+            Assert.AreEqual(_exampleHook.Topics[i], res.Topics[i]);
         }
-        Assert.AreEqual(ExampleHook.IsActive, res.IsActive);
+        Assert.AreEqual(_exampleHook.IsActive, res.IsActive);
     }
 
     [TestMethod]
     public async Task DeleteDefaultHookTest()
     {
-        var targetId = ExampleHook.Id;
+        var targetId = _exampleHook.Id;
 
         // Arrange
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(ExampleHook);
+            var json = JsonConvert.SerializeObject(_exampleHook);
             builder
                 .Setup(HttpMethod.Delete, $"/api/v1/hook/{targetId}")
                 .Result(json);
         });
 
         // Act
-        await HookApi.DeleteDefaultHook(targetId);
+        await HookApi.DeleteEnvironmentHook(targetId);
 
         // Assert
-        // Implicitely succeeded
+        // Implicitly succeeded
     }
 
 
@@ -121,7 +121,7 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = $"[ {JsonConvert.SerializeObject(ExampleHook)} ]";
+            var json = $"[ {JsonConvert.SerializeObject(_exampleHook)} ]";
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
@@ -135,14 +135,14 @@ public class HookApiTests : PsbTestContext
         // Assert
         Assert.IsNotNull(res);
         Assert.IsNotNull(res[0]);
-        Assert.AreEqual(ExampleHook.Id, res[0].Id);
-        Assert.AreEqual(ExampleHook.Action, res[0].Action);
-        Assert.AreEqual(ExampleHook.Name, res[0].Name);
-        for (int i = 0; i < ExampleHook.Topics.Length; i++)
+        Assert.AreEqual(_exampleHook.Id, res[0].Id);
+        Assert.AreEqual(_exampleHook.Action, res[0].Action);
+        Assert.AreEqual(_exampleHook.Name, res[0].Name);
+        for (int i = 0; i < _exampleHook.Topics.Length; i++)
         {
-            Assert.AreEqual(ExampleHook.Topics[i], res[0].Topics[i]);
+            Assert.AreEqual(_exampleHook.Topics[i], res[0].Topics[i]);
         }
-        Assert.AreEqual(ExampleHook.IsActive, res[0].IsActive);
+        Assert.AreEqual(_exampleHook.IsActive, res[0].IsActive);
     }
 
     [TestMethod]
@@ -152,7 +152,7 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(ExampleHook);
+            var json = JsonConvert.SerializeObject(_exampleHook);
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
@@ -161,17 +161,17 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.SetPartyHooks(ExamplePartyId, ExampleHook);
+        var res = await HookApi.SetPartyHook(ExamplePartyId, _exampleHook);
 
         // Assert
-        Assert.AreEqual(ExampleHook.Id, res.Id);
-        Assert.AreEqual(ExampleHook.Action, res.Action);
-        Assert.AreEqual(ExampleHook.Name, res.Name);
-        for (int i = 0; i < ExampleHook.Topics.Length; i++)
+        Assert.AreEqual(_exampleHook.Id, res.Id);
+        Assert.AreEqual(_exampleHook.Action, res.Action);
+        Assert.AreEqual(_exampleHook.Name, res.Name);
+        for (int i = 0; i < _exampleHook.Topics.Length; i++)
         {
-            Assert.AreEqual(ExampleHook.Topics[i], res.Topics[i]);
+            Assert.AreEqual(_exampleHook.Topics[i], res.Topics[i]);
         }
-        Assert.AreEqual(ExampleHook.IsActive, res.IsActive);
+        Assert.AreEqual(_exampleHook.IsActive, res.IsActive);
     }
 
     [TestMethod]
@@ -199,13 +199,13 @@ public class HookApiTests : PsbTestContext
     [TestMethod]
     public async Task DeletePartyHookTest()
     {
-        var targetId = ExampleHook.Id;
+        var targetId = _exampleHook.Id;
 
         // Arrange
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(ExampleHook);
+            var json = JsonConvert.SerializeObject(_exampleHook);
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
@@ -217,6 +217,6 @@ public class HookApiTests : PsbTestContext
         await HookApi.DeletePartyHook(targetId, ExamplePartyId);
 
         // Assert
-        // Implicitely succeeded
+        // Implicitly succeeded
     }
 }

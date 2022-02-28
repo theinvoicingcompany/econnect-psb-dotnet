@@ -17,7 +17,7 @@ public class PsbHookApi : IPsbHookApi
         _psbClient = psbClient;
     }
 
-    public async Task<Hook[]> GetEnviromentHooks(CancellationToken cancellation)
+    public async Task<Hook[]> GetEnvironmentHooks(CancellationToken cancellation)
     {
         var targetUrl = $"/api/v1/hook";
 
@@ -25,12 +25,12 @@ public class PsbHookApi : IPsbHookApi
         return hooks;
     }
 
-    public async Task<Hook> SetEnviromentHook(
+    public async Task<Hook> SetEnvironmentHook(
         Hook hook,
         CancellationToken cancellation)
     {
         var targetUrl = $"/api/v1/hook";
-        
+
         var createdHook = await _psbClient.Put<Hook>(
             requestUri: targetUrl,
             body: hook,
@@ -40,12 +40,12 @@ public class PsbHookApi : IPsbHookApi
         return createdHook;
     }
 
-    public async Task DeleteDefaultHook(
+    public async Task DeleteEnvironmentHook(
         string hookId,
         CancellationToken cancellation)
     {
-        var encodedHookid = HttpUtility.UrlEncode(hookId);
-        var targetUrl = $"/api/v1/hook/{encodedHookid}";
+        var encodedHookId = HttpUtility.UrlEncode(hookId);
+        var targetUrl = $"/api/v1/hook/{encodedHookId}";
 
         await _psbClient.Delete<HttpResponseMessage>(
             requestUri: targetUrl,
@@ -60,8 +60,8 @@ public class PsbHookApi : IPsbHookApi
         string partyId,
         CancellationToken cancellation = default)
     {
-        var encodedPartyid = HttpUtility.UrlEncode(partyId);
-        var targetUrl = $"/api/v1/{encodedPartyid}/hook";
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var targetUrl = $"/api/v1/{encodedPartyId}/hook";
 
         var hooks = await _psbClient.Get<Hook[]>(
             requestUri: targetUrl,
@@ -71,13 +71,13 @@ public class PsbHookApi : IPsbHookApi
         return hooks;
     }
 
-    public async Task<Hook> SetPartyHooks(
+    public async Task<Hook> SetPartyHook(
         string partyId,
         Hook hook,
         CancellationToken cancellation)
     {
-        var encodedPartyid = HttpUtility.UrlEncode(partyId);
-        var targetUrl = $"/api/v1/{encodedPartyid}/hook";
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var targetUrl = $"/api/v1/{encodedPartyId}/hook";
 
         var createdHook = await _psbClient.Put<Hook>(
             requestUri: targetUrl,
@@ -92,8 +92,8 @@ public class PsbHookApi : IPsbHookApi
         string partyId,
         CancellationToken cancellation)
     {
-        var encodedPartyid = HttpUtility.UrlEncode(partyId);
-        var targetUrl = $"/api/v1/{encodedPartyid}/hook/ping";
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var targetUrl = $"/api/v1/{encodedPartyId}/hook/ping";
 
         var party = await _psbClient.Get<Party>(
             requestUri: targetUrl,
@@ -108,9 +108,9 @@ public class PsbHookApi : IPsbHookApi
         string partyId,
         CancellationToken cancellation)
     {
-        var encodedHookid = HttpUtility.UrlEncode(hookId);
-        var encodedPartyid = HttpUtility.UrlEncode(partyId);
-        var targetUrl = $"/api/v1/{encodedPartyid}/hook/{encodedHookid}";
+        var encodedHookId = HttpUtility.UrlEncode(hookId);
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var targetUrl = $"/api/v1/{encodedPartyId}/hook/{encodedHookId}";
 
         await _psbClient.Delete<HttpResponseMessage>(
             requestUri: targetUrl,

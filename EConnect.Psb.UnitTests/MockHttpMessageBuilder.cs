@@ -14,9 +14,9 @@ public class MockHttpMessageBuilder
 {
     private readonly Mock<HttpMessageHandler> _mockHandler;
     private ISetup<HttpMessageHandler, Task<HttpResponseMessage>>? _setup;
-    private readonly string _baseUrl;
+    private readonly string? _baseUrl;
 
-    public MockHttpMessageBuilder(Mock<HttpMessageHandler> mockHandler, string baseUrl)
+    public MockHttpMessageBuilder(Mock<HttpMessageHandler> mockHandler, string? baseUrl)
     {
         _mockHandler = mockHandler;
         _baseUrl = baseUrl;
@@ -37,19 +37,29 @@ public class MockHttpMessageBuilder
         Content = new StringContent(json, Encoding.UTF8, "application/json")
     };
 
+    private HttpResponseMessage Plain(HttpStatusCode status, string text) => new(status)
+    {
+        Content = new StringContent(text, Encoding.UTF8)
+    };
+
     public MockHttpMessageBuilder SetupFormPost(string path)
     {
         _setup = _mockHandler.SetupRequest(HttpMethod.Post, _baseUrl + path);//, message => message.Content.Headers.ContentType == MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded"));
         return this;
     }
 
-    public MockHttpMessageBuilder Setup(HttpMethod method, string path, bool ensureAuthorizationHeader = true, bool ensureSubscriptionHeader = true)
+    public MockHttpMessageBuilder Setup(HttpMethod method, string path, 
+        bool ensureAuthorizationHeader = true, 
+        bool ensureSubscriptionHeader = true,
+        bool ensureFileUpload = false)
     {
         return Setup(method, path, message =>
         {
             var auth = !ensureAuthorizationHeader || IsAuthenticated(message);
             var sub = !ensureSubscriptionHeader || HasSubscription(message);
-            return auth && sub;
+            var file = !ensureFileUpload || message.Content is MultipartFormDataContent;
+
+            return auth && sub && file;
         });
     }
 
@@ -59,12 +69,13 @@ public class MockHttpMessageBuilder
         return this;
     }
 
-    public MockHttpMessageBuilder Result(string json, HttpStatusCode statusCode = HttpStatusCode.OK)
+    public MockHttpMessageBuilder Result(string body, HttpStatusCode statusCode = HttpStatusCode.OK, bool asJson = true)
     {
         if (_setup == null)
             throw new Exception("Please call the 'Setup' before this 'Result' call.");
 
-        _setup.ReturnsAsync(Json(statusCode, json)).Verifiable();
+        var ret = asJson ? Json(statusCode, body) : Plain(statusCode, body);
+        _setup.ReturnsAsync(ret).Verifiable();
         return this;
     }
 }

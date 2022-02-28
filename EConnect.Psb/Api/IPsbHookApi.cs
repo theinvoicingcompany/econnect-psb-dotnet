@@ -8,17 +8,17 @@ namespace EConnect.Psb.Api;
 
 public interface IPsbHookApi
 {
-    public Task<Hook[]> GetEnviromentHooks(CancellationToken cancellation = default);
+    Task<Hook[]> GetEnvironmentHooks(CancellationToken cancellation = default);
 
-    Task<Hook> SetEnviromentHook(Hook hook, CancellationToken cancellation = default);
-    
-    Task DeleteDefaultHook(string hookId, CancellationToken cancellation = default);
-    
+    Task<Hook> SetEnvironmentHook(Hook hook, CancellationToken cancellation = default);
+
+    Task DeleteEnvironmentHook(string hookId, CancellationToken cancellation = default);
+
     Task<Hook[]> GetPartyHooks(string partyId, CancellationToken cancellation = default);
-    
-    Task<Hook> SetPartyHooks(string partyId, Hook hook, CancellationToken cancellation = default);
-    
+
+    Task<Hook> SetPartyHook(string partyId, Hook hook, CancellationToken cancellation = default);
+
     Task<string> PingPartyHooks(string partyId, CancellationToken cancellation = default);
-    
+
     Task DeletePartyHook(string hookId, string partyId, CancellationToken cancellation = default);
 }

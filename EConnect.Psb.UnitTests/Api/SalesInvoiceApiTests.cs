@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using EConnect.Psb.Api;
+using EConnect.Psb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EConnect.Psb.UnitTests.Api;
@@ -31,9 +30,33 @@ public class SalesInvoiceApiTests : PsbTestContext
         });
 
         // Act
-        var advisedPartyId = await SalesInvoiceApi.QueryRecipientParty("NL:KVK:SENDER", new[] {"NL:KVK:RECEIVER_1", "GLN:RECEIVER_GLN"});
+        var advisedPartyId = await SalesInvoiceApi.QueryRecipientParty("NL:KVK:SENDER", new[] { "NL:KVK:RECEIVER_1", "GLN:RECEIVER_GLN" });
 
         // Assert
         Assert.AreEqual("NL:KVK:12345678", advisedPartyId);
+    }
+
+    [TestMethod]
+    [DeploymentItem("TestData/bisv3.xml", "TestData")]
+    public async Task SendFileStreamTest()
+    {
+        // Arrange
+        FileContent file = File.OpenRead("TestData/bisv3.xml");
+        var expectedId = Guid.NewGuid().ToString();
+        SetAccessToken();
+        Configure(builder =>
+        {
+            var json = "{ \"id\": \"" + expectedId + "\"}";
+
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/send", ensureFileUpload: true)
+                .Result(json);
+        });
+
+        // Act
+        var id = await SalesInvoiceApi.Send("NL:KVK:SENDER", file);
+
+        // Assert
+        Assert.AreEqual(expectedId, id);
     }
 }

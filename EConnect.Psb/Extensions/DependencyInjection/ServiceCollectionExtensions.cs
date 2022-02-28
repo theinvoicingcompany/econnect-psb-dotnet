@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using EConnect.Psb.Api;
 using EConnect.Psb.Auth;
 using EConnect.Psb.Client;
@@ -11,13 +10,10 @@ namespace EConnect.Psb.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddPsbService(
-        this IServiceCollection services,
-        Action<PsbOptions> configureOptions)
+    public static IServiceCollection AddPsbHttpClients<TPsbHttpMessageHandlerFactory>(this IServiceCollection services)
+        where TPsbHttpMessageHandlerFactory : class, IPsbHttpMessageHandlerFactory
     {
-        services.Configure(configureOptions);
-        services.AddTransient<IPsbHttpMessageHandlerFactory, PsbHttpMessageHandlerFactory>();
-        services.AddSingleton<IPsbAuthenticationProvider, PsbAuthenticationProvider>();
+        services.AddTransient<IPsbHttpMessageHandlerFactory, TPsbHttpMessageHandlerFactory>();
 
         services.AddHttpClient(nameof(PsbAuthenticationProvider))
             .ConfigurePrimaryHttpMessageHandler(provider =>
@@ -36,10 +32,46 @@ public static class ServiceCollectionExtensions
                 return new PsbAuthenticationHandler(authenticationProvider);
             });
 
+        return services;
+    }
+
+    public static IServiceCollection AddPsbApis(this IServiceCollection services)
+    {
         services.AddSingleton<IPsbMeApi, PsbMeApi>();
         services.AddSingleton<IPsbSalesInvoiceApi, PsbSalesInvoiceApi>();
         services.AddSingleton<IPsbHookApi, PsbHookApi>();
 
         return services;
     }
+
+    public static IServiceCollection AddPsbService<TPsbHttpMessageHandlerFactory, TPsbAuthenticationProvider>(
+        this IServiceCollection services,
+        Action<PsbOptions> configureOptions)
+        where TPsbHttpMessageHandlerFactory : class, IPsbHttpMessageHandlerFactory
+        where TPsbAuthenticationProvider : class, IPsbAuthenticationProvider
+    {
+        services.Configure(configureOptions);
+        services.AddSingleton<IPsbAuthenticationProvider, TPsbAuthenticationProvider>();
+
+        services.AddPsbHttpClients<TPsbHttpMessageHandlerFactory>();
+        services.AddPsbApis();
+
+        return services;
+    }
+
+    public static IServiceCollection AddPsbService<TPsbHttpMessageHandlerFactory>(
+        this IServiceCollection services,
+        Action<PsbOptions> configureOptions)
+        where TPsbHttpMessageHandlerFactory : class, IPsbHttpMessageHandlerFactory
+    {
+        return services.AddPsbService<TPsbHttpMessageHandlerFactory, PsbAuthenticationProvider>(configureOptions);
+    }
+    
+    public static IServiceCollection AddPsbService(
+        this IServiceCollection services,
+        Action<PsbOptions> configureOptions)
+    {
+        return services.AddPsbService<PsbHttpMessageHandlerFactory>(configureOptions);
+    }
+
 }

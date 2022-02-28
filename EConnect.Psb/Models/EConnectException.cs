@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using System.Text.Json.Serialization;
 
 namespace EConnect.Psb.Models;
 
@@ -12,7 +13,8 @@ public class EConnectException : Exception
     public DateTimeOffset? DateTime { get; }
     public new string? HelpLink { get; }
 
-    public EConnectException(string code, string message, string? helpLink = null, string? requestId = null, DateTimeOffset? dateTime = null, Exception innerException = null)
+    [JsonConstructor]
+    public EConnectException(string code, string message, string? helpLink = null, string? requestId = null, DateTimeOffset? dateTime = null, Exception innerException = default!)
         : base(message, innerException)
     {
         Code = code;

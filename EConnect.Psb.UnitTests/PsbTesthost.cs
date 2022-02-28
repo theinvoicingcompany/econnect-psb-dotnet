@@ -1,11 +1,7 @@
 using System;
 using System.Net.Http;
-using EConnect.Psb.Api;
-using EConnect.Psb.Auth;
-using EConnect.Psb.Client.Handlers;
 using EConnect.Psb.Config;
 using EConnect.Psb.Extensions.DependencyInjection;
-using EConnect.Psb.UnitTests.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -17,14 +13,15 @@ namespace EConnect.Psb.UnitTests;
 public abstract class PsbTestContext : IDisposable
 {
     private readonly IHost _host;
-    private readonly Mock<HttpMessageHandler> _httpMock = new();
+    private readonly Mock<HttpMessageHandler> _httpMock;
 
     protected PsbTestContext()
     {
         var hostBuilder = new HostBuilder()
             .ConfigureServices(services =>
             {
-                services.AddPsbService(_ =>
+                services.AddSingleton<Mock<HttpMessageHandler>>();
+                services.AddPsbService<MockPsbHttpMessageHandlerFactory>(_ =>
                 {
                     _.Username = "user";
                     _.Password = "pass";
@@ -34,22 +31,21 @@ public abstract class PsbTestContext : IDisposable
                     _.ClientSecret = "client_secret";
                     _.SubscriptionKey = "Subscription.Mock";
                 });
-
-                services.RemoveImplementationType<IPsbHttpMessageHandlerFactory>()
-                    .AddSingleton<IPsbHttpMessageHandlerFactory>(new MockPsbHttpMessageHandlerFactory(_httpMock));
             });
 
         _host = hostBuilder
             .Build();
 
         _host.Start();
+        _httpMock = GetRequiredService<Mock<HttpMessageHandler>>();
     }
 
     public TService GetRequiredService<TService>() where TService : class
     {
         return _host.Services.GetRequiredService<TService>();
     }
-    public void Configure(string baseUrl, Action<MockHttpMessageBuilder> builder)
+    
+    public void Configure(string? baseUrl, Action<MockHttpMessageBuilder> builder)
     {
         builder(new MockHttpMessageBuilder(_httpMock, baseUrl));
     }
