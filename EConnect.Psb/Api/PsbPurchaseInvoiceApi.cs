@@ -16,7 +16,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         _psbClient = psbClient;
     }
 
-    public async Task<string> Download(
+    public async Task<FileContent> Download(
         string partyId,
         string documentId,
         CancellationToken cancellation = default)
@@ -25,9 +25,8 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}/download";
 
-        var file = await _psbClient.Get<Party>(targetUrl, cancellation);
-
-        return file.Id;
+        var file = await _psbClient.Get<FileContent>(targetUrl, cancellation);
+        return file;
     }
 
     public async Task<Document> Response(
@@ -58,7 +57,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}";
 
-        await _psbClient.Delete<HttpResponseMessage>(
+        await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
         );
@@ -66,7 +65,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
 
     public async Task<Document> Recognize(
         string partyId,
-        string file,
+        FileContent file,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);

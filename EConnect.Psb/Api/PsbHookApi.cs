@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -47,7 +46,7 @@ public class PsbHookApi : IPsbHookApi
         var encodedHookId = HttpUtility.UrlEncode(hookId);
         var targetUrl = $"/api/v1/hook/{encodedHookId}";
 
-        await _psbClient.Delete<HttpResponseMessage>(
+        await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
         );
@@ -112,7 +111,7 @@ public class PsbHookApi : IPsbHookApi
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/{encodedPartyId}/hook/{encodedHookId}";
 
-        await _psbClient.Delete<HttpResponseMessage>(
+        await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
         );

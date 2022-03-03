@@ -32,4 +32,10 @@
     <ProjectReference Include="..\EConnect.Psb\EConnect.Psb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\example.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

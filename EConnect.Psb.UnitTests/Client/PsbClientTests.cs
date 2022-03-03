@@ -27,7 +27,7 @@ public class PsbClientTests : PsbTestContext
         {
             builder
                 .Setup(HttpMethod.Get, "/api/v1/me")
-                .Result("Server Error", HttpStatusCode.InternalServerError, false);
+                .Result("Server Error", HttpStatusCode.InternalServerError, "html");
         });
 
         // Assert
@@ -71,7 +71,7 @@ public class PsbClientTests : PsbTestContext
         Assert.AreEqual("Access forbidden. Please check PartyId authorization and make sure the Subscription-Key is valid.", ex.Message);
     }
 
-    private PsbClient _psbClient => GetRequiredService<PsbClient>();
+    private PsbClient PsbClient => GetRequiredService<PsbClient>();
 
     public async Task AssertPostFile(string expectedXml, FileContent file)
     {
@@ -98,7 +98,7 @@ public class PsbClientTests : PsbTestContext
         });
 
         // Act
-        var res = await _psbClient.PostFile<Document>("/upload", file);
+        var res = await PsbClient.PostFile<Document>("/upload", file);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);

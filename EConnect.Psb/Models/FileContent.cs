@@ -12,6 +12,12 @@ namespace EConnect.Psb.Models
         public HttpContent Content { get; }
         public string? Filename { get; set; }
 
+        public FileContent(HttpContent content, string? filename = null)
+        {
+            Content = content;
+            Filename = filename;
+        }
+
         public FileContent(Stream contents, string? filename = null)
         {
             Content = new StreamContent(contents);

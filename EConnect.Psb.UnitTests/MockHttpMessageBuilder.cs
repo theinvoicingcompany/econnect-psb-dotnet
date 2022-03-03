@@ -32,6 +32,11 @@ public class MockHttpMessageBuilder
         return message.Headers.TryGetValues("Subscription-Key", out var keys) && keys.Any();
     }
 
+    private HttpResponseMessage Xml(HttpStatusCode status, string xml) => new(status)
+    {
+        Content = new StringContent(xml, Encoding.UTF8, "application/xml")
+    };
+
     private HttpResponseMessage Json(HttpStatusCode status, string json) => new(status)
     {
         Content = new StringContent(json, Encoding.UTF8, "application/json")
@@ -48,8 +53,8 @@ public class MockHttpMessageBuilder
         return this;
     }
 
-    public MockHttpMessageBuilder Setup(HttpMethod method, string path, 
-        bool ensureAuthorizationHeader = true, 
+    public MockHttpMessageBuilder Setup(HttpMethod method, string path,
+        bool ensureAuthorizationHeader = true,
         bool ensureSubscriptionHeader = true,
         bool ensureFileUpload = false)
     {
@@ -69,12 +74,18 @@ public class MockHttpMessageBuilder
         return this;
     }
 
-    public MockHttpMessageBuilder Result(string body, HttpStatusCode statusCode = HttpStatusCode.OK, bool asJson = true)
+    public MockHttpMessageBuilder Result(string body, HttpStatusCode statusCode = HttpStatusCode.OK, string contentType = "json")
     {
         if (_setup == null)
             throw new Exception("Please call the 'Setup' before this 'Result' call.");
 
-        var ret = asJson ? Json(statusCode, body) : Plain(statusCode, body);
+        var ret = contentType switch
+        {
+            "json" => Json(statusCode, body),
+            "xml" => Xml(statusCode, body),
+            _ => Plain(statusCode, body)
+        };
+
         _setup.ReturnsAsync(ret).Verifiable();
         return this;
     }
