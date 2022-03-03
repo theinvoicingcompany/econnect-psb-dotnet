@@ -10,10 +10,12 @@ public class PsbServiceProvider
     {
         Me = serviceProvider.GetRequiredService<IPsbMeApi>();
         Hook = serviceProvider.GetRequiredService<IPsbHookApi>();
+        PurchaseInvoice = serviceProvider.GetRequiredService<IPsbPurchaseInvoiceApi>();
         SalesInvoice = serviceProvider.GetRequiredService<IPsbSalesInvoiceApi>();
     }
 
     public IPsbMeApi Me { get; }
     public IPsbHookApi Hook { get; }
+    public IPsbPurchaseInvoiceApi PurchaseInvoice { get; }
     public IPsbSalesInvoiceApi SalesInvoice { get; }
 }

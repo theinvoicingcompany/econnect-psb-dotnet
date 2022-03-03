@@ -24,20 +24,21 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         return party.Id;
     }
 
-    public async Task<string> Send(string senderPartyId, FileContent file, string? receiverPartyId = null, CancellationToken cancellation = default)
+    public async Task<Document> Send(string senderPartyId, FileContent file, string? receiverPartyId = null, CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/send";
         if (!string.IsNullOrEmpty(receiverPartyId))
             requestUri += "?receiverId=" + HttpUtility.UrlEncode(receiverPartyId);
 
         var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation);
-        return res.Id;
+        return res;
     }
 
-    public async Task<string> Recognize(string senderPartyId, FileContent file, CancellationToken cancellation = default)
+    public async Task<Document> Recognize(string senderPartyId, FileContent file, CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/recognize";
+
         var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation);
-        return res.Id;
+        return res;
     }
 }

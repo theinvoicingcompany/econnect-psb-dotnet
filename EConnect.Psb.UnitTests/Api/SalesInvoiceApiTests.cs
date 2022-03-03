@@ -54,9 +54,9 @@ public class SalesInvoiceApiTests : PsbTestContext
         });
 
         // Act
-        var id = await SalesInvoiceApi.Send("NL:KVK:SENDER", file);
+        var res = await SalesInvoiceApi.Send("NL:KVK:SENDER", file);
 
         // Assert
-        Assert.AreEqual(expectedId, id);
+        Assert.AreEqual(expectedId, res.Id);
     }
 }
