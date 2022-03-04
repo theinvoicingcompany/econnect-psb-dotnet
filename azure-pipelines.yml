@@ -1,0 +1,80 @@
+trigger:
+- feature/*
+- bug/*
+- master
+
+pool: 'Default'
+
+variables:
+  solution: |
+        **/*.csproj
+        !**/*IntegrationTests*.sfproj
+  buildPlatform: 'AnyCPU'
+  buildConfiguration: 'Release'
+  nuGetProjects: '**/EConnect.Psb.csproj'
+  buildProjects: '**/*.csproj'
+  testProjects: '**/*UnitTests*.csproj'
+
+stages:
+- stage: 'Build'
+  displayName: 'Setup NuGet Package'
+
+  jobs:
+  - job: Build
+    displayName: Build
+    pool: 'Default'
+
+    steps:
+    - task: GitVersion@5
+      displayName: GitVersion 
+      inputs: 
+        preferBundledVersion: false
+        configFilePath: 'GitVersion.yml'
+
+    - task: UseDotNet@2
+      displayName: 'Use dotnet sdk 6.0.x'
+      inputs:
+        version: '6.0.x'
+        includePreviewVersions: false
+ 
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet restore'
+      inputs:
+        command: 'restore'
+        projects: '$(solution)'
+
+    - task: SonarCloudPrepare@1
+      displayName: 'Prepare analysis configuration'
+      enabled: false
+      inputs:
+        SonarCloud: 'SC'
+        organization: 'everbinding'
+        scannerMode: 'MSBuild'
+        projectKey: 'everbinding_$(Build.Repository.Name)'
+        projectName: '$(Build.Repository.Name)'
+        extraProperties: |
+          sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
+          sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
+          sonar.qualitygate.wait=true
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        command: 'build'
+        arguments: '-c $(buildConfiguration) /p:Platform=x64 /p:Version=$(GitVersion.SemVer)'
+        projects: $(solution)
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test'
+      inputs:
+        command: 'test'
+        nobuild: true
+        projects: '$(testProjects)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet pack'
+      inputs:
+        command: pack
+        packagesToPack: '$(nuGetProjects)'    
+        versioningScheme: byEnvVar
+        versionEnvVar: GitVersion.SemVer

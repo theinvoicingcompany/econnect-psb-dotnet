@@ -7,9 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EConnect.Psb", "EConnect.Ps
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EConnect.Psb.UnitTests", "EConnect.Psb.UnitTests\EConnect.Psb.UnitTests.csproj", "{23479213-9283-4A67-A232-4638CDFAFDEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EConnect.Psb.Web.Example", "EConnect.Psb.Web.Example\EConnect.Psb.Web.Example.csproj", "{E452F0E1-3657-47C1-AB53-50C4B35819FE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C96D8E8B-8157-40C9-9906-85CF86592991}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		gitversion.yml = gitversion.yml
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EConnect.Psb.ConsoleNet.Example", "EConnect.Psb.ConsoleNet.Example\EConnect.Psb.ConsoleNet.Example.csproj", "{0B38C18A-4804-4CEC-B059-3A08C7070A67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EConnect.Psb.Web.Example", "EConnect.Psb.Web.Example\EConnect.Psb.Web.Example.csproj", "{E452F0E1-3657-47C1-AB53-50C4B35819FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EConnect.Psb.ConsoleNet.Example", "EConnect.Psb.ConsoleNet.Example\EConnect.Psb.ConsoleNet.Example.csproj", "{0B38C18A-4804-4CEC-B059-3A08C7070A67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Examples", "2. Examples", "{59D267AF-84E2-437B-8334-4ED695D99B8A}"
 EndProject

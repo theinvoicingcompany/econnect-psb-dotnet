@@ -1,0 +1,8 @@
+mode: Mainline
+continuous-delivery-fallback-tag: ''
+next-version: 0.1.0
+branches:
+  master:
+    tag: ''
+ignore:
+  sha: []
