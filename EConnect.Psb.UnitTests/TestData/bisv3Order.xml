@@ -1,0 +1,473 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- An Order with as many optional fields as possible -->
+<Order xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
+       xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+       xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+	<cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:order:3</cbc:CustomizationID>
+	<cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:order_only:3</cbc:ProfileID>
+	<cbc:ID>123</cbc:ID>
+	<cbc:SalesOrderID>112233</cbc:SalesOrderID>
+	<cbc:IssueDate>2021-01-08</cbc:IssueDate>
+	<cbc:IssueTime>12:30:00</cbc:IssueTime>
+	<cbc:OrderTypeCode>220</cbc:OrderTypeCode>
+	<cbc:Note>Information text for the whole order</cbc:Note>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cbc:CustomerReference>10012230001</cbc:CustomerReference>
+	<cbc:AccountingCost>Project One</cbc:AccountingCost>
+	<cac:ValidityPeriod>
+		<cbc:EndDate>2021-02-08</cbc:EndDate>
+	</cac:ValidityPeriod>
+	<cac:QuotationDocumentReference>
+		<cbc:ID>Quote One</cbc:ID>
+	</cac:QuotationDocumentReference>
+	<cac:OrderDocumentReference>
+		<cbc:ID>Order122</cbc:ID>
+	</cac:OrderDocumentReference>
+	<cac:OriginatorDocumentReference>
+		<cbc:ID>Originator document</cbc:ID>
+	</cac:OriginatorDocumentReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>Doc1</cbc:ID>
+		<cbc:DocumentType>Specification table</cbc:DocumentType>
+		<cac:Attachment>
+			<cac:ExternalReference>
+				<cbc:URI>http://example.nl/table123.html</cbc:URI>
+			</cac:ExternalReference>
+		</cac:Attachment>
+	</cac:AdditionalDocumentReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>Doc2</cbc:ID>
+		<cbc:DocumentType>Specification Drawing</cbc:DocumentType>
+		<cac:Attachment>
+			<cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="drawing.pdf">QmFzZTY0IENvZGUK</cbc:EmbeddedDocumentBinaryObject>
+		</cac:Attachment>
+	</cac:AdditionalDocumentReference>
+	<cac:Contract>
+		<cbc:ID>46508</cbc:ID>
+	</cac:Contract>
+	<cac:BuyerCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0106">12345678</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0088">8700000000001</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Customer B.V.</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Companystreet 40</cbc:StreetName>
+				<cbc:AdditionalStreetName>Side alley B</cbc:AdditionalStreetName>
+				<cbc:CityName>Storetown</cbc:CityName>
+				<cbc:PostalZone>0099CG</cbc:PostalZone>
+				<cbc:CountrySubentity>Gelderland</cbc:CountrySubentity>
+				<cac:AddressLine>
+					<cbc:Line>B.14</cbc:Line>
+				</cac:AddressLine>
+				<cac:Country>
+					<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>NL132585600B01</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Customer B.V.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0106">12345678</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:CityName>Storetown</cbc:CityName>
+					<cac:Country>
+						<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:RegistrationAddress>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Ien Koop</cbc:Name>
+				<cbc:Telephone>0612341234</cbc:Telephone>
+				<cbc:ElectronicMail>inkoop@example.nl</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:BuyerCustomerParty>
+	<cac:SellerSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0106">87654321</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0088">8700000000001</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Supply Chain International</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Salesstreet</cbc:StreetName>
+				<cbc:AdditionalStreetName>320-340</cbc:AdditionalStreetName>
+				<cbc:CityName>Salestown</cbc:CityName>
+				<cbc:PostalZone>9988ZA</cbc:PostalZone>
+				<cbc:CountrySubentity>Brabant</cbc:CountrySubentity>
+				<cac:AddressLine>
+					<cbc:Line>322A</cbc:Line>
+				</cac:AddressLine>
+				<cac:Country>
+					<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Supply Chain International</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0106">87654321</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:CityName>Salestown</cbc:CityName>
+					<cac:Country>
+						<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:RegistrationAddress>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Simon Ales</cbc:Name>
+				<cbc:Telephone>0600001111</cbc:Telephone>
+				<cbc:ElectronicMail>sales@example.com</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:SellerSupplierParty>
+	<cac:OriginatorCustomerParty>
+		<cac:Party>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0088">8700000000001</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Originator Inc.</cbc:Name>
+			</cac:PartyName>
+			<cac:Contact>
+				<cbc:Name>Olaf Riginator</cbc:Name>
+				<cbc:Telephone>0310000000123</cbc:Telephone>
+				<cbc:ElectronicMail>olaf@example.nl</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:OriginatorCustomerParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0192">987654325</cbc:EndpointID>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0088">8700000000001</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Accountancy Services B.V.</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Paymentstraat 12</cbc:StreetName>
+				<cbc:AdditionalStreetName>Gebouw C</cbc:AdditionalStreetName>
+				<cbc:CityName>Amsterdam</cbc:CityName>
+				<cbc:PostalZone>1234AB</cbc:PostalZone>
+				<cbc:CountrySubentity>Noord-Holland</cbc:CountrySubentity>
+				<cac:AddressLine>
+					<cbc:Line>Brievenbus 23</cbc:Line>
+				</cac:AddressLine>
+				<cac:Country>
+					<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>NL344632301B02</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Accountancy Services B.V.</cbc:RegistrationName>
+				<cbc:CompanyID schemeID="0106">35748293</cbc:CompanyID>
+				<cac:RegistrationAddress>
+					<cbc:CityName>Amsterdam</cbc:CityName>
+					<cac:Country>
+						<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+					</cac:Country>
+				</cac:RegistrationAddress>
+			</cac:PartyLegalEntity>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:Delivery>
+		<cac:DeliveryLocation>
+			<cbc:ID schemeID="0088">8700000000001</cbc:ID>
+			<cbc:Name>Goedereningang zuid</cbc:Name>
+			<cac:Address>
+				<cbc:StreetName>Bezorglaan 56</cbc:StreetName>
+				<cbc:AdditionalStreetName>Zuid</cbc:AdditionalStreetName>
+				<cbc:CityName>Amsterdam</cbc:CityName>
+				<cbc:PostalZone>3456DF</cbc:PostalZone>
+				<cbc:CountrySubentity>Noord-Holland</cbc:CountrySubentity>
+				<cac:AddressLine>
+					<cbc:Line>Deur 4</cbc:Line>
+				</cac:AddressLine>
+				<cac:Country>
+					<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+		<cac:RequestedDeliveryPeriod>
+			<cbc:StartDate>2020-01-26</cbc:StartDate>
+			<cbc:EndDate>2020-01-28</cbc:EndDate>
+		</cac:RequestedDeliveryPeriod>
+		<cac:DeliveryParty>
+			<cac:PartyIdentification>
+				<cbc:ID schemeID="0106">45677654</cbc:ID>
+			</cac:PartyIdentification>
+			<cac:PartyName>
+				<cbc:Name>Stichting Bezorg Hier - Afleveringen</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Bezorglaan 2</cbc:StreetName>
+				<cbc:AdditionalStreetName>Zuid</cbc:AdditionalStreetName>
+				<cbc:CityName>Amsterdam</cbc:CityName>
+				<cbc:PostalZone>3456DF</cbc:PostalZone>
+				<cbc:CountrySubentity>Noord-Holland</cbc:CountrySubentity>
+				<cac:AddressLine>
+					<cbc:Line>Deur 1</cbc:Line>
+				</cac:AddressLine>
+				<cac:Country>
+					<cbc:IdentificationCode>NL</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:Contact>
+				<cbc:Name>Bas-Eduard Zorg</cbc:Name>
+				<cbc:Telephone>0600001234</cbc:Telephone>
+				<cbc:ElectronicMail>be.zorg@example.nl</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:DeliveryParty>
+		<cac:Shipment>
+			<cbc:ID>12345</cbc:ID>
+			<cac:TransportHandlingUnit>
+				<cbc:ShippingMarks>Handle with care</cbc:ShippingMarks>
+			</cac:TransportHandlingUnit>
+		</cac:Shipment>
+	</cac:Delivery>
+	<cac:DeliveryTerms>
+		<cbc:ID>DAP</cbc:ID>
+		<cbc:SpecialTerms>CAD</cbc:SpecialTerms>
+		<cac:DeliveryLocation>
+			<cbc:ID>DAP Amsterdam</cbc:ID>
+		</cac:DeliveryLocation>
+	</cac:DeliveryTerms>
+	<cac:PaymentTerms>
+		<cbc:Note>Payment terms description</cbc:Note>
+	</cac:PaymentTerms>
+	<cac:AllowanceCharge>
+		<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+		<cbc:AllowanceChargeReasonCode>ABK</cbc:AllowanceChargeReasonCode>
+		<cbc:AllowanceChargeReason>Additional care in packaging</cbc:AllowanceChargeReason>
+		<cbc:MultiplierFactorNumeric>100</cbc:MultiplierFactorNumeric>
+		<cbc:Amount currencyID="EUR">200.00</cbc:Amount>
+		<cbc:BaseAmount currencyID="EUR">200.00</cbc:BaseAmount>
+		<cac:TaxCategory>
+			<cbc:ID>S</cbc:ID>
+			<cbc:Percent>21</cbc:Percent>
+			<cac:TaxScheme>
+				<cbc:ID>VAT</cbc:ID>
+			</cac:TaxScheme>
+		</cac:TaxCategory>
+	</cac:AllowanceCharge>
+	<cac:AllowanceCharge>
+		<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+		<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+		<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+		<cbc:MultiplierFactorNumeric>5</cbc:MultiplierFactorNumeric>
+		<cbc:Amount currencyID="EUR">100.00</cbc:Amount>
+		<cbc:BaseAmount currencyID="EUR">2000.00</cbc:BaseAmount>
+		<cac:TaxCategory>
+			<cbc:ID>S</cbc:ID>
+			<cbc:Percent>21</cbc:Percent>
+			<cac:TaxScheme>
+				<cbc:ID>VAT</cbc:ID>
+			</cac:TaxScheme>
+		</cac:TaxCategory>
+	</cac:AllowanceCharge>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">462.00</cbc:TaxAmount>
+	</cac:TaxTotal>
+	<cac:AnticipatedMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">2100.00</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">2200.00</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">2662.00</cbc:TaxInclusiveAmount>
+		<cbc:AllowanceTotalAmount currencyID="EUR">100.00</cbc:AllowanceTotalAmount>
+		<cbc:ChargeTotalAmount currencyID="EUR">200.00</cbc:ChargeTotalAmount>
+		<cbc:PrepaidAmount currencyID="EUR">1000.00</cbc:PrepaidAmount>
+		<cbc:PayableRoundingAmount currencyID="EUR">0.00</cbc:PayableRoundingAmount>
+		<cbc:PayableAmount currencyID="EUR">1662.00</cbc:PayableAmount>
+	</cac:AnticipatedMonetaryTotal>
+	<cac:OrderLine>
+		<cbc:Note>Freetext note on line 1</cbc:Note>
+		<cac:LineItem>
+			<cbc:ID>1</cbc:ID>
+			<cbc:Quantity unitCode="EA">10</cbc:Quantity>
+			<cbc:LineExtensionAmount currencyID="EUR">1050.00</cbc:LineExtensionAmount>
+			<cbc:PartialDeliveryIndicator>false</cbc:PartialDeliveryIndicator>
+			<cbc:AccountingCost>12345678</cbc:AccountingCost>
+			<cac:Delivery>
+				<cbc:ID schemeID="0106">12345679</cbc:ID>
+				<cac:RequestedDeliveryPeriod>
+					<cbc:StartDate>2020-01-26</cbc:StartDate>
+					<cbc:EndDate>2020-01-28</cbc:EndDate>
+				</cac:RequestedDeliveryPeriod>
+			</cac:Delivery>
+			<cac:OriginatorParty>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="0082">1234567890</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>Sandra Ales</cbc:Name>
+				</cac:PartyName>
+			</cac:OriginatorParty>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReasonCode>ABK</cbc:AllowanceChargeReasonCode>
+				<cbc:AllowanceChargeReason>Extra care in packaging</cbc:AllowanceChargeReason>
+				<cbc:MultiplierFactorNumeric>100</cbc:MultiplierFactorNumeric>
+				<cbc:Amount currencyID="EUR">100.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">100.00</cbc:BaseAmount>
+			</cac:AllowanceCharge>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+				<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+				<cbc:MultiplierFactorNumeric>5</cbc:MultiplierFactorNumeric>
+				<cbc:Amount currencyID="EUR">50.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">1000.00</cbc:BaseAmount>
+			</cac:AllowanceCharge>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="EUR">100.000</cbc:PriceAmount>
+				<cbc:BaseQuantity unitCode="EA">1</cbc:BaseQuantity>
+				<cac:AllowanceCharge>
+					<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+					<cbc:Amount currencyID="EUR">10.00</cbc:Amount>
+					<cbc:BaseAmount currencyID="EUR">110.00</cbc:BaseAmount>
+				</cac:AllowanceCharge>
+			</cac:Price>
+			<cac:Item>
+				<cbc:Description>Luxury Boxes Red - set 12</cbc:Description>
+				<cbc:Name>L-Box-R 12</cbc:Name>
+				<cac:BuyersItemIdentification>
+					<cbc:ID>123456</cbc:ID>
+				</cac:BuyersItemIdentification>
+				<cac:SellersItemIdentification>
+					<cbc:ID>121212</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:StandardItemIdentification>
+					<cbc:ID schemeID="0160">7560000012345</cbc:ID>
+				</cac:StandardItemIdentification>
+				<cac:ItemSpecificationDocumentReference>
+					<cbc:ID>12345678</cbc:ID>
+				</cac:ItemSpecificationDocumentReference>
+				<cac:CommodityClassification>
+					<cbc:ItemClassificationCode listID="MP" listVersionID="19.0501">12345678</cbc:ItemClassificationCode>
+				</cac:CommodityClassification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID>S</cbc:ID>
+					<cbc:Percent>21</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+				<cac:AdditionalItemProperty>
+					<cbc:Name>Size</cbc:Name>
+					<cbc:NameCode listID="444">S44.1</cbc:NameCode>
+					<cbc:Value>cm</cbc:Value>
+					<cbc:ValueQuantity unitCode="C62">40</cbc:ValueQuantity>
+					<cbc:ValueQualifier>descr</cbc:ValueQualifier>
+				</cac:AdditionalItemProperty>
+				<cac:ItemInstance>
+					<cbc:SerialID>NL-123456</cbc:SerialID>
+					<cac:LotIdentification>
+						<cbc:LotNumberID>LO-123456</cbc:LotNumberID>
+					</cac:LotIdentification>
+				</cac:ItemInstance>
+			</cac:Item>
+		</cac:LineItem>
+	</cac:OrderLine>
+	<cac:OrderLine>
+		<cbc:Note>Freetext note on line 2</cbc:Note>
+		<cac:LineItem>
+			<cbc:ID>2</cbc:ID>
+			<cbc:Quantity unitCode="EA">10</cbc:Quantity>
+			<cbc:LineExtensionAmount currencyID="EUR">1050.00</cbc:LineExtensionAmount>
+			<cbc:PartialDeliveryIndicator>false</cbc:PartialDeliveryIndicator>
+			<cbc:AccountingCost>12345678</cbc:AccountingCost>
+			<cac:Delivery>
+				<cbc:ID schemeID="0106">12345679</cbc:ID>
+				<cac:RequestedDeliveryPeriod>
+					<cbc:StartDate>2020-01-26</cbc:StartDate>
+					<cbc:EndDate>2020-01-28</cbc:EndDate>
+				</cac:RequestedDeliveryPeriod>
+			</cac:Delivery>
+			<cac:OriginatorParty>
+				<cac:PartyIdentification>
+					<cbc:ID schemeID="0082">1234567890</cbc:ID>
+				</cac:PartyIdentification>
+				<cac:PartyName>
+					<cbc:Name>Sandra Ales</cbc:Name>
+				</cac:PartyName>
+			</cac:OriginatorParty>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReasonCode>ABK</cbc:AllowanceChargeReasonCode>
+				<cbc:AllowanceChargeReason>Extra care in packaging</cbc:AllowanceChargeReason>
+				<cbc:MultiplierFactorNumeric>100</cbc:MultiplierFactorNumeric>
+				<cbc:Amount currencyID="EUR">100.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">100.00</cbc:BaseAmount>
+			</cac:AllowanceCharge>
+			<cac:AllowanceCharge>
+				<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+				<cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+				<cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+				<cbc:MultiplierFactorNumeric>5</cbc:MultiplierFactorNumeric>
+				<cbc:Amount currencyID="EUR">50.00</cbc:Amount>
+				<cbc:BaseAmount currencyID="EUR">1000.00</cbc:BaseAmount>
+			</cac:AllowanceCharge>
+			<cac:Price>
+				<cbc:PriceAmount currencyID="EUR">100.000</cbc:PriceAmount>
+				<cbc:BaseQuantity unitCode="EA">1</cbc:BaseQuantity>
+				<cac:AllowanceCharge>
+					<cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+					<cbc:Amount currencyID="EUR">10.00</cbc:Amount>
+					<cbc:BaseAmount currencyID="EUR">110.00</cbc:BaseAmount>
+				</cac:AllowanceCharge>
+			</cac:Price>
+			<cac:Item>
+				<cbc:Description>Luxury Boxes - set 12</cbc:Description>
+				<cbc:Name>L-Box 12</cbc:Name>
+				<cac:BuyersItemIdentification>
+					<cbc:ID>123456</cbc:ID>
+				</cac:BuyersItemIdentification>
+				<cac:SellersItemIdentification>
+					<cbc:ID>121212</cbc:ID>
+				</cac:SellersItemIdentification>
+				<cac:StandardItemIdentification>
+					<cbc:ID schemeID="0160">7560000012345</cbc:ID>
+				</cac:StandardItemIdentification>
+				<cac:ItemSpecificationDocumentReference>
+					<cbc:ID>12345678</cbc:ID>
+				</cac:ItemSpecificationDocumentReference>
+				<cac:CommodityClassification>
+					<cbc:ItemClassificationCode listID="MP" listVersionID="19.0501">12345678</cbc:ItemClassificationCode>
+				</cac:CommodityClassification>
+				<cac:ClassifiedTaxCategory>
+					<cbc:ID>S</cbc:ID>
+					<cbc:Percent>21</cbc:Percent>
+					<cac:TaxScheme>
+						<cbc:ID>VAT</cbc:ID>
+					</cac:TaxScheme>
+				</cac:ClassifiedTaxCategory>
+				<cac:AdditionalItemProperty>
+					<cbc:Name>Size</cbc:Name>
+					<cbc:NameCode listID="444">S44.1</cbc:NameCode>
+					<cbc:Value>cm</cbc:Value>
+					<cbc:ValueQuantity unitCode="C62">40</cbc:ValueQuantity>
+					<cbc:ValueQualifier>descr</cbc:ValueQualifier>
+				</cac:AdditionalItemProperty>
+				<cac:ItemInstance>
+					<cbc:SerialID>NL-123456</cbc:SerialID>
+					<cac:LotIdentification>
+						<cbc:LotNumberID>LO-123456</cbc:LotNumberID>
+					</cac:LotIdentification>
+				</cac:ItemInstance>
+			</cac:Item>
+		</cac:LineItem>
+	</cac:OrderLine>
+</Order>

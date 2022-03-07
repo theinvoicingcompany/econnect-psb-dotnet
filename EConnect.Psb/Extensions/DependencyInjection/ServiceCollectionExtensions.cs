@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<IPsbMeApi, PsbMeApi>();
         services.AddSingleton<IPsbSalesInvoiceApi, PsbSalesInvoiceApi>();
+        services.AddSingleton<IPsbSalesOrderApi, PsbSalesOrderApi>();
         services.AddSingleton<IPsbHookApi, PsbHookApi>();
         services.AddSingleton<IPsbPurchaseInvoiceApi, PsbPurchaseInvoiceApi>();
 

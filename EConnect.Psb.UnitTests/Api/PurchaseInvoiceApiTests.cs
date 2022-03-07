@@ -102,7 +102,7 @@ public class PurchaseInvoiceApiTests : PsbTestContext
         await PurchaseInvoiceApi.Delete(partyId, docId);
 
         // Assert
-        VerifyAnyRequest(Times.Once());
+        VerifyDeleteRequest(Times.Once());
     }
 
     [TestMethod]
@@ -129,6 +129,6 @@ public class PurchaseInvoiceApiTests : PsbTestContext
 
         // Assert
         Assert.IsNotNull(res);
-        Assert.AreEqual(docId, res);
+        Assert.AreEqual(docId, res.Id);
     }
 }

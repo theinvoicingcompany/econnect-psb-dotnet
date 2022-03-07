@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Threading;
 using EConnect.Psb.Config;
 using EConnect.Psb.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,6 +74,11 @@ public abstract class PsbTestContext : IDisposable
         string? failMessage = null)
     {
         _httpMock.VerifyAnyRequest(times, failMessage);
+    }
+
+    public void VerifyDeleteRequest(Times? times = null, string? failMessage = null)
+    {
+        _httpMock.VerifyRequest(request => request.Method.Equals(HttpMethod.Delete), times, failMessage);
     }
 
     public void Dispose()

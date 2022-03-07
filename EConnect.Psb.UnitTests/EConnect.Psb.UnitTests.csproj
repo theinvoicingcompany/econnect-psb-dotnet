@@ -8,10 +8,18 @@
 
   <ItemGroup>
     <None Remove="TestData\bisv3.xml" />
+    <None Remove="TestData\bisv3Order.xml" />
+    <None Remove="TestData\example.pdf" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="TestData\bisv3.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\bisv3Order.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\example.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -30,12 +38,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EConnect.Psb\EConnect.Psb.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="TestData\example.pdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
