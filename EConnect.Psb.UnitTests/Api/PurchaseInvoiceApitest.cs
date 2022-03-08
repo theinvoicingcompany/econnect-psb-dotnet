@@ -38,6 +38,7 @@ public class PurchaseInvoiceApitest : PsbTestContext
 
 
     [TestMethod]
+    [DeploymentItem("TestData/bisv3.xml", "TestData")]
     public async Task DownloadTest()
     {
         // Arrange

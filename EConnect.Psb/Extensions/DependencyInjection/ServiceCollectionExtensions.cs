@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddPsbApis(this IServiceCollection services)
     {
         services.AddSingleton<IPsbMeApi, PsbMeApi>();
+        services.AddSingleton<IPsbPurchaseOrderApi, PsbPurchaseOrderApi>();
         services.AddSingleton<IPsbSalesInvoiceApi, PsbSalesInvoiceApi>();
         services.AddSingleton<IPsbSalesOrderApi, PsbSalesOrderApi>();
         services.AddSingleton<IPsbHookApi, PsbHookApi>();
