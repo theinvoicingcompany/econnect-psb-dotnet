@@ -44,6 +44,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPsbHookApi, PsbHookApi>();
         services.AddSingleton<IPsbPeppolApi, PsbPeppolApi>();
         services.AddSingleton<IPsbPurchaseInvoiceApi, PsbPurchaseInvoiceApi>();
+        services.AddSingleton<IPsbGenericApi, PsbGenericApi>();
 
         return services;
     }
@@ -70,7 +71,7 @@ public static class ServiceCollectionExtensions
     {
         return services.AddPsbService<TPsbHttpMessageHandlerFactory, PsbAuthenticationProvider>(configureOptions);
     }
-    
+
     public static IServiceCollection AddPsbService(
         this IServiceCollection services,
         Action<PsbOptions> configureOptions)
