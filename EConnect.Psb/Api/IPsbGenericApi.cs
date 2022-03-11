@@ -9,4 +9,17 @@ public interface IPsbGenericApi
     Task<Document> Receive(string receiverPartyId,
         FileContent file, string? topic = null, string? senderPartyId = null,
         CancellationToken cancellation = default);
+
+    Task<Document> Send(
+        string senderPartyId,
+        FileContent file,
+        string? topic = null,
+        string? receiverPartyId = null,
+        CancellationToken cancellation = default);
+
+    Task<FileContent> Download(
+        string recipientPartyId,
+        string documentId,
+        string? targetFormat = null,
+        CancellationToken cancellation = default);
 }
