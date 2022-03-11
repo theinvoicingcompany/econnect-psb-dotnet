@@ -78,3 +78,10 @@ stages:
         packagesToPack: '$(nuGetProjects)'    
         versioningScheme: byEnvVar
         versionEnvVar: GitVersion.SemVer
+
+    # Publish
+    - task: PublishBuildArtifacts@1
+      inputs:
+        path: $(Build.ArtifactStagingDirectory)
+        artifact: package
+      displayName: 'Publish artifacts'
