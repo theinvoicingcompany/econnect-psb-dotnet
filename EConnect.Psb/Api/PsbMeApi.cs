@@ -20,8 +20,8 @@ public class PsbMeApi : IPsbMeApi
         return _psbClient.Get<Me>("/api/v1/me", cancellation);
     }
         
-    public Task<IEnumerable<UserParty>> MeParties(CancellationToken cancellation = default)
+    public Task<UserParty[]> MeParties(CancellationToken cancellation = default)
     {
-        return _psbClient.Get<IEnumerable<UserParty>>("/api/v1/me/party", cancellation);
+        return _psbClient.Get<UserParty[]>("/api/v1/me/party", cancellation);
     }
 }

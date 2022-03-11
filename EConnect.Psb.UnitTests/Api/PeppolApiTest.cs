@@ -27,7 +27,7 @@ public class PeppolApiTest : PsbTestContext
 
     private PeppolPartyConfig? ExamplePeppolPartyConfig;
 
-    private List<Party>? ExamplePartyPageResult = new List<Party>();
+    private Party[] ExamplePartyPageResult;
 
     private string ExamplePeppolPartyConfigJson = @"{ 
         ""id"":""1"",
@@ -140,9 +140,9 @@ public class PeppolApiTest : PsbTestContext
             ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
         ); ;
 
-        ExamplePartyPageResult.Add(
+        ExamplePartyPageResult = new Party[] {
             new Party(ExamplePartyId)
-        );
+        };
     }
 
     [TestMethod]
@@ -273,15 +273,13 @@ public class PeppolApiTest : PsbTestContext
         Assert.IsNotNull(ExamplePeppolPartyConfig);
         Assert.IsNotNull(res);
 
-        var partyList = (List<Party>)res;
+        var partyArray = res;
 
-
-
-        Assert.IsNotNull(partyList[0]);
-        Assert.AreEqual(ExamplePartyPageResult.Count, partyList.Count);
-        for (int i = 0; i < ExamplePartyPageResult.Count; i++)
+        Assert.IsNotNull(partyArray[0]);
+        Assert.AreEqual(ExamplePartyPageResult.Length, partyArray.Length);
+        for (int i = 0; i < ExamplePartyPageResult.Length; i++)
         {
-            Assert.AreEqual(ExamplePartyPageResult[i], partyList[i]);
+            Assert.AreEqual(ExamplePartyPageResult[i], partyArray[i]);
         }
     }
 

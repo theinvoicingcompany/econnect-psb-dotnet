@@ -14,7 +14,7 @@ public interface IPsbPeppolApi
 
     Task<PeppolPartyConfig> PutEnviromentConfig(PeppolPartyConfig config, CancellationToken cancellation = default);
 
-    Task<IEnumerable<Party>> GetParties(CancellationToken cancellation = default);
+    Task<Party[]> GetParties(CancellationToken cancellation = default);
 
     Task<PeppolPartyConfig> GetPartyConfig(string partyId, CancellationToken cancellation = default);
 

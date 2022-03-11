@@ -9,5 +9,5 @@ public interface IPsbMeApi
 {
     Task<Me> Me(CancellationToken cancellation = default);
 
-    Task<IEnumerable<UserParty>> MeParties(CancellationToken cancellation = default);
+    Task<UserParty[]> MeParties(CancellationToken cancellation = default);
 }
