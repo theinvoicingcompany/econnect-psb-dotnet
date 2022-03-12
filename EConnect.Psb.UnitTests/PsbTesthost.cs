@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Threading;
 using EConnect.Psb.Config;
 using EConnect.Psb.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;

@@ -18,7 +18,7 @@ public interface IPsbGenericApi
         CancellationToken cancellation = default);
 
     Task<FileContent> Download(
-        string recipientPartyId,
+        string partyId,
         string documentId,
         string? targetFormat = null,
         CancellationToken cancellation = default);

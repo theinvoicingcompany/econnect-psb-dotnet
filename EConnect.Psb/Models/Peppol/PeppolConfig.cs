@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace EConnect.Psb.Models.Peppol
 {
-    public record PeppolPartyConfig(
+    public record PeppolConfig(
         string Id,
         Dictionary<string, PeppolCapability> Capabilities,
         PeppolBusinessCard BusinessCard,
@@ -19,11 +18,4 @@ namespace EConnect.Psb.Models.Peppol
         public DateTimeOffset? CreatedOn { get; } = CreatedOn;
         public DateTimeOffset? ChangedOn { get; } = ChangedOn;
     }
-}
-
-// Required due to build version mismatch?
-namespace System.Runtime.CompilerServices
-{
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    internal class IsExternalInit { }
 }

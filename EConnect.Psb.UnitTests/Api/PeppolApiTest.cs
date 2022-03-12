@@ -25,7 +25,7 @@ public class PeppolApiTest : PsbTestContext
 
     private PeppolBusinessCard? ExamplePeppolBusinessCard;
 
-    private PeppolPartyConfig? ExamplePeppolPartyConfig;
+    private PeppolConfig? ExamplePeppolPartyConfig;
 
     private Party[] ExamplePartyPageResult;
 
@@ -113,17 +113,17 @@ public class PeppolApiTest : PsbTestContext
         );
 
         ExamplePeppolBusinessCard = new PeppolBusinessCard(
-            Names: new BusinessCardProperty(
+            Names: new PeppolBusinessCardProperty(
                 Value: "eVerbinding, eConnect",
                 State: "on",
                 Description: "Business names."
             ),
-            Address: new BusinessCardProperty(
+            Address: new PeppolBusinessCardProperty(
                 Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
                 State: "on",
                 Description: "Geographic information."
             ),
-            EmailAddress: new BusinessCardProperty(
+            EmailAddress: new PeppolBusinessCardProperty(
                 Value: "techsupport@econnect.eu",
                 State: "inherited => on",
                 Description: "Technical contact"
@@ -131,7 +131,7 @@ public class PeppolApiTest : PsbTestContext
             State: "on"
         );
 
-        ExamplePeppolPartyConfig = new PeppolPartyConfig(
+        ExamplePeppolPartyConfig = new PeppolConfig(
             Id: "1",
             Capabilities: ExamplePeppolCapabilities,
             BusinessCard: ExamplePeppolBusinessCard,
@@ -201,7 +201,7 @@ public class PeppolApiTest : PsbTestContext
         });
 
         // Act
-        var res = await PeppolApi.GetEnviromentConfig();
+        var res = await PeppolApi.GetEnvironmentConfig();
 
         // Assert
         Assert.IsNotNull(ExamplePeppolPartyConfig);
@@ -233,7 +233,7 @@ public class PeppolApiTest : PsbTestContext
         });
 
         // Act
-        var res = await PeppolApi.PutEnviromentConfig(config: ExamplePeppolPartyConfig);
+        var res = await PeppolApi.PutEnvironmentConfig(config: ExamplePeppolPartyConfig);
 
         // Assert
         Assert.IsNotNull(ExamplePeppolPartyConfig);
@@ -299,7 +299,7 @@ public class PeppolApiTest : PsbTestContext
         });
 
         // Act
-        var res = await PeppolApi.GetPartyConfig(
+        var res = await PeppolApi.GetConfig(
             partyId: ExamplePartyId
         );
 
@@ -334,9 +334,9 @@ public class PeppolApiTest : PsbTestContext
         });
 
         // Act
-        var res = await PeppolApi.PutPartyConfig(
+        var res = await PeppolApi.PutConfig(
             partyId: ExamplePartyId,
-            partyConfig: ExamplePeppolPartyConfig
+            config: ExamplePeppolPartyConfig
         );
 
         // Assert
@@ -370,7 +370,7 @@ public class PeppolApiTest : PsbTestContext
         });
 
         // Act
-        await PeppolApi.DeletePartyConfig(
+        await PeppolApi.DeleteConfig(
             partyId: ExamplePartyId
         );
 

@@ -4,6 +4,7 @@ using System.Web;
 using EConnect.Psb.Api;
 using EConnect.Psb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using Newtonsoft.Json;
 
 namespace EConnect.Psb.UnitTests.Api;
@@ -128,7 +129,7 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.GetPartyHooks(ExamplePartyId);
+        var res = await HookApi.GetHooks(ExamplePartyId);
 
         // Assert
         Assert.IsNotNull(res);
@@ -159,7 +160,7 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.SetPartyHook(ExamplePartyId, _exampleHook);
+        var res = await HookApi.SetHook(ExamplePartyId, _exampleHook);
 
         // Assert
         Assert.AreEqual(_exampleHook.Id, res.Id);
@@ -188,7 +189,7 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.PingPartyHooks(ExamplePartyId);
+        var res = await HookApi.PingHooks(ExamplePartyId);
 
         // Assert
         Assert.AreEqual(ExamplePartyId, res);
@@ -197,9 +198,8 @@ public class HookApiTests : PsbTestContext
     [TestMethod]
     public async Task DeletePartyHookTest()
     {
-        var targetId = _exampleHook.Id;
-
         // Arrange
+        var hookId = "hookId";
         SetAccessToken();
         Configure(builder =>
         {
@@ -207,14 +207,14 @@ public class HookApiTests : PsbTestContext
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
-                .Setup(HttpMethod.Delete, $"/api/v1/{encodedPartyId}/hook/{targetId}")
+                .Setup(HttpMethod.Delete, $"/api/v1/{encodedPartyId}/hook/{hookId}")
                 .Result(json);
         });
 
         // Act
-        await HookApi.DeletePartyHook(targetId, ExamplePartyId);
+        await HookApi.DeleteHook(ExamplePartyId, hookId);
 
         // Assert
-        // Implicitly succeeded
+        VerifyDeleteRequest(Times.Once());
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace EConnect.Psb.Models.Peppol;
 
-public record BusinessCardProperty(
+public record PeppolBusinessCardProperty(
     string? State,
     string? Value,
     string? Description)

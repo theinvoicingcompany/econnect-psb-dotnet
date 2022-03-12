@@ -6,13 +6,10 @@ trigger:
 pool: 'Default'
 
 variables:
-  solution: |
-        **/*.csproj
-        !**/*IntegrationTests*.sfproj
+  solution: '**/*.csproj'
   buildPlatform: 'AnyCPU'
   buildConfiguration: 'Release'
   nuGetProjects: '**/EConnect.Psb.csproj'
-  buildProjects: '**/*.csproj'
   testProjects: '**/*UnitTests*.csproj'
 
 stages:
@@ -43,25 +40,11 @@ stages:
         command: 'restore'
         projects: '$(solution)'
 
-    - task: SonarCloudPrepare@1
-      displayName: 'Prepare analysis configuration'
-      enabled: false
-      inputs:
-        SonarCloud: 'SC'
-        organization: 'everbinding'
-        scannerMode: 'MSBuild'
-        projectKey: 'everbinding_$(Build.Repository.Name)'
-        projectName: '$(Build.Repository.Name)'
-        extraProperties: |
-          sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\**\*.trx
-          sonar.cs.opencover.reportsPaths=$(Build.SourcesDirectory)/**/coverage.opencover.xml
-          sonar.qualitygate.wait=true
-
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build'
       inputs:
         command: 'build'
-        arguments: '-c $(buildConfiguration) /p:Platform=x64 /p:Version=$(GitVersion.SemVer)'
+        arguments: '-c $(buildConfiguration) /p:Platform=$(buildPlatform) /p:Version=$(GitVersion.SemVer)'
         projects: $(solution)
 
     - task: DotNetCoreCLI@2

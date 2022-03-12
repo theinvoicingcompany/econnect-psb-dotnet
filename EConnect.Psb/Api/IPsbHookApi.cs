@@ -12,11 +12,11 @@ public interface IPsbHookApi
 
     Task DeleteEnvironmentHook(string hookId, CancellationToken cancellation = default);
 
-    Task<Hook[]> GetPartyHooks(string partyId, CancellationToken cancellation = default);
+    Task<Hook[]> GetHooks(string partyId, CancellationToken cancellation = default);
 
-    Task<Hook> SetPartyHook(string partyId, Hook hook, CancellationToken cancellation = default);
+    Task<Hook> SetHook(string partyId, Hook hook, CancellationToken cancellation = default);
 
-    Task<string> PingPartyHooks(string partyId, CancellationToken cancellation = default);
+    Task<string> PingHooks(string partyId, CancellationToken cancellation = default);
 
-    Task DeletePartyHook(string hookId, string partyId, CancellationToken cancellation = default);
+    Task DeleteHook(string partyId, string hookId, CancellationToken cancellation = default);
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using EConnect.Psb.Client;
@@ -14,7 +15,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
     {
         _psbClient = psbClient;
     }
-    public async Task<string> QueryRecipientParty(string senderPartyId, string[] recipientPartyIds, string? preferredDocumentTypeId = null, CancellationToken cancellation = default)
+    public async Task<string> QueryRecipientParty(string senderPartyId, IEnumerable<string> recipientPartyIds, string? preferredDocumentTypeId = null, CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/queryRecipientParty";
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))

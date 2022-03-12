@@ -1,11 +1,9 @@
-﻿using EConnect.Psb.Client;
-using EConnect.Psb.Models;
-using EConnect.Psb.Models.Peppol;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using EConnect.Psb.Client;
+using EConnect.Psb.Models;
+using EConnect.Psb.Models.Peppol;
 
 namespace EConnect.Psb.Api;
 
@@ -20,84 +18,71 @@ public class PsbPeppolApi : IPsbPeppolApi
 
     public async Task<DeliveryOption[]> GetDeliveryOption(CancellationToken cancellation = default)
     {
-        var targetUrl = $"/api/v1/peppol/deliveryOption";
+        var targetUrl = "/api/v1/peppol/deliveryOption";
 
         var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(targetUrl, cancellation);
-        
+
         return deliveryOptions;
     }
 
-    public async Task<PeppolPartyConfig> GetEnviromentConfig(CancellationToken cancellation = default)
+    public async Task<PeppolConfig> GetEnvironmentConfig(CancellationToken cancellation = default)
     {
-        var targetUrl = $"/api/v1/peppol/config";
+        var targetUrl = "/api/v1/peppol/config";
 
-        var peppolPartyConfig = await _psbClient.Get<PeppolPartyConfig>(targetUrl, cancellation);
+        var peppolPartyConfig = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation);
 
         return peppolPartyConfig;
     }
 
-    public async Task<PeppolPartyConfig> PutEnviromentConfig(
-        PeppolPartyConfig partyConfig, 
+    public async Task<PeppolConfig> PutEnvironmentConfig(
+        PeppolConfig config,
         CancellationToken cancellation = default)
     {
-        var targetUrl = $"/api/v1/peppol/config";
+        var targetUrl = "/api/v1/peppol/config";
 
-        var peppolPartyConfig = await _psbClient.Put<PeppolPartyConfig>(targetUrl, cancellation);
+        var peppolPartyConfig = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation);
 
         return peppolPartyConfig;
     }
 
     public async Task<Party[]> GetParties(CancellationToken cancellation = default)
     {
-        var targetUrl = $"/api/v1/peppol/config/party";
+        var targetUrl = "/api/v1/peppol/config/party";
 
         var partyPagedResult = await _psbClient.Get<Party[]>(targetUrl, cancellation);
-
         return partyPagedResult;
     }
 
-    public async Task<PeppolPartyConfig> GetPartyConfig(
+    public async Task<PeppolConfig> GetConfig(
         string partyId,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        var partyPagedResult = await _psbClient.Get<PeppolPartyConfig>(
-            requestUri: targetUrl,
-            cancellation: cancellation
-        );
-
-        return partyPagedResult;
+        var res = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation);
+        return res;
     }
 
-    public async Task<PeppolPartyConfig> PutPartyConfig(
+    public async Task<PeppolConfig> PutConfig(
         string partyId,
-        PeppolPartyConfig partyConfig,
+        PeppolConfig config,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        var partyPagedResult = await _psbClient.Put<PeppolPartyConfig>(
-            requestUri: targetUrl,
-            body: partyConfig,
-            cancellation: cancellation
-        );
-        
-        return partyPagedResult;
+        var res = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation);
+        return res;
     }
 
-    public async Task DeletePartyConfig(
+    public async Task DeleteConfig(
         string partyId,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        await _psbClient.Delete(
-            requestUri: targetUrl,
-            cancellation: cancellation
-        );
+        await _psbClient.Delete(targetUrl, cancellation);
     }
 }

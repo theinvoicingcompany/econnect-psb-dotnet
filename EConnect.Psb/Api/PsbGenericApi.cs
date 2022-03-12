@@ -67,12 +67,12 @@ public class PsbGenericApi : IPsbGenericApi
     }
 
     public async Task<FileContent> Download(
-        string recipientPartyId,
+        string partyId,
         string documentId,
         string? targetFormat = null,
         CancellationToken cancellation = default)
     {
-        var encodedPartyId = HttpUtility.UrlEncode(recipientPartyId);
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var requestUri = $"/api/v1-beta/{encodedPartyId}/generic/{encodedDocumentId}/download";
         var query = new Dictionary<string, string>();

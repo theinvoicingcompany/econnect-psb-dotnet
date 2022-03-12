@@ -54,7 +54,7 @@ public class PsbHookApi : IPsbHookApi
 
     #region partyHooks
 
-    public async Task<Hook[]> GetPartyHooks(
+    public async Task<Hook[]> GetHooks(
         string partyId,
         CancellationToken cancellation = default)
     {
@@ -69,7 +69,7 @@ public class PsbHookApi : IPsbHookApi
         return hooks;
     }
 
-    public async Task<Hook> SetPartyHook(
+    public async Task<Hook> SetHook(
         string partyId,
         Hook hook,
         CancellationToken cancellation)
@@ -86,7 +86,7 @@ public class PsbHookApi : IPsbHookApi
         return createdHook;
     }
 
-    public async Task<string> PingPartyHooks(
+    public async Task<string> PingHooks(
         string partyId,
         CancellationToken cancellation)
     {
@@ -101,13 +101,13 @@ public class PsbHookApi : IPsbHookApi
         return party.Id;
     }
 
-    public async Task DeletePartyHook(
-        string hookId,
+    public async Task DeleteHook(
         string partyId,
+        string hookId,
         CancellationToken cancellation)
     {
-        var encodedHookId = HttpUtility.UrlEncode(hookId);
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var encodedHookId = HttpUtility.UrlEncode(hookId);
         var targetUrl = $"/api/v1/{encodedPartyId}/hook/{encodedHookId}";
 
         await _psbClient.Delete(

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using EConnect.Psb.Client;
@@ -16,13 +17,13 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
     }
 
     public async Task<Party> QueryRecipientParty(
-        string partyId,
-        string[] recipientPartyIds,
+        string senderPartyId,
+        IEnumerable<string> recipientPartyIds,
         string? preferredDocumentTypeId = null,
         CancellationToken cancellation = default)
     {
-        var encodedpartyId = HttpUtility.UrlEncode(partyId);
-        var requestUri = $"/api/v1/{encodedpartyId}/purchaseOrder/queryRecipientParty";
+        var encodedPartyId = HttpUtility.UrlEncode(senderPartyId);
+        var requestUri = $"/api/v1/{encodedPartyId}/purchaseOrder/queryRecipientParty";
 
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
             requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
@@ -38,8 +39,8 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         string? receiverPartyId = null,
         CancellationToken cancellation = default)
     {
-        var encodedpartyId = HttpUtility.UrlEncode(partyId);
-        var requestUri = $"/api/v1/{encodedpartyId}/purchaseOrder/send";
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var requestUri = $"/api/v1/{encodedPartyId}/purchaseOrder/send";
 
         if (!string.IsNullOrEmpty(receiverPartyId))
             requestUri += "?receiverId=" + HttpUtility.UrlEncode(receiverPartyId);

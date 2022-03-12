@@ -14,22 +14,18 @@ public class PurchaseOrderApiTests : PsbTestContext
 {
     public IPsbPurchaseOrderApi PsbPurchaseOrderApi => GetRequiredService<IPsbPurchaseOrderApi>();
 
-    private readonly string ExampleSenderPartyId = "NL:KVK:SENDER";
-
-    private readonly string ExampleDocumentId = "1";
-
     [TestMethod]
     public async Task QueryRecipientPartyTest()
     {
         // Arrange
         var expectedId = Guid.NewGuid().ToString();
+        var senderPartyId = "NL:KVK:SENDER";
 
         SetAccessToken();
         Configure(builder =>
         {
             var json = "{\r\n  \"id\": \"" + expectedId + "\"\r\n}";
-            var encodedDocumentId = HttpUtility.UrlEncode(ExampleDocumentId);
-            var encodedPartyId = HttpUtility.UrlEncode(ExampleSenderPartyId);
+            var encodedPartyId = HttpUtility.UrlEncode(senderPartyId);
 
             var requestUri = $"/api/v1/{encodedPartyId}/purchaseOrder/queryRecipientParty";
 
@@ -40,7 +36,7 @@ public class PurchaseOrderApiTests : PsbTestContext
 
         // Act
         var advisedParty = await PsbPurchaseOrderApi.QueryRecipientParty(
-            partyId: ExampleSenderPartyId,
+            senderPartyId: senderPartyId,
             recipientPartyIds: new[] { "NL:KVK:RECEIVER_1", "GLN:RECEIVER_GLN" },
             preferredDocumentTypeId: null
         );
@@ -54,6 +50,7 @@ public class PurchaseOrderApiTests : PsbTestContext
     public async Task SendFileStreamTest()
     {
         // Arrange
+        var senderPartyId = "NL:KVK:SENDER";
         FileContent file = File.OpenRead("TestData/bisv3.xml");
         var expectedId = Guid.NewGuid().ToString();
 
@@ -61,7 +58,7 @@ public class PurchaseOrderApiTests : PsbTestContext
         Configure(builder =>
         {
             var json = "{ \"id\": \"" + expectedId + "\"}";
-            var encodedPartyId = HttpUtility.UrlEncode(ExampleSenderPartyId);
+            var encodedPartyId = HttpUtility.UrlEncode(senderPartyId);
 
             var requestUri = $"/api/v1/{encodedPartyId}/purchaseOrder/send";
 
@@ -72,7 +69,7 @@ public class PurchaseOrderApiTests : PsbTestContext
 
         // Act
         var res = await PsbPurchaseOrderApi.Send(
-            partyId: ExampleSenderPartyId,
+            senderPartyId: senderPartyId,
             receiverId: null,
             file: file
         );
