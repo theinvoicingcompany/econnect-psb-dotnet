@@ -4,7 +4,34 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <Authors>ThiemeNL, roeland.krijgsman</Authors>
+    <Description>The offical .NET C# API client for the eConnect Procurement Service Bus (PSB)</Description>
+    <PackageProjectUrl>https://psb.econnect.eu</PackageProjectUrl>
+    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/everbinding/econnect-psb-dotnet</RepositoryUrl>
+    <PackageTags>econnect;psb;api;client;dotnet;csharp;peppol;einvoicing;efacturatie</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>logo.png</PackageIcon>
+    <Company>eConnect-International</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\ReadMe.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="6.0.0" />
