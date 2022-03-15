@@ -28,6 +28,9 @@ public class HookApiTests : PsbTestContext
             "HookSentError",
             "HookSentRetry"
         },
+        PublishTopics: new string[] {
+            "*Received"
+        },
         IsActive: true
     );
 
@@ -59,6 +62,10 @@ public class HookApiTests : PsbTestContext
         {
             Assert.AreEqual(_exampleHook.Topics[i], res[0].Topics[i]);
         }
+        for (int i = 0; i < _exampleHook.PublishTopics.Length; i++)
+        {
+            Assert.AreEqual(_exampleHook.PublishTopics[i], res[0].PublishTopics[i]);
+        }
         Assert.AreEqual(_exampleHook.IsActive, res[0].IsActive);
     }
 
@@ -85,6 +92,10 @@ public class HookApiTests : PsbTestContext
         for(int i = 0; i < _exampleHook.Topics.Length; i++)
         {
             Assert.AreEqual(_exampleHook.Topics[i], res.Topics[i]);
+        }
+        for (int i = 0; i < _exampleHook.PublishTopics.Length; i++)
+        {
+            Assert.AreEqual(_exampleHook.PublishTopics[i], res.PublishTopics[i]);
         }
         Assert.AreEqual(_exampleHook.IsActive, res.IsActive);
     }

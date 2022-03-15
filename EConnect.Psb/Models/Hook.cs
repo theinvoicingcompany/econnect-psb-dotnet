@@ -8,6 +8,7 @@ public record Hook(
     string Name,
     string[] Topics,
     bool IsActive,
+    string[]? PublishTopics = null,
     DateTimeOffset? CreatedOn = null,
     DateTimeOffset? ChangedOn = null)
 {
@@ -15,6 +16,7 @@ public record Hook(
     public string Action { get; } = Action;
     public string Name { get; } = Name;
     public string[] Topics { get; } = Topics;
+    public string[] PublishTopics { get; } = Topics;
     public bool IsActive { get; } = IsActive;
     public DateTimeOffset? CreatedOn { get; } = CreatedOn;
     public DateTimeOffset? ChangedOn { get; } = ChangedOn;
