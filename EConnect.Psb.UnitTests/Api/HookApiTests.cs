@@ -5,7 +5,6 @@ using EConnect.Psb.Api;
 using EConnect.Psb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 
 namespace EConnect.Psb.UnitTests.Api;
 
@@ -43,7 +42,27 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = $"[ {JsonConvert.SerializeObject(_exampleHook)} ]";
+            var json = @"[
+            {
+                ""id"": ""1"",
+                ""action"": ""mailto:techsupport@econnect.eu"",
+                ""name"": ""mail hook"",
+                ""topics"": [
+                    ""*Received"",
+                    ""*ReceivedError"",
+                    ""*Sent"",
+                    ""*SentRetry"",
+                    ""*SentError"",
+                    ""HookSent"",
+                    ""HookSentError"",
+                    ""HookSentRetry""
+                ],
+                ""publishTopics"": [
+                    ""*Received""
+                ],
+                ""isActive"": true
+            }]";
+
             builder
                 .Setup(HttpMethod.Get, "/api/v1/hook")
                 .Result(json);
@@ -76,7 +95,26 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(_exampleHook);
+            var json = @"{
+                ""id"": ""1"",
+                ""action"": ""mailto:techsupport@econnect.eu"",
+                ""name"": ""mail hook"",
+                ""topics"": [
+                    ""*Received"",
+                    ""*ReceivedError"",
+                    ""*Sent"",
+                    ""*SentRetry"",
+                    ""*SentError"",
+                    ""HookSent"",
+                    ""HookSentError"",
+                    ""HookSentRetry""
+                ],
+                ""publishTopics"": [
+                    ""*Received""
+                ],
+                ""isActive"": true
+            }";
+
             builder
                 .Setup(HttpMethod.Put, "/api/v1/hook")
                 .Result(json);
@@ -109,7 +147,27 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(_exampleHook);
+            var json = @"[
+            {
+                ""id"": ""1"",
+                ""action"": ""mailto:techsupport@econnect.eu"",
+                ""name"": ""mail hook"",
+                ""topics"": [
+                    ""*Received"",
+                    ""*ReceivedError"",
+                    ""*Sent"",
+                    ""*SentRetry"",
+                    ""*SentError"",
+                    ""HookSent"",
+                    ""HookSentError"",
+                    ""HookSentRetry""
+                ],
+                ""publishTopics"": [
+                    ""*Received""
+                ],
+                ""isActive"": true
+            }]";
+
             builder
                 .Setup(HttpMethod.Delete, $"/api/v1/hook/{targetId}")
                 .Result(json);
@@ -131,7 +189,27 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = $"[ {JsonConvert.SerializeObject(_exampleHook)} ]";
+            var json = @"[
+            {
+                ""id"": ""1"",
+                ""action"": ""mailto:techsupport@econnect.eu"",
+                ""name"": ""mail hook"",
+                ""topics"": [
+                    ""*Received"",
+                    ""*ReceivedError"",
+                    ""*Sent"",
+                    ""*SentRetry"",
+                    ""*SentError"",
+                    ""HookSent"",
+                    ""HookSentError"",
+                    ""HookSentRetry""
+                ],
+                ""publishTopics"": [
+                    ""*Received""
+                ],
+                ""isActive"": true
+            }]";
+
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
@@ -162,7 +240,26 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(_exampleHook);
+            var json = @"{
+                ""id"": ""1"",
+                ""action"": ""mailto:techsupport@econnect.eu"",
+                ""name"": ""mail hook"",
+                ""topics"": [
+                    ""*Received"",
+                    ""*ReceivedError"",
+                    ""*Sent"",
+                    ""*SentRetry"",
+                    ""*SentError"",
+                    ""HookSent"",
+                    ""HookSentError"",
+                    ""HookSentRetry""
+                ],
+                ""publishTopics"": [
+                    ""*Received""
+                ],
+                ""isActive"": true
+            }";
+
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
@@ -214,7 +311,27 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-            var json = JsonConvert.SerializeObject(_exampleHook);
+            var json = @"[
+            {
+                ""id"": ""1"",
+                ""action"": ""mailto:techsupport@econnect.eu"",
+                ""name"": ""mail hook"",
+                ""topics"": [
+                    ""*Received"",
+                    ""*ReceivedError"",
+                    ""*Sent"",
+                    ""*SentRetry"",
+                    ""*SentError"",
+                    ""HookSent"",
+                    ""HookSentError"",
+                    ""HookSentRetry""
+                ],
+                ""publishTopics"": [
+                    ""*Received""
+                ],
+                ""isActive"": true
+            }]";
+
             var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
 
             builder
