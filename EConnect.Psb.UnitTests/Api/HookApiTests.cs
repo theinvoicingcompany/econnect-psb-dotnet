@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using EConnect.Psb.Api;
@@ -13,32 +14,30 @@ public class HookApiTests : PsbTestContext
 {
     public IPsbHookApi HookApi => GetRequiredService<IPsbHookApi>();
 
-    private readonly Hook _exampleHook = new Hook(
-        Id: "1",
-        Action: "mailto:techsupport@econnect.eu",
-        Name: "mail hook",
-        Topics: new string[] {
-            "*Received",
-            "*ReceivedError",
-            "*Sent",
-            "*SentRetry",
-            "*SentError",
-            "HookSent",
-            "HookSentError",
-            "HookSentRetry"
-        },
-        PublishTopics: new string[] {
-            "*Received"
-        },
-        IsActive: true
-    );
-
-    private readonly string ExamplePartyId = "NL:KVK:12345678";
-
     [TestMethod]
     public async Task GetEnvironmentHooksTest()
     {
         // Arrange
+        Hook hook = new Hook(
+            Id: "1",
+            Action: "mailto:techsupport@econnect.eu",
+            Name: "mail hook",
+            Topics: new string[] {
+                "*Received",
+                "*ReceivedError",
+                "*Sent",
+                "*SentRetry",
+                "*SentError",
+                "HookSent",
+                "HookSentError",
+                "HookSentRetry"
+            },
+            PublishTopics: new string[] {
+                "*Received"
+            },
+            IsActive: true
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
@@ -74,24 +73,44 @@ public class HookApiTests : PsbTestContext
         // Assert
         Assert.IsNotNull(res);
         Assert.IsNotNull(res[0]);
-        Assert.AreEqual(_exampleHook.Id, res[0].Id);
-        Assert.AreEqual(_exampleHook.Action, res[0].Action);
-        Assert.AreEqual(_exampleHook.Name, res[0].Name);
-        for (int i = 0; i < _exampleHook.Topics.Length; i++)
+        Assert.AreEqual(hook.Id, res[0].Id);
+        Assert.AreEqual(hook.Action, res[0].Action);
+        Assert.AreEqual(hook.Name, res[0].Name);
+        for (int i = 0; i < hook.Topics.Length; i++)
         {
-            Assert.AreEqual(_exampleHook.Topics[i], res[0].Topics[i]);
+            Assert.AreEqual(hook.Topics[i], res[0].Topics[i]);
         }
-        for (int i = 0; i < _exampleHook.PublishTopics.Length; i++)
+        for (int i = 0; i < hook.PublishTopics.Length; i++)
         {
-            Assert.AreEqual(_exampleHook.PublishTopics[i], res[0].PublishTopics[i]);
+            Assert.AreEqual(hook.PublishTopics[i], res[0].PublishTopics[i]);
         }
-        Assert.AreEqual(_exampleHook.IsActive, res[0].IsActive);
+        Assert.AreEqual(hook.IsActive, res[0].IsActive);
     }
 
     [TestMethod]
     public async Task PutEnvironmentHooksTest()
     {
         // Arrange
+        Hook hook = new Hook(
+            Id: "1",
+            Action: "mailto:techsupport@econnect.eu",
+            Name: "mail hook",
+            Topics: new string[] {
+                "*Received",
+                "*ReceivedError",
+                "*Sent",
+                "*SentRetry",
+                "*SentError",
+                "HookSent",
+                "HookSentError",
+                "HookSentRetry"
+            },
+            PublishTopics: new string[] {
+                "*Received"
+            },
+            IsActive: true
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
@@ -121,71 +140,70 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.SetEnvironmentHook(_exampleHook);
+        var res = await HookApi.SetEnvironmentHook(hook);
 
         // Assert
-        Assert.AreEqual(_exampleHook.Id, res.Id);
-        Assert.AreEqual(_exampleHook.Action, res.Action);
-        Assert.AreEqual(_exampleHook.Name, res.Name);
-        for(int i = 0; i < _exampleHook.Topics.Length; i++)
+        Assert.AreEqual(hook.Id, res.Id);
+        Assert.AreEqual(hook.Action, res.Action);
+        Assert.AreEqual(hook.Name, res.Name);
+        for(int i = 0; i < hook.Topics.Length; i++)
         {
-            Assert.AreEqual(_exampleHook.Topics[i], res.Topics[i]);
+            Assert.AreEqual(hook.Topics[i], res.Topics[i]);
         }
-        for (int i = 0; i < _exampleHook.PublishTopics.Length; i++)
+        for (int i = 0; i < hook.PublishTopics.Length; i++)
         {
-            Assert.AreEqual(_exampleHook.PublishTopics[i], res.PublishTopics[i]);
+            Assert.AreEqual(hook.PublishTopics[i], res.PublishTopics[i]);
         }
-        Assert.AreEqual(_exampleHook.IsActive, res.IsActive);
+        Assert.AreEqual(hook.IsActive, res.IsActive);
     }
 
     [TestMethod]
     public async Task DeleteDefaultHookTest()
     {
-        var targetId = _exampleHook.Id;
-
         // Arrange
+        var expectedId = Guid.NewGuid().ToString();
+
         SetAccessToken();
         Configure(builder =>
         {
-            var json = @"[
-            {
-                ""id"": ""1"",
-                ""action"": ""mailto:techsupport@econnect.eu"",
-                ""name"": ""mail hook"",
-                ""topics"": [
-                    ""*Received"",
-                    ""*ReceivedError"",
-                    ""*Sent"",
-                    ""*SentRetry"",
-                    ""*SentError"",
-                    ""HookSent"",
-                    ""HookSentError"",
-                    ""HookSentRetry""
-                ],
-                ""publishTopics"": [
-                    ""*Received""
-                ],
-                ""isActive"": true
-            }]";
 
             builder
-                .Setup(HttpMethod.Delete, $"/api/v1/hook/{targetId}")
-                .Result(json);
+                .Setup(HttpMethod.Delete, $"/api/v1/hook/{expectedId}")
+                .Result("", contentType: "plain");
         });
 
         // Act
-        await HookApi.DeleteEnvironmentHook(targetId);
+        await HookApi.DeleteEnvironmentHook(expectedId);
 
         // Assert
-        // Implicitly succeeded
+        VerifyDeleteRequest(Times.Once());
     }
-
-
 
     [TestMethod]
     public async Task GetPartyHooksTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+        Hook hook = new Hook(
+            Id: "1",
+            Action: "mailto:techsupport@econnect.eu",
+            Name: "mail hook",
+            Topics: new string[] {
+                "*Received",
+                "*ReceivedError",
+                "*Sent",
+                "*SentRetry",
+                "*SentError",
+                "HookSent",
+                "HookSentError",
+                "HookSentRetry"
+            },
+            PublishTopics: new string[] {
+                "*Received"
+            },
+            IsActive: true
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
@@ -210,7 +228,7 @@ public class HookApiTests : PsbTestContext
                 ""isActive"": true
             }]";
 
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
 
             builder
                 .Setup(HttpMethod.Get, $"/api/v1/{encodedPartyId}/hook")
@@ -218,25 +236,46 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.GetHooks(ExamplePartyId);
+        var res = await HookApi.GetHooks(partyId);
 
         // Assert
         Assert.IsNotNull(res);
         Assert.IsNotNull(res[0]);
-        Assert.AreEqual(_exampleHook.Id, res[0].Id);
-        Assert.AreEqual(_exampleHook.Action, res[0].Action);
-        Assert.AreEqual(_exampleHook.Name, res[0].Name);
-        for (int i = 0; i < _exampleHook.Topics.Length; i++)
+        Assert.AreEqual(hook.Id, res[0].Id);
+        Assert.AreEqual(hook.Action, res[0].Action);
+        Assert.AreEqual(hook.Name, res[0].Name);
+        for (int i = 0; i < hook.Topics.Length; i++)
         {
-            Assert.AreEqual(_exampleHook.Topics[i], res[0].Topics[i]);
+            Assert.AreEqual(hook.Topics[i], res[0].Topics[i]);
         }
-        Assert.AreEqual(_exampleHook.IsActive, res[0].IsActive);
+        Assert.AreEqual(hook.IsActive, res[0].IsActive);
     }
 
     [TestMethod]
     public async Task PutPartyHooksTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+        Hook hook = new Hook(
+            Id: "1",
+            Action: "mailto:techsupport@econnect.eu",
+            Name: "mail hook",
+            Topics: new string[] {
+                "*Received",
+                "*ReceivedError",
+                "*Sent",
+                "*SentRetry",
+                "*SentError",
+                "HookSent",
+                "HookSentError",
+                "HookSentRetry"
+            },
+            PublishTopics: new string[] {
+                "*Received"
+            },
+            IsActive: true
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
@@ -260,7 +299,7 @@ public class HookApiTests : PsbTestContext
                 ""isActive"": true
             }";
 
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
 
             builder
                 .Setup(HttpMethod.Put, $"/api/v1/{encodedPartyId}/hook")
@@ -268,28 +307,49 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.SetHook(ExamplePartyId, _exampleHook);
+        var res = await HookApi.SetHook(partyId, hook);
 
         // Assert
-        Assert.AreEqual(_exampleHook.Id, res.Id);
-        Assert.AreEqual(_exampleHook.Action, res.Action);
-        Assert.AreEqual(_exampleHook.Name, res.Name);
-        for (int i = 0; i < _exampleHook.Topics.Length; i++)
+        Assert.AreEqual(hook.Id, res.Id);
+        Assert.AreEqual(hook.Action, res.Action);
+        Assert.AreEqual(hook.Name, res.Name);
+        for (int i = 0; i < hook.Topics.Length; i++)
         {
-            Assert.AreEqual(_exampleHook.Topics[i], res.Topics[i]);
+            Assert.AreEqual(hook.Topics[i], res.Topics[i]);
         }
-        Assert.AreEqual(_exampleHook.IsActive, res.IsActive);
+        Assert.AreEqual(hook.IsActive, res.IsActive);
     }
 
     [TestMethod]
     public async Task PingPartyHooksTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+        Hook hook = new Hook(
+            Id: "1",
+            Action: "mailto:techsupport@econnect.eu",
+            Name: "mail hook",
+            Topics: new string[] {
+                "*Received",
+                "*ReceivedError",
+                "*Sent",
+                "*SentRetry",
+                "*SentError",
+                "HookSent",
+                "HookSentError",
+                "HookSentRetry"
+            },
+            PublishTopics: new string[] {
+                "*Received"
+            },
+            IsActive: true
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
-            var json = "{\r\n  \"id\": \"" + ExamplePartyId +"\"\r\n}";
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
+            var json = "{\r\n  \"id\": \"" + partyId +"\"\r\n}";
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
 
             builder
                 .Setup(HttpMethod.Get, $"/api/v1/{encodedPartyId}/hook/ping")
@@ -297,50 +357,31 @@ public class HookApiTests : PsbTestContext
         });
 
         // Act
-        var res = await HookApi.PingHooks(ExamplePartyId);
+        var res = await HookApi.PingHooks(partyId);
 
         // Assert
-        Assert.AreEqual(ExamplePartyId, res);
+        Assert.AreEqual(partyId, res);
     }
 
     [TestMethod]
     public async Task DeletePartyHookTest()
     {
         // Arrange
-        var hookId = "hookId";
+        string partyId = "NL:KVK:12345678";
+        var expectedId = Guid.NewGuid().ToString();
+
         SetAccessToken();
         Configure(builder =>
         {
-            var json = @"[
-            {
-                ""id"": ""1"",
-                ""action"": ""mailto:techsupport@econnect.eu"",
-                ""name"": ""mail hook"",
-                ""topics"": [
-                    ""*Received"",
-                    ""*ReceivedError"",
-                    ""*Sent"",
-                    ""*SentRetry"",
-                    ""*SentError"",
-                    ""HookSent"",
-                    ""HookSentError"",
-                    ""HookSentRetry""
-                ],
-                ""publishTopics"": [
-                    ""*Received""
-                ],
-                ""isActive"": true
-            }]";
-
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
 
             builder
-                .Setup(HttpMethod.Delete, $"/api/v1/{encodedPartyId}/hook/{hookId}")
-                .Result(json);
+                .Setup(HttpMethod.Delete, $"/api/v1/{encodedPartyId}/hook/{expectedId}")
+                .Result("", contentType: "plain");
         });
 
         // Act
-        await HookApi.DeleteHook(ExamplePartyId, hookId);
+        await HookApi.DeleteHook(partyId, expectedId);
 
         // Assert
         VerifyDeleteRequest(Times.Once());

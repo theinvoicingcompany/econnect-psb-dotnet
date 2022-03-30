@@ -7,6 +7,7 @@ using EConnect.Psb.Api;
 using EConnect.Psb.Models;
 using EConnect.Psb.Models.Peppol;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace EConnect.Psb.UnitTests.Api;
 
@@ -15,66 +16,18 @@ public class PeppolApiTest : PsbTestContext
 {
     public IPsbPeppolApi PeppolApi => GetRequiredService<IPsbPeppolApi>();
 
-    private readonly string ExamplePartyId = "NL:KVK:12345678";
-
-    private DeliveryOption? ExampleDeliveryOption;
-
-    private Dictionary<string, PeppolCapability> ExamplePeppolCapabilities = new Dictionary<string, PeppolCapability>() { };
-
-    private PeppolPartyVerification? ExamplePeppolPartyVerification;
-
-    private PeppolBusinessCard? ExamplePeppolBusinessCard;
-
-    private PeppolConfig? ExamplePeppolPartyConfig;
-
-    private Party[] ExamplePartyPageResult;
-
-    private string ExamplePeppolPartyConfigJson = @"{ 
-        ""id"":""1"",
-        ""capabilities"":{
-            ""invoices"":{
-                ""state"":""inherited => on"",
-                ""description"":""SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII""
-            },
-            ""invoiceResponse"":{
-                ""state"":""inherited => off"",
-                ""description"":""PEPPOL IMR""
-            },
-            ""orders"":{
-                ""state"":""inherited => off"",
-                ""description"":""SI Order 1.2, PEPPOL Order transaction 3.0""
-            }
-        },
-        ""businessCard"":{
-            ""names"":{
-                ""state"":""on"",
-                ""value"":""eVerbinding, eConnect"",
-                ""description"":""Business names.""
-            },
-            ""address"":{
-                ""state"":""on"",
-                ""value"":""Pelmolenlaan 16A, 3447 GW, Woerden, NL"",
-                ""description"":""Geographic information.""
-            },
-            ""emailAddress"":{
-                ""state"":""inherited => on"",
-                ""value"":""techsupport@econnect.eu"",
-                ""description"":""Technical contact""
-            },
-            ""state"":""on""
-        },
-        ""verification"":{
-            ""notes"":""Contract agreement C21345"",
-            ""verifiedOn"":""2022-02-28T16:02:52.8478308+00:00""
-        },
-        ""createdOn"": ""2022-02-26T21:59:43.8217536+00:00"",
-        ""changedOn"": ""2022-02-26T21:59:43.8217536+00:00""
-    }";
 
     [TestInitialize]
     public void Init()
     {
-        ExampleDeliveryOption = new DeliveryOption(
+
+    }
+
+    [TestMethod]
+    public async Task GetDeliveryOptionTest()
+    {
+        // Arrange
+        DeliveryOption? deliveryOption = new DeliveryOption(
             PartyId: "0106:5444158",
             DocumentTypeId: "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:www.cenbii.eu:transaction:biitrns071:ver2.0:extended:urn:www.peppol.eu:bis:peppol36a:ver1.0::2.1",
             ProcessId: "urn:www.cenbii.eu:profile:bii36:ver2.0",
@@ -83,72 +36,6 @@ public class PeppolApiTest : PsbTestContext
             Certificate: "MIIF .... AT00kF4Xw=="
         );
 
-        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
-
-        ExamplePeppolPartyVerification = new PeppolPartyVerification(
-            Notes: "Contract agreement C21345",
-            VerifiedOn: verifiedOnDateTime
-            );
-
-        ExamplePeppolCapabilities.Add(
-            key: "invoices",
-            value: new PeppolCapability(
-                State: "inherited => on",
-                Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
-            )
-        );
-        ExamplePeppolCapabilities.Add(
-            key: "invoiceResponse",
-            value: new PeppolCapability(
-                State: "inherited => off",
-                Description: "PEPPOL IMR"
-            )
-        );
-        ExamplePeppolCapabilities.Add(
-            key: "orders",
-            value: new PeppolCapability(
-                State: "inherited => off",
-                Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
-            )
-        );
-
-        ExamplePeppolBusinessCard = new PeppolBusinessCard(
-            Names: new PeppolBusinessCardProperty(
-                Value: "eVerbinding, eConnect",
-                State: "on",
-                Description: "Business names."
-            ),
-            Address: new PeppolBusinessCardProperty(
-                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
-                State: "on",
-                Description: "Geographic information."
-            ),
-            EmailAddress: new PeppolBusinessCardProperty(
-                Value: "techsupport@econnect.eu",
-                State: "inherited => on",
-                Description: "Technical contact"
-            ),
-            State: "on"
-        );
-
-        ExamplePeppolPartyConfig = new PeppolConfig(
-            Id: "1",
-            Capabilities: ExamplePeppolCapabilities,
-            BusinessCard: ExamplePeppolBusinessCard,
-            Verification: ExamplePeppolPartyVerification,
-            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
-            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
-        ); ;
-
-        ExamplePartyPageResult = new Party[] {
-            new Party(ExamplePartyId)
-        };
-    }
-
-    [TestMethod]
-    public async Task GetDeliveryOptionTest()
-    {
-        // Arrange
         SetAccessToken();
         Configure(builder =>
         {
@@ -172,28 +59,127 @@ public class PeppolApiTest : PsbTestContext
         var res = await PeppolApi.GetDeliveryOption();
 
         // Assert
-        Assert.IsNotNull(ExampleDeliveryOption);
+        Assert.IsNotNull(deliveryOption);
         Assert.IsNotNull(res);
         Assert.IsNotNull(res[0]);
 
-        Assert.AreEqual(ExampleDeliveryOption.PartyId, res[0].PartyId);
-        Assert.AreEqual(ExampleDeliveryOption.DocumentTypeId, res[0].DocumentTypeId);
+        Assert.AreEqual(deliveryOption.PartyId, res[0].PartyId);
+        Assert.AreEqual(deliveryOption.DocumentTypeId, res[0].DocumentTypeId);
 
-        Assert.AreEqual(ExampleDeliveryOption.ProcessId, res[0].ProcessId);
+        Assert.AreEqual(deliveryOption.ProcessId, res[0].ProcessId);
 
-        Assert.AreEqual(ExampleDeliveryOption.Protocol, res[0].Protocol);
-        Assert.AreEqual(ExampleDeliveryOption.Url, res[0].Url);
-        Assert.AreEqual(ExampleDeliveryOption.Certificate, res[0].Certificate);
+        Assert.AreEqual(deliveryOption.Protocol, res[0].Protocol);
+        Assert.AreEqual(deliveryOption.Url, res[0].Url);
+        Assert.AreEqual(deliveryOption.Certificate, res[0].Certificate);
     }
 
     [TestMethod]
     public async Task GetEnviromentConfigTest()
     {
         // Arrange
+        Dictionary<string, PeppolCapability> peppolCapabilities = new Dictionary<string, PeppolCapability>() {
+            {
+                "invoices",
+                new PeppolCapability(
+                    State: "inherited => on",
+                    Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
+                )
+            },
+            {
+                "invoiceResponse",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "PEPPOL IMR"
+                )
+            },
+            {
+                "orders",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
+                )
+            }
+        };
+
+        PeppolBusinessCard peppolBusinessCard = new PeppolBusinessCard(
+            Names: new PeppolBusinessCardProperty(
+                Value: "eVerbinding, eConnect",
+                State: "on",
+                Description: "Business names."
+            ),
+            Address: new PeppolBusinessCardProperty(
+                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
+                State: "on",
+                Description: "Geographic information."
+            ),
+            EmailAddress: new PeppolBusinessCardProperty(
+                Value: "techsupport@econnect.eu",
+                State: "inherited => on",
+                Description: "Technical contact"
+            ),
+            State: "on"
+        );
+
+        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
+        PeppolPartyVerification? peppolPartyVerification = new PeppolPartyVerification(
+             Notes: "Contract agreement C21345",
+             VerifiedOn: verifiedOnDateTime
+         );
+
+
+        PeppolConfig peppolPartyConfig = new PeppolConfig(
+            Id: "1",
+            Capabilities: peppolCapabilities,
+            BusinessCard: peppolBusinessCard,
+            Verification: peppolPartyVerification,
+            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
+            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
-            var json = ExamplePeppolPartyConfigJson;
+            var json = @"{ 
+                ""id"":""1"",
+                ""capabilities"":{
+                    ""invoices"":{
+                        ""state"":""inherited => on"",
+                        ""description"":""SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII""
+                    },
+                    ""invoiceResponse"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""PEPPOL IMR""
+                    },
+                    ""orders"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""SI Order 1.2, PEPPOL Order transaction 3.0""
+                    }
+                },
+                ""businessCard"":{
+                    ""names"":{
+                        ""state"":""on"",
+                        ""value"":""eVerbinding, eConnect"",
+                        ""description"":""Business names.""
+                    },
+                    ""address"":{
+                        ""state"":""on"",
+                        ""value"":""Pelmolenlaan 16A, 3447 GW, Woerden, NL"",
+                        ""description"":""Geographic information.""
+                    },
+                    ""emailAddress"":{
+                        ""state"":""inherited => on"",
+                        ""value"":""techsupport@econnect.eu"",
+                        ""description"":""Technical contact""
+                    },
+                    ""state"":""on""
+                },
+                ""verification"":{
+                    ""notes"":""Contract agreement C21345"",
+                    ""verifiedOn"":""2022-02-28T16:02:52.8478308+00:00""
+                },
+                ""createdOn"": ""2022-02-26T21:59:43.8217536+00:00"",
+                ""changedOn"": ""2022-02-26T21:59:43.8217536+00:00""
+            }";
 
             builder
                 .Setup(HttpMethod.Get, $"/api/v1/peppol/config")
@@ -204,28 +190,127 @@ public class PeppolApiTest : PsbTestContext
         var res = await PeppolApi.GetEnvironmentConfig();
 
         // Assert
-        Assert.IsNotNull(ExamplePeppolPartyConfig);
+        Assert.IsNotNull(peppolPartyConfig);
         Assert.IsNotNull(res);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Id, res.Id);
+        Assert.AreEqual(peppolPartyConfig.Id, res.Id);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
+        Assert.AreEqual(peppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.CreatedOn, res.CreatedOn);
-        Assert.AreEqual(ExamplePeppolPartyConfig.ChangedOn, res.ChangedOn);
+        Assert.AreEqual(peppolPartyConfig.CreatedOn, res.CreatedOn);
+        Assert.AreEqual(peppolPartyConfig.ChangedOn, res.ChangedOn);
     }
 
     [TestMethod]
     public async Task PutEnviromentConfigTest()
     {
         // Arrange
+        Dictionary<string, PeppolCapability> peppolCapabilities = new Dictionary<string, PeppolCapability>() {
+            {
+                "invoices",
+                new PeppolCapability(
+                    State: "inherited => on",
+                    Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
+                )
+            },
+            {
+                "invoiceResponse",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "PEPPOL IMR"
+                )
+            },
+            {
+                "orders",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
+                )
+            }
+        };
+
+        PeppolBusinessCard peppolBusinessCard = new PeppolBusinessCard(
+            Names: new PeppolBusinessCardProperty(
+                Value: "eVerbinding, eConnect",
+                State: "on",
+                Description: "Business names."
+            ),
+            Address: new PeppolBusinessCardProperty(
+                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
+                State: "on",
+                Description: "Geographic information."
+            ),
+            EmailAddress: new PeppolBusinessCardProperty(
+                Value: "techsupport@econnect.eu",
+                State: "inherited => on",
+                Description: "Technical contact"
+            ),
+            State: "on"
+        );
+
+        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
+        PeppolPartyVerification? peppolPartyVerification = new PeppolPartyVerification(
+             Notes: "Contract agreement C21345",
+             VerifiedOn: verifiedOnDateTime
+         );
+
+
+        PeppolConfig peppolPartyConfig = new PeppolConfig(
+            Id: "1",
+            Capabilities: peppolCapabilities,
+            BusinessCard: peppolBusinessCard,
+            Verification: peppolPartyVerification,
+            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
+            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
-            var json = ExamplePeppolPartyConfigJson;
+            var json = @"{ 
+                ""id"":""1"",
+                ""capabilities"":{
+                    ""invoices"":{
+                        ""state"":""inherited => on"",
+                        ""description"":""SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII""
+                    },
+                    ""invoiceResponse"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""PEPPOL IMR""
+                    },
+                    ""orders"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""SI Order 1.2, PEPPOL Order transaction 3.0""
+                    }
+                },
+                ""businessCard"":{
+                    ""names"":{
+                        ""state"":""on"",
+                        ""value"":""eVerbinding, eConnect"",
+                        ""description"":""Business names.""
+                    },
+                    ""address"":{
+                        ""state"":""on"",
+                        ""value"":""Pelmolenlaan 16A, 3447 GW, Woerden, NL"",
+                        ""description"":""Geographic information.""
+                    },
+                    ""emailAddress"":{
+                        ""state"":""inherited => on"",
+                        ""value"":""techsupport@econnect.eu"",
+                        ""description"":""Technical contact""
+                    },
+                    ""state"":""on""
+                },
+                ""verification"":{
+                    ""notes"":""Contract agreement C21345"",
+                    ""verifiedOn"":""2022-02-28T16:02:52.8478308+00:00""
+                },
+                ""createdOn"": ""2022-02-26T21:59:43.8217536+00:00"",
+                ""changedOn"": ""2022-02-26T21:59:43.8217536+00:00""
+            }";
 
             builder
                 .Setup(HttpMethod.Put, $"/api/v1/peppol/config")
@@ -233,27 +318,92 @@ public class PeppolApiTest : PsbTestContext
         });
 
         // Act
-        var res = await PeppolApi.PutEnvironmentConfig(config: ExamplePeppolPartyConfig);
+        var res = await PeppolApi.PutEnvironmentConfig(config: peppolPartyConfig);
 
         // Assert
-        Assert.IsNotNull(ExamplePeppolPartyConfig);
+        Assert.IsNotNull(peppolPartyConfig);
         Assert.IsNotNull(res);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Id, res.Id);
+        Assert.AreEqual(peppolPartyConfig.Id, res.Id);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
+        Assert.AreEqual(peppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.CreatedOn, res.CreatedOn);
-        Assert.AreEqual(ExamplePeppolPartyConfig.ChangedOn, res.ChangedOn);
+        Assert.AreEqual(peppolPartyConfig.CreatedOn, res.CreatedOn);
+        Assert.AreEqual(peppolPartyConfig.ChangedOn, res.ChangedOn);
     }
 
     [TestMethod]
     public async Task GetPartiesTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+
+        Dictionary<string, PeppolCapability> peppolCapabilities = new Dictionary<string, PeppolCapability>() {
+            {
+                "invoices",
+                new PeppolCapability(
+                    State: "inherited => on",
+                    Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
+                )
+            },
+            {
+                "invoiceResponse",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "PEPPOL IMR"
+                )
+            },
+            {
+                "orders",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
+                )
+            }
+        };
+
+        PeppolBusinessCard peppolBusinessCard = new PeppolBusinessCard(
+            Names: new PeppolBusinessCardProperty(
+                Value: "eVerbinding, eConnect",
+                State: "on",
+                Description: "Business names."
+            ),
+            Address: new PeppolBusinessCardProperty(
+                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
+                State: "on",
+                Description: "Geographic information."
+            ),
+            EmailAddress: new PeppolBusinessCardProperty(
+                Value: "techsupport@econnect.eu",
+                State: "inherited => on",
+                Description: "Technical contact"
+            ),
+            State: "on"
+        );
+
+        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
+        PeppolPartyVerification? peppolPartyVerification = new PeppolPartyVerification(
+             Notes: "Contract agreement C21345",
+             VerifiedOn: verifiedOnDateTime
+         );
+
+
+        PeppolConfig peppolPartyConfig = new PeppolConfig(
+            Id: "1",
+            Capabilities: peppolCapabilities,
+            BusinessCard: peppolBusinessCard,
+            Verification: peppolPartyVerification,
+            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
+            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
+        );
+
+        Party[] partyPageResult = new Party[] {
+            new Party(partyId)
+        };
+
         SetAccessToken();
         Configure(builder =>
         {
@@ -270,16 +420,16 @@ public class PeppolApiTest : PsbTestContext
         var res = await PeppolApi.GetParties();
 
         // Assert
-        Assert.IsNotNull(ExamplePeppolPartyConfig);
+        Assert.IsNotNull(peppolPartyConfig);
         Assert.IsNotNull(res);
 
         var partyArray = res;
 
         Assert.IsNotNull(partyArray[0]);
-        Assert.AreEqual(ExamplePartyPageResult.Length, partyArray.Length);
-        for (int i = 0; i < ExamplePartyPageResult.Length; i++)
+        Assert.AreEqual(partyPageResult.Length, partyArray.Length);
+        for (int i = 0; i < partyPageResult.Length; i++)
         {
-            Assert.AreEqual(ExamplePartyPageResult[i], partyArray[i]);
+            Assert.AreEqual(partyPageResult[i], partyArray[i]);
         }
     }
 
@@ -287,11 +437,112 @@ public class PeppolApiTest : PsbTestContext
     public async Task GetPartyConfigTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+
+        Dictionary<string, PeppolCapability> peppolCapabilities = new Dictionary<string, PeppolCapability>() {
+            {
+                "invoices",
+                new PeppolCapability(
+                    State: "inherited => on",
+                    Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
+                )
+            },
+            {
+                "invoiceResponse",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "PEPPOL IMR"
+                )
+            },
+            {
+                "orders",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
+                )
+            }
+        };
+
+        PeppolBusinessCard peppolBusinessCard = new PeppolBusinessCard(
+            Names: new PeppolBusinessCardProperty(
+                Value: "eVerbinding, eConnect",
+                State: "on",
+                Description: "Business names."
+            ),
+            Address: new PeppolBusinessCardProperty(
+                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
+                State: "on",
+                Description: "Geographic information."
+            ),
+            EmailAddress: new PeppolBusinessCardProperty(
+                Value: "techsupport@econnect.eu",
+                State: "inherited => on",
+                Description: "Technical contact"
+            ),
+            State: "on"
+        );
+
+        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
+        PeppolPartyVerification? peppolPartyVerification = new PeppolPartyVerification(
+             Notes: "Contract agreement C21345",
+             VerifiedOn: verifiedOnDateTime
+         );
+
+
+        PeppolConfig peppolPartyConfig = new PeppolConfig(
+            Id: "1",
+            Capabilities: peppolCapabilities,
+            BusinessCard: peppolBusinessCard,
+            Verification: peppolPartyVerification,
+            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
+            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
-            var json = ExamplePeppolPartyConfigJson;
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
+            var json = @"{ 
+                ""id"":""1"",
+                ""capabilities"":{
+                    ""invoices"":{
+                        ""state"":""inherited => on"",
+                        ""description"":""SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII""
+                    },
+                    ""invoiceResponse"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""PEPPOL IMR""
+                    },
+                    ""orders"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""SI Order 1.2, PEPPOL Order transaction 3.0""
+                    }
+                },
+                ""businessCard"":{
+                    ""names"":{
+                        ""state"":""on"",
+                        ""value"":""eVerbinding, eConnect"",
+                        ""description"":""Business names.""
+                    },
+                    ""address"":{
+                        ""state"":""on"",
+                        ""value"":""Pelmolenlaan 16A, 3447 GW, Woerden, NL"",
+                        ""description"":""Geographic information.""
+                    },
+                    ""emailAddress"":{
+                        ""state"":""inherited => on"",
+                        ""value"":""techsupport@econnect.eu"",
+                        ""description"":""Technical contact""
+                    },
+                    ""state"":""on""
+                },
+                ""verification"":{
+                    ""notes"":""Contract agreement C21345"",
+                    ""verifiedOn"":""2022-02-28T16:02:52.8478308+00:00""
+                },
+                ""createdOn"": ""2022-02-26T21:59:43.8217536+00:00"",
+                ""changedOn"": ""2022-02-26T21:59:43.8217536+00:00""
+            }";
 
             builder
                 .Setup(HttpMethod.Get, $"/api/v1/peppol/config/party/{encodedPartyId}")
@@ -300,33 +551,134 @@ public class PeppolApiTest : PsbTestContext
 
         // Act
         var res = await PeppolApi.GetConfig(
-            partyId: ExamplePartyId
+            partyId: partyId
         );
 
         // Assert
-        Assert.IsNotNull(ExamplePeppolPartyConfig);
+        Assert.IsNotNull(peppolPartyConfig);
         Assert.IsNotNull(res);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Id, res.Id);
+        Assert.AreEqual(peppolPartyConfig.Id, res.Id);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
+        Assert.AreEqual(peppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.CreatedOn, res.CreatedOn);
-        Assert.AreEqual(ExamplePeppolPartyConfig.ChangedOn, res.ChangedOn);
+        Assert.AreEqual(peppolPartyConfig.CreatedOn, res.CreatedOn);
+        Assert.AreEqual(peppolPartyConfig.ChangedOn, res.ChangedOn);
     }
 
     [TestMethod]
     public async Task PutPartyConfigTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+
+        Dictionary<string, PeppolCapability> peppolCapabilities = new Dictionary<string, PeppolCapability>() {
+            {
+                "invoices",
+                new PeppolCapability(
+                    State: "inherited => on",
+                    Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
+                )
+            },
+            {
+                "invoiceResponse",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "PEPPOL IMR"
+                )
+            },
+            {
+                "orders",
+                new PeppolCapability(
+                    State: "inherited => off",
+                    Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
+                )
+            }
+        };
+
+        PeppolBusinessCard peppolBusinessCard = new PeppolBusinessCard(
+            Names: new PeppolBusinessCardProperty(
+                Value: "eVerbinding, eConnect",
+                State: "on",
+                Description: "Business names."
+            ),
+            Address: new PeppolBusinessCardProperty(
+                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
+                State: "on",
+                Description: "Geographic information."
+            ),
+            EmailAddress: new PeppolBusinessCardProperty(
+                Value: "techsupport@econnect.eu",
+                State: "inherited => on",
+                Description: "Technical contact"
+            ),
+            State: "on"
+        );
+
+        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
+        PeppolPartyVerification? peppolPartyVerification = new PeppolPartyVerification(
+             Notes: "Contract agreement C21345",
+             VerifiedOn: verifiedOnDateTime
+         );
+
+
+        PeppolConfig peppolPartyConfig = new PeppolConfig(
+            Id: "1",
+            Capabilities: peppolCapabilities,
+            BusinessCard: peppolBusinessCard,
+            Verification: peppolPartyVerification,
+            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
+            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
+        );
+
         SetAccessToken();
         Configure(builder =>
         {
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
-            var json = ExamplePeppolPartyConfigJson;
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
+            var json = @"{ 
+                ""id"":""1"",
+                ""capabilities"":{
+                    ""invoices"":{
+                        ""state"":""inherited => on"",
+                        ""description"":""SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII""
+                    },
+                    ""invoiceResponse"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""PEPPOL IMR""
+                    },
+                    ""orders"":{
+                        ""state"":""inherited => off"",
+                        ""description"":""SI Order 1.2, PEPPOL Order transaction 3.0""
+                    }
+                },
+                ""businessCard"":{
+                    ""names"":{
+                        ""state"":""on"",
+                        ""value"":""eVerbinding, eConnect"",
+                        ""description"":""Business names.""
+                    },
+                    ""address"":{
+                        ""state"":""on"",
+                        ""value"":""Pelmolenlaan 16A, 3447 GW, Woerden, NL"",
+                        ""description"":""Geographic information.""
+                    },
+                    ""emailAddress"":{
+                        ""state"":""inherited => on"",
+                        ""value"":""techsupport@econnect.eu"",
+                        ""description"":""Technical contact""
+                    },
+                    ""state"":""on""
+                },
+                ""verification"":{
+                    ""notes"":""Contract agreement C21345"",
+                    ""verifiedOn"":""2022-02-28T16:02:52.8478308+00:00""
+                },
+                ""createdOn"": ""2022-02-26T21:59:43.8217536+00:00"",
+                ""changedOn"": ""2022-02-26T21:59:43.8217536+00:00""
+            }";
 
             builder
                 .Setup(HttpMethod.Put, $"/api/v1/peppol/config/party/{encodedPartyId}")
@@ -335,46 +687,47 @@ public class PeppolApiTest : PsbTestContext
 
         // Act
         var res = await PeppolApi.PutConfig(
-            partyId: ExamplePartyId,
-            config: ExamplePeppolPartyConfig
+            partyId: partyId,
+            config: peppolPartyConfig
         );
 
         // Assert
-        Assert.IsNotNull(ExamplePeppolPartyConfig);
+        Assert.IsNotNull(peppolPartyConfig);
         Assert.IsNotNull(res);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Id, res.Id);
+        Assert.AreEqual(peppolPartyConfig.Id, res.Id);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
-        Assert.AreEqual(ExamplePeppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
+        Assert.AreEqual(peppolPartyConfig.Capabilities.Count, res.Capabilities.Count);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Names.Value, res.BusinessCard.Names.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.Address.Value, res.BusinessCard.Address.Value);
+        Assert.AreEqual(peppolPartyConfig.BusinessCard.EmailAddress.Value, res.BusinessCard.EmailAddress.Value);
 
-        Assert.AreEqual(ExamplePeppolPartyConfig.CreatedOn, res.CreatedOn);
-        Assert.AreEqual(ExamplePeppolPartyConfig.ChangedOn, res.ChangedOn);
+        Assert.AreEqual(peppolPartyConfig.CreatedOn, res.CreatedOn);
+        Assert.AreEqual(peppolPartyConfig.ChangedOn, res.ChangedOn);
     }
 
     [TestMethod]
     public async Task DeletePartyConfigTest()
     {
         // Arrange
+        string partyId = "NL:KVK:12345678";
+
         SetAccessToken();
         Configure(builder =>
         {
-            var encodedPartyId = HttpUtility.UrlEncode(ExamplePartyId);
-            var json = ExamplePeppolPartyConfigJson;
+            var encodedPartyId = HttpUtility.UrlEncode(partyId);
 
             builder
                 .Setup(HttpMethod.Delete, $"/api/v1/peppol/config/party/{encodedPartyId}")
-                .Result(json);
+                .Result("", contentType: "plain");
         });
 
         // Act
         await PeppolApi.DeleteConfig(
-            partyId: ExamplePartyId
+            partyId: partyId
         );
 
         // Assert
-        // Implicitly succeeded
+        VerifyDeleteRequest(Times.Once());
     }
 }
