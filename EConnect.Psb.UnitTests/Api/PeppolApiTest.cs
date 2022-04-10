@@ -390,7 +390,6 @@ public class PeppolApiTest : PsbTestContext
              VerifiedOn: verifiedOnDateTime
          );
 
-
         PeppolConfig peppolPartyConfig = new PeppolConfig(
             Id: "1",
             Capabilities: peppolCapabilities,
@@ -623,7 +622,6 @@ public class PeppolApiTest : PsbTestContext
              Notes: "Contract agreement C21345",
              VerifiedOn: verifiedOnDateTime
          );
-
 
         PeppolConfig peppolPartyConfig = new PeppolConfig(
             Id: "1",

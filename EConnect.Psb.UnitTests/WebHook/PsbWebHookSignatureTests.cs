@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using EConnect.Psb.WebHook;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EConnect.Psb.UnitTests.WebHook
+namespace EConnect.Psb.UnitTests.WebHook;
+
+[TestClass]
+public class PsbWebHookSignatureTests
 {
-    [TestClass]
-    public class PsbWebHookSignatureTests
-    {
-        private const string secret = "secret";
-        private const string signature = "sha256=8f3382eadc9a5444977205979f22d5a899cae74b75b6aade80c3274b214096f4";
-        private const string jsonWebHook = @"{
+    private const string secret = "secret";
+    private const string signature = "sha256=8f3382eadc9a5444977205979f22d5a899cae74b75b6aade80c3274b214096f4";
+    private const string jsonWebHook = @"{
     ""topic"": ""InvoiceSent"",
     ""partyId"": ""NL:KVK:SENDER"",
     ""hookId"": ""111"",
@@ -33,27 +33,26 @@ namespace EConnect.Psb.UnitTests.WebHook
     ""sentOn"": ""2022-01-21T10:03:18.5951881+00:00""
 }";
 
-        [TestMethod]
-        public void ComputeSignatureFromStringTest()
-        {
-            // Act
-            var computeSignature = PsbWebHookSignature.ComputeSignature(jsonWebHook, secret);
+    [TestMethod]
+    public void ComputeSignatureFromStringTest()
+    {
+        // Act
+        var computeSignature = PsbWebHookSignature.ComputeSignature(jsonWebHook, secret);
 
-            // Assert
-            Assert.AreEqual(signature, computeSignature);
-        }
+        // Assert
+        Assert.AreEqual(signature, computeSignature);
+    }
 
-        [TestMethod]
-        public async Task ComputeSignatureFromStreamTest()
-        {
-            // Arrange
-            await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonWebHook));
+    [TestMethod]
+    public async Task ComputeSignatureFromStreamTest()
+    {
+        // Arrange
+        await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonWebHook));
 
-            // Act
-            var computeSignature = await PsbWebHookSignature.ComputeSignature(stream, secret);
+        // Act
+        var computeSignature = await PsbWebHookSignature.ComputeSignature(stream, secret);
 
-            // Assert
-            Assert.AreEqual(signature, computeSignature);
-        }
+        // Assert
+        Assert.AreEqual(signature, computeSignature);
     }
 }

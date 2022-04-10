@@ -166,7 +166,6 @@ public class HookApiTests : PsbTestContext
         SetAccessToken();
         Configure(builder =>
         {
-
             builder
                 .Setup(HttpMethod.Delete, $"/api/v1/hook/{expectedId}")
                 .Result("", contentType: "plain");

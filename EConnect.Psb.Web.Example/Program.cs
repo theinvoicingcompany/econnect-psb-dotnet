@@ -1,11 +1,14 @@
+using EConnect.Psb.AspNetCore.Mvc.Webhook;
 using EConnect.Psb.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages(options =>
 {
-    options.Conventions.AddPageRoute("/ExampleSendInvoice", "");
+    options.Conventions.AddPageRoute("/ExampleSendInvoice", "/");
 });
+
+builder.Services.AddControllers();
 
 builder.Services.AddPsbService(_ =>
 {
@@ -15,6 +18,9 @@ builder.Services.AddPsbService(_ =>
     _.ClientSecret = "ddded83702534a6c9cadde3d1bf3e94a";
     _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
 });
+
+// Secret from config
+builder.Services.AddOptions<PsbWebhookOptions>("webhook").Configure(options => options.Secret = "mySecret");
 
 var app = builder.Build();
 
@@ -30,5 +36,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

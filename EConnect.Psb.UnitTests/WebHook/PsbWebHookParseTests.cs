@@ -2,12 +2,12 @@
 using EConnect.Psb.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EConnect.Psb.UnitTests.WebHook
+namespace EConnect.Psb.UnitTests.WebHook;
+
+[TestClass]
+public class PsbWebHookParseTests
 {
-    [TestClass]
-    public class PsbWebHookParseTests
-    {
-        private const string jsonWebHook = @"{
+    private const string jsonWebHook = @"{
     ""topic"": ""InvoiceSent"",
     ""partyId"": ""NL:KVK:SENDER"",
     ""hookId"": ""111"",
@@ -29,15 +29,14 @@ namespace EConnect.Psb.UnitTests.WebHook
     ""sentOn"": ""2022-01-21T10:03:18.5951881+00:00""
 }";
 
-        [TestMethod]
-        public void DeserializeTest()
-        {
-            var @event = JsonSerializer.Deserialize<PsbWebHookEvent>(jsonWebHook, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+    [TestMethod]
+    public void DeserializeTest()
+    {
+        var @event = JsonSerializer.Deserialize<PsbWebHookEvent>(jsonWebHook, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-            Assert.IsNotNull(@event);
-            Assert.AreEqual("InvoiceSent", @event.Topic);
-            Assert.AreEqual("'Invoice' successfully sent: 'ffb4b016-5c24-4bbb-b56c-3571ec4bb6a2@econnect.eu'.", @event.Message);
-            Assert.AreEqual("NL:KVK:SENDER", @event.Details["sender"]);
-        }
+        Assert.IsNotNull(@event);
+        Assert.AreEqual("InvoiceSent", @event.Topic);
+        Assert.AreEqual("'Invoice' successfully sent: 'ffb4b016-5c24-4bbb-b56c-3571ec4bb6a2@econnect.eu'.", @event.Message);
+        Assert.AreEqual("NL:KVK:SENDER", @event.Details["sender"]);
     }
 }

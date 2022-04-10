@@ -16,7 +16,7 @@ public record Hook(
     public string Action { get; } = Action;
     public string Name { get; } = Name;
     public string[] Topics { get; } = Topics;
-    public string[] PublishTopics { get; } = Topics;
+    public string[]? PublishTopics { get; } = PublishTopics;
     public bool IsActive { get; } = IsActive;
     public DateTimeOffset? CreatedOn { get; } = CreatedOn;
     public DateTimeOffset? ChangedOn { get; } = ChangedOn;

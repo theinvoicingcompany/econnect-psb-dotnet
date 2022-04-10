@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EConnect.Psb\EConnect.Psb.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\EConnect.Psb.AspNetCore.Mvc\EConnect.Psb.AspNetCore.Mvc.csproj" />
+    <ProjectReference Include="..\EConnect.Psb\EConnect.Psb.csproj" />
   </ItemGroup>
 
 </Project>
