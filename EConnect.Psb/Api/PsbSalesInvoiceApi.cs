@@ -21,7 +21,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
             requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
 
-        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation);
+        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation).ConfigureAwait(false);
         return party.Id;
     }
 
@@ -31,7 +31,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         if (!string.IsNullOrEmpty(receiverPartyId))
             requestUri += "?receiverId=" + HttpUtility.UrlEncode(receiverPartyId);
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation);
+        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
         return res;
     }
 
@@ -39,7 +39,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/recognize";
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation);
+        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
         return res;
     }
 }

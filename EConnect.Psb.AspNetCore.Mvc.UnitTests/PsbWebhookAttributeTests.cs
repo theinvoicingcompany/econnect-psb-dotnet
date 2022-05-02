@@ -79,10 +79,10 @@ namespace EConnect.Psb.AspNetCore.Mvc.UnitTests
             var body = JsonConvert.SerializeObject(@event);
             var signature = PsbWebHookSignature.ComputeSignature(body, secret);
 
-            var res = await SendWebhook(body, signature);
+            var res = await SendWebhook(body, signature).ConfigureAwait(false);
 
             Assert.AreEqual(expectedStatusCode, res.StatusCode);
-            Assert.IsTrue((await res.Content.ReadAsStringAsync()).Contains(expectedResponseText));
+            Assert.IsTrue((await res.Content.ReadAsStringAsync().ConfigureAwait(false)).Contains(expectedResponseText));
         }
     }
 }

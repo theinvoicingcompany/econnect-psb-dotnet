@@ -29,11 +29,11 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(topic))
             query.Add("topic", topic!);
 
-        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync();
+        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
             requestUri += "?" + queryString;
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation);
+        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
         return res;
     }
 
@@ -54,14 +54,14 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(topic))
             query.Add("topic", topic!);
 
-        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync();
+        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
             requestUri += "?" + queryString;
 
         var res = await _psbClient.PostFile<Document>(
             requestUri,
             file,
-            cancellation);
+            cancellation).ConfigureAwait(false);
 
         return res;
     }
@@ -81,13 +81,13 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(targetFormat))
             query.Add("targetFormat", targetFormat!);
 
-        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync();
+        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
             requestUri += "?" + queryString;
 
         var file = await _psbClient.Get<FileContent>(
             requestUri,
-            cancellation);
+            cancellation).ConfigureAwait(false);
 
         return file;
     }

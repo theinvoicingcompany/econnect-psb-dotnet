@@ -34,7 +34,7 @@ namespace EConnect.Psb.ConsoleNet.Example
                            _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
                        }))
                 {
-                    var res = await psb.SalesInvoice.QueryRecipientParty("0106:12345678", new[] { "0106:receiver" });
+                    var res = await psb.SalesInvoice.QueryRecipientParty("0106:12345678", new[] { "0106:receiver" }).ConfigureAwait(false);
                     Console.WriteLine(res);
                 }
             }

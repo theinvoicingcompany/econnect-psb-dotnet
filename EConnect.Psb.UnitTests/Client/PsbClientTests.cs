@@ -87,7 +87,7 @@ public class PsbClientTests : PsbTestContext
                 {
                     if (message.Content is MultipartFormDataContent content)
                     {
-                        var xml = content.ReadAsStringAsync().Result;
+                        var xml = content.ReadAsStringAsync().GetAwaiter().GetResult();
                         Assert.IsTrue(xml.Contains(expectedXml));
                         return true;
                     }

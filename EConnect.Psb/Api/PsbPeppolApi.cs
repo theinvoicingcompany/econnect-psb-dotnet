@@ -20,7 +20,7 @@ public class PsbPeppolApi : IPsbPeppolApi
     {
         var targetUrl = "/api/v1/peppol/deliveryOption";
 
-        var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(targetUrl, cancellation);
+        var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(targetUrl, cancellation).ConfigureAwait(false);
 
         return deliveryOptions;
     }
@@ -29,7 +29,7 @@ public class PsbPeppolApi : IPsbPeppolApi
     {
         var targetUrl = "/api/v1/peppol/config";
 
-        var peppolPartyConfig = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation);
+        var peppolPartyConfig = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation).ConfigureAwait(false);
 
         return peppolPartyConfig;
     }
@@ -40,7 +40,7 @@ public class PsbPeppolApi : IPsbPeppolApi
     {
         var targetUrl = "/api/v1/peppol/config";
 
-        var peppolPartyConfig = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation);
+        var peppolPartyConfig = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation).ConfigureAwait(false);
 
         return peppolPartyConfig;
     }
@@ -49,7 +49,7 @@ public class PsbPeppolApi : IPsbPeppolApi
     {
         var targetUrl = "/api/v1/peppol/config/party";
 
-        var partyPagedResult = await _psbClient.Get<Party[]>(targetUrl, cancellation);
+        var partyPagedResult = await _psbClient.Get<Party[]>(targetUrl, cancellation).ConfigureAwait(false);
         return partyPagedResult;
     }
 
@@ -60,7 +60,7 @@ public class PsbPeppolApi : IPsbPeppolApi
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        var res = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation);
+        var res = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation).ConfigureAwait(false);
         return res;
     }
 
@@ -72,7 +72,7 @@ public class PsbPeppolApi : IPsbPeppolApi
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        var res = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation);
+        var res = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation).ConfigureAwait(false);
         return res;
     }
 
@@ -83,6 +83,6 @@ public class PsbPeppolApi : IPsbPeppolApi
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        await _psbClient.Delete(targetUrl, cancellation);
+        await _psbClient.Delete(targetUrl, cancellation).ConfigureAwait(false);
     }
 }

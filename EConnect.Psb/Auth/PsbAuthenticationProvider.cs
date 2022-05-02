@@ -34,7 +34,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         };
 
         var httpClient = _httpClientFactory.CreateClient(nameof(PsbAuthenticationProvider));
-        var response = await httpClient.RequestPasswordTokenAsync(request, cancellation);
+        var response = await httpClient.RequestPasswordTokenAsync(request, cancellation).ConfigureAwait(false);
 
         if (response.IsError)
         {
@@ -52,7 +52,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
             cacheEntry.TokenExpiresAt >= DateTimeOffset.Now + TimeSpan.FromMinutes(1))
             return cacheEntry.AccessToken;
 
-        var tokenResponse = await RequestAccessToken(scope, cancellation);
+        var tokenResponse = await RequestAccessToken(scope, cancellation).ConfigureAwait(false);
 
         _cache[scope] = (TokenExpiresAt: DateTimeOffset.Now.AddSeconds(tokenResponse.ExpiresIn),
             AccessToken: tokenResponse.AccessToken);

@@ -28,7 +28,7 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
             requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
 
-        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation);
+        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation).ConfigureAwait(false);
 
         return party;
     }
@@ -45,7 +45,7 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         if (!string.IsNullOrEmpty(receiverPartyId))
             requestUri += "?receiverId=" + HttpUtility.UrlEncode(receiverPartyId);
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation);
+        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
         return res;
     }
 }

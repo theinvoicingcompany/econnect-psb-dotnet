@@ -24,7 +24,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}/download";
 
-        var file = await _psbClient.Get<FileContent>(targetUrl, cancellation);
+        var file = await _psbClient.Get<FileContent>(targetUrl, cancellation).ConfigureAwait(false);
         return file;
     }
 
@@ -42,7 +42,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
             requestUri: targetUrl,
             body: purchaseInvoice,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return invoiceResponse;
     }
@@ -59,7 +59,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
     }
 
     public async Task<Document> Recognize(
@@ -74,7 +74,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
             requestUri: targetUrl,
             body: file,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return document;
     }

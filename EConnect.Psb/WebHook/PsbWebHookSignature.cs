@@ -43,7 +43,7 @@ public static class PsbWebHookSignature
             // Split body into 4K chunks.
             var buffer = new byte[4096];
             int bytesRead;
-            while ((bytesRead = await body.ReadAsync(buffer, 0, buffer.Length)) > 0)
+            while ((bytesRead = await body.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) > 0)
             {
                 hmacSha256.TransformBlock(
                     buffer,

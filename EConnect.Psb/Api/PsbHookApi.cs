@@ -19,7 +19,7 @@ public class PsbHookApi : IPsbHookApi
     {
         var targetUrl = $"/api/v1/hook";
 
-        var hooks = await _psbClient.Get<Hook[]>(targetUrl, cancellation);
+        var hooks = await _psbClient.Get<Hook[]>(targetUrl, cancellation).ConfigureAwait(false);
         return hooks;
     }
 
@@ -33,7 +33,7 @@ public class PsbHookApi : IPsbHookApi
             requestUri: targetUrl,
             body: hook,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return createdHook;
     }
@@ -48,7 +48,7 @@ public class PsbHookApi : IPsbHookApi
         await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
     }
 
 
@@ -64,7 +64,7 @@ public class PsbHookApi : IPsbHookApi
         var hooks = await _psbClient.Get<Hook[]>(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return hooks;
     }
@@ -81,7 +81,7 @@ public class PsbHookApi : IPsbHookApi
             requestUri: targetUrl,
             body: hook,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return createdHook;
     }
@@ -96,7 +96,7 @@ public class PsbHookApi : IPsbHookApi
         var party = await _psbClient.Get<Party>(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return party.Id;
     }
@@ -113,7 +113,7 @@ public class PsbHookApi : IPsbHookApi
         await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
     }
 
     #endregion

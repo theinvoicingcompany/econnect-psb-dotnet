@@ -28,7 +28,7 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
         var file = await _psbClient.Get<FileContent>(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
 
         return file;
     }
@@ -45,6 +45,6 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
         await _psbClient.Delete(
             requestUri: targetUrl,
             cancellation: cancellation
-        );
+        ).ConfigureAwait(false);
     }
 }

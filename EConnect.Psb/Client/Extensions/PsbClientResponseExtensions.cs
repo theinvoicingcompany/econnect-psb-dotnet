@@ -13,7 +13,7 @@ public static class PsbClientResponseExtensions
     {
         try
         {
-            var body = await response.Content.ReadFromJsonAsync<TResponseBody>(cancellationToken: cancellation);
+            var body = await response.Content.ReadFromJsonAsync<TResponseBody>(cancellationToken: cancellation).ConfigureAwait(false);
             if (body == null)
                 throw new EConnectException($"PSB{response.StatusCode}.JSON01", "Response body is empty.");
 
@@ -21,7 +21,7 @@ public static class PsbClientResponseExtensions
         }
         catch (JsonException ex)
         {
-            var text = await response.Content.ReadAsStringAsync();
+            var text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             if (text.Length > 1000)
                 text = text.Substring(0, 1000);
 
@@ -31,7 +31,7 @@ public static class PsbClientResponseExtensions
 
     public static async Task ThrowError(this HttpResponseMessage response, CancellationToken cancellation)
     {
-        var exception = await response.ReadBody<EConnectException>(cancellation);
+        var exception = await response.ReadBody<EConnectException>(cancellation).ConfigureAwait(false);
         throw exception;
     }
 
@@ -39,8 +39,8 @@ public static class PsbClientResponseExtensions
         CancellationToken cancellation)
     {
         if (!response.IsSuccessStatusCode)
-            await response.ThrowError(cancellation);
+            await response.ThrowError(cancellation).ConfigureAwait(false);
 
-        return await response.ReadBody<TResponseBody>(cancellation);
+        return await response.ReadBody<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 }

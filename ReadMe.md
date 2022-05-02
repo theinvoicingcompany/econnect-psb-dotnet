@@ -82,7 +82,7 @@ using (var psb = PsbServiceHost.Create(_ =>
 ))
 {
     // Example for QueryRecipientParty
-    var res = await psb.SalesInvoice.QueryRecipientParty("{senderPartyId}", new[] { "{receiverPartyId}"  });
+    var res = await psb.SalesInvoice.QueryRecipientParty("{senderPartyId}", new[] { "{receiverPartyId}"  }).ConfigureAwait(false);
     Console.WriteLine(res);
 }
 ```

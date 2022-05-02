@@ -22,9 +22,9 @@ public class WebhookController : Controller
     [PsbWebhook("mySecret")]
     public async Task<IActionResult> InvoiceReceived([PsbWebhookValidSentOn] PsbWebHookEvent @event)
     {
-        var file = await _purchaseInvoiceApi.Download(@event.PartyId, @event.DocumentId, HttpContext.RequestAborted);
+        var file = await _purchaseInvoiceApi.Download(@event.PartyId, @event.DocumentId, HttpContext.RequestAborted).ConfigureAwait(false);
         // Process xml here
-        var xml = await file.Content.ReadAsStringAsync();
+        var xml = await file.Content.ReadAsStringAsync().ConfigureAwait(false);
 
         return Ok();
     }

@@ -45,7 +45,7 @@ public class PurchaseInvoiceApiTests : PsbTestContext
     }
 
     [TestMethod]
-    public void ResponseTest()
+    public async void ResponseTest()
     {
         // Arrange
         var docId = "69fb5e02-7c51-4b62-a469-424054674c4a";
@@ -75,7 +75,7 @@ public class PurchaseInvoiceApiTests : PsbTestContext
         });
 
         // Act
-        var res = PurchaseInvoiceApi.Response(partyId, docId, response).Result;
+        var res = await PurchaseInvoiceApi.Response(partyId, docId, response).ConfigureAwait(false);
 
         // Assert
         Assert.AreEqual(docId, res.Id);
