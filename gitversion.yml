@@ -1,6 +1,6 @@
 mode: Mainline
 continuous-delivery-fallback-tag: ''
-next-version: 0.1.0
+next-version: 0.9.0
 branches:
   master:
     tag: ''

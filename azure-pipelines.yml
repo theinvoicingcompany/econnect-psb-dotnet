@@ -9,7 +9,7 @@ variables:
   solution: '**/*.csproj'
   buildPlatform: 'AnyCPU'
   buildConfiguration: 'Release'
-  nuGetProjects: '**/EConnect.Psb.csproj'
+  nuGetProjects: '**/EConnect.Psb.csproj;**/EConnect.Psb.AspNetCore.Mvc.csproj'
   testProjects: '**/*UnitTests*.csproj'
 
 stages:
@@ -58,7 +58,7 @@ stages:
       displayName: 'dotnet pack'
       inputs:
         command: pack
-        packagesToPack: '$(nuGetProjects)'    
+        packagesToPack: '$(nuGetProjects)'
         versioningScheme: byEnvVar
         versionEnvVar: GitVersion.SemVer
 
