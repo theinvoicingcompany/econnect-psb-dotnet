@@ -26,29 +26,46 @@ public class PsbClient
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    public async Task<TResponseBody> Get<TResponseBody>(string? requestUri, CancellationToken cancellation = default) where TResponseBody : class
+    public async Task<TResponseBody> Get<TResponseBody>(
+        string? requestUri,
+        CancellationToken cancellation = default
+        ) where TResponseBody : class
     {
         var res = await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
 
-        if (typeof(TResponseBody) == typeof(FileContent) && new FileContent(res.Content) is TResponseBody body)
+        if (typeof(TResponseBody) == typeof(FileContent) && new FileContent(res.Content, "file") is TResponseBody body)
+        {
             return body;
+        }
 
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
-    public async Task<TResponseBody> Put<TResponseBody>(string? requestUri, object body, CancellationToken cancellation = default) where TResponseBody : class
+    public async Task<TResponseBody> Put<TResponseBody>(
+        string? requestUri,
+        object body,
+        CancellationToken cancellation = default
+        ) where TResponseBody : class
     {
         var res = await _httpClient.PutAsJsonAsync(requestUri, body, cancellation).ConfigureAwait(false);
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
-    public async Task<TResponseBody> Post<TResponseBody>(string? requestUri, object body, CancellationToken cancellation = default) where TResponseBody : class
+    public async Task<TResponseBody> Post<TResponseBody>(
+        string? requestUri,
+        object body,
+        CancellationToken cancellation = default
+        ) where TResponseBody : class
     {
         var res = await _httpClient.PostAsJsonAsync(requestUri, body, cancellation).ConfigureAwait(false);
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
-    public async Task<TResponseBody> PostFile<TResponseBody>(string? requestUri, FileContent file, CancellationToken cancellation = default) where TResponseBody : class
+    public async Task<TResponseBody> PostFile<TResponseBody>(
+        string? requestUri,
+        FileContent file,
+        CancellationToken cancellation = default
+        ) where TResponseBody : class
     {
         using var multipart = new MultipartFormDataContent();
         if (string.IsNullOrEmpty(file.Filename))
@@ -62,7 +79,9 @@ public class PsbClient
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
-    public async Task Delete(string? requestUri, CancellationToken cancellation = default)
+    public async Task Delete(
+        string? requestUri,
+        CancellationToken cancellation = default)
     {
         var res = await _httpClient.DeleteAsync(requestUri, cancellation).ConfigureAwait(false);
 

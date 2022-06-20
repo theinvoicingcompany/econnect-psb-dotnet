@@ -9,37 +9,44 @@ namespace EConnect.Psb.Models;
 
 public class FileContent : IDisposable
 {
+    private const string DefaultFileName = "file";
+
     public HttpContent Content { get; }
-    public string? Filename { get; set; }
+    public string Filename { get; private set; }
 
     public FileContent(HttpContent content, string? filename = null)
     {
         Content = content;
-        Filename = filename;
+        EnsureAndSetFilename(filename);
     }
 
     public FileContent(Stream contents, string? filename = null)
     {
         Content = new StreamContent(contents);
-        Filename = filename;
+        EnsureAndSetFilename(filename);
     }
 
-    public FileContent(FileStream contents)
+    public FileContent(FileStream contents, string? filename = null)
     {
         Content = new StreamContent(contents);
-        Filename = contents.Name;
+        EnsureAndSetFilename(filename ?? contents.Name);
     }
 
     public FileContent(byte[] contents, string? filename = null)
     {
         Content = new ByteArrayContent(contents);
-        Filename = filename;
+        EnsureAndSetFilename(filename);
     }
 
     public FileContent(string contents, string? filename = null)
     {
         Content = new StringContent(contents);
-        Filename = filename;
+        EnsureAndSetFilename(filename);
+    }
+
+    private void EnsureAndSetFilename(string? filename = null)
+    {
+        Filename = string.IsNullOrEmpty(filename) ? DefaultFileName : filename;
     }
 
     private static byte[] CreateWriter(Action<XmlWriter> onWrite)
@@ -63,51 +70,19 @@ public class FileContent : IDisposable
         return ms.ToArray();
     }
 
-    public FileContent(XElement xml) : this(CreateWriter(xml.Save))
+    public FileContent(XElement xml, string? filename = null)
+        : this(CreateWriter(xml.Save), filename)
     {
     }
 
-    public FileContent(XDocument xml) : this(CreateWriter(xml.Save))
+    public FileContent(XDocument xml, string? filename = null)
+        : this(CreateWriter(xml.Save), filename)
     {
     }
 
-    public FileContent(XmlDocument xml) : this(CreateWriter(xml.Save))
+    public FileContent(XmlDocument xml, string? filename = null)
+        : this(CreateWriter(xml.Save), filename)
     {
-    }
-
-    public static implicit operator FileContent(Stream contents)
-    {
-        return new FileContent(contents);
-    }
-
-    public static implicit operator FileContent(FileStream contents)
-    {
-        return new FileContent(contents);
-    }
-
-    public static implicit operator FileContent(byte[] contents)
-    {
-        return new FileContent(contents);
-    }
-
-    public static implicit operator FileContent(string contents)
-    {
-        return new FileContent(contents);
-    }
-
-    public static implicit operator FileContent(XElement contents)
-    {
-        return new FileContent(contents);
-    }
-
-    public static implicit operator FileContent(XDocument contents)
-    {
-        return new FileContent(contents);
-    }
-
-    public static implicit operator FileContent(XmlDocument contents)
-    {
-        return new FileContent(contents);
     }
 
     public void Dispose()

@@ -14,6 +14,7 @@ public class PsbServiceProvider
         PurchaseInvoice = serviceProvider.GetRequiredService<IPsbPurchaseInvoiceApi>();
         SalesInvoice = serviceProvider.GetRequiredService<IPsbSalesInvoiceApi>();
         SalesOrderApi = serviceProvider.GetRequiredService<IPsbSalesOrderApi>();
+        PurchaseOrderApi = serviceProvider.GetRequiredService<IPsbPurchaseOrderApi>();
         GenericApi = serviceProvider.GetRequiredService<IPsbGenericApi>();
     }
 
@@ -24,4 +25,5 @@ public class PsbServiceProvider
     public IPsbSalesInvoiceApi SalesInvoice { get; }
     public IPsbGenericApi GenericApi { get; }
     public IPsbSalesOrderApi SalesOrderApi { get; }
+    public IPsbPurchaseOrderApi PurchaseOrderApi { get; }
 }

@@ -41,8 +41,9 @@ public class SalesInvoiceApiTests : PsbTestContext
     public async Task SendFileStreamTest()
     {
         // Arrange
-        FileContent file = File.OpenRead("TestData/bisv3.xml");
+        FileContent file = new FileContent(File.OpenRead("TestData/bisv3.xml"), "bisv3");
         var expectedId = Guid.NewGuid().ToString();
+
         SetAccessToken();
         Configure(builder =>
         {

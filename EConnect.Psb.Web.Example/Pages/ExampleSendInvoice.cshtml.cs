@@ -68,7 +68,12 @@ public class IndexModel : PageModel
 
         try
         {
-            var res = await _salesInvoice.QueryRecipientParty(SenderPartyId!, new[] { ReceiverPartyId! }, cancellation:HttpContext.RequestAborted).ConfigureAwait(false);
+            var res = await _salesInvoice.QueryRecipientParty(
+                SenderPartyId!,
+                new[] { ReceiverPartyId! },
+                cancellation: HttpContext.RequestAborted
+            ).ConfigureAwait(false);
+
             ViewData["preflightResponse"] = res;
         }
         catch (EConnectException ex)
@@ -81,8 +86,13 @@ public class IndexModel : PageModel
 
         try
         {
-            var res = await _salesInvoice.Send(SenderPartyId!, new FileContent(MyFile.OpenReadStream(), MyFile.FileName),
-                ReceiverPartyId, HttpContext.RequestAborted).ConfigureAwait(false);
+            var res = await _salesInvoice.Send(
+                SenderPartyId!,
+                new FileContent(MyFile.OpenReadStream(), MyFile.FileName),
+                ReceiverPartyId,
+                HttpContext.RequestAborted
+            ).ConfigureAwait(false);
+            
             ViewData["sendResponse"] = res;
         }
         catch (EConnectException ex)

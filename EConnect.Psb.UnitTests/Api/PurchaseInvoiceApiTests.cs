@@ -110,9 +110,10 @@ public class PurchaseInvoiceApiTests : PsbTestContext
     public async Task RecognizeTest()
     {
         // Arrange
-        using FileContent pdf = File.OpenRead("TestData/bisv3.xml");
+        using FileContent pdf = new(File.OpenRead("TestData/bisv3.xml"), "bisv3");
         var docId = "69fb5e02-7c51-4b62-a469-424054674c4a";
         var partyId = "NL:KVK:12345678";
+
         SetAccessToken();
         Configure(builder =>
         {

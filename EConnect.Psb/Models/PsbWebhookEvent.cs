@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace EConnect.Psb.Models;
 
@@ -16,6 +17,10 @@ public record PsbWebHookEventBase<TDetails>(string Topic, string PartyId, string
     public string DocumentId { get; } = DocumentId;
     public string Message { get; } = Message;
     public TDetails Details { get; } = Details;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public DateTimeOffset CreatedOn { get; } = CreatedOn;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public DateTimeOffset SentOn { get; } = SentOn;
 }

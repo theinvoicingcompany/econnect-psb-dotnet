@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace EConnect.Psb.Models;
 
@@ -18,6 +19,10 @@ public record Hook(
     public string[] Topics { get; } = Topics;
     public string[]? PublishTopics { get; } = PublishTopics;
     public bool IsActive { get; } = IsActive;
-    public DateTimeOffset? CreatedOn { get; } = CreatedOn;
-    public DateTimeOffset? ChangedOn { get; } = ChangedOn;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public DateTimeOffset? CreatedOn { get; private set; } = CreatedOn;
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public DateTimeOffset? ChangedOn { get; private set; } = ChangedOn;
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace EConnect.Psb.Models;
 
@@ -12,5 +13,7 @@ public record DocumentStatus(
     public string Id { get; } = Id;
     public string? Name { get; } = Name;
     public string? Description { get; } = Description;
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public DateTimeOffset CreatedOn { get; } = CreatedOn;
 }

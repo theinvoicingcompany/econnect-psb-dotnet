@@ -51,7 +51,7 @@ public class PurchaseOrderApiTests : PsbTestContext
     {
         // Arrange
         var senderPartyId = "NL:KVK:SENDER";
-        FileContent file = File.OpenRead("TestData/bisv3.xml");
+        FileContent file = new(File.OpenRead("TestData/bisv3.xml"), "bisv3");
         var expectedId = Guid.NewGuid().ToString();
 
         SetAccessToken();

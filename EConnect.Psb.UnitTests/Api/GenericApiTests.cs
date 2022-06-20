@@ -20,8 +20,9 @@ public class GenericApiTests : PsbTestContext
     public async Task ReceiveFileStreamTest()
     {
         // Arrange
-        FileContent file = File.OpenRead("TestData/bisv3.xml");
+        FileContent file = new(File.OpenRead("TestData/bisv3.xml"), "bisv3");
         var expectedId = Guid.NewGuid().ToString();
+
         SetAccessToken();
         Configure(builder =>
         {
@@ -44,8 +45,9 @@ public class GenericApiTests : PsbTestContext
     public async Task SendFileStreamTest()
     {
         // Arrange
-        FileContent file = File.OpenRead("TestData/bisv3.xml");
+        FileContent file = new(File.OpenRead("TestData/bisv3.xml"), "bisv3");
         var expectedId = Guid.NewGuid().ToString();
+
         SetAccessToken();
         Configure(builder =>
         {

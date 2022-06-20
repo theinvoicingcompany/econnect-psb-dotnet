@@ -10,6 +10,8 @@ public class EConnectException : Exception
 {
     public string Code { get; }
     public string? RequestId { get; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public DateTimeOffset? DateTime { get; }
     public new string? HelpLink { get; }
 

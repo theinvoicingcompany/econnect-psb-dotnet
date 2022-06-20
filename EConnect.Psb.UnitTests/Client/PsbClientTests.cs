@@ -109,7 +109,7 @@ public class PsbClientTests : PsbTestContext
     public async Task StreamPostFileTest()
     {
         var xmlString = await File.ReadAllTextAsync("TestData/bisv3.xml");
-        using FileContent file = File.OpenRead("TestData/bisv3.xml") as Stream;
+        using FileContent file = new FileContent(File.OpenRead("TestData/bisv3.xml") as Stream, "bisv3");
 
         await AssertPostFile(xmlString, file);
     }
@@ -119,7 +119,7 @@ public class PsbClientTests : PsbTestContext
     public async Task FileStreamPostFileTest()
     {
         var xmlString = await File.ReadAllTextAsync("TestData/bisv3.xml");
-        using FileContent file = File.OpenRead("TestData/bisv3.xml");
+        using FileContent file = new FileContent(File.OpenRead("TestData/bisv3.xml"), "bisv3");
 
         await AssertPostFile(xmlString, file);
     }
@@ -129,7 +129,7 @@ public class PsbClientTests : PsbTestContext
     public async Task BytesPostFileTest()
     {
         var xmlString = await File.ReadAllTextAsync("TestData/bisv3.xml");
-        using FileContent file = await File.ReadAllBytesAsync("TestData/bisv3.xml");
+        using FileContent file = new FileContent(await File.ReadAllBytesAsync("TestData/bisv3.xml"), "bisv3");
 
         await AssertPostFile(xmlString, file);
     }
@@ -139,8 +139,9 @@ public class PsbClientTests : PsbTestContext
     public async Task XmlStringPostFileTest()
     {
         var xmlString = await File.ReadAllTextAsync("TestData/bisv3.xml");
+        var fileContent = new FileContent(xmlString, "bisv3");
 
-        await AssertPostFile(xmlString, xmlString);
+        await AssertPostFile(xmlString, fileContent);
     }
 
     [TestMethod]
@@ -151,8 +152,8 @@ public class PsbClientTests : PsbTestContext
         var xDocument = XDocument.Parse(xmlString);
 
         Assert.IsNotNull(xDocument.Root);
-        await AssertPostFile("<cbc:EndpointID schemeID=\"0106\">12345678</cbc:EndpointID>", xDocument);
-        await AssertPostFile("<cbc:EndpointID schemeID=\"0106\">12345678</cbc:EndpointID>", xDocument.Root);
+        await AssertPostFile("<cbc:EndpointID schemeID=\"0106\">12345678</cbc:EndpointID>", new FileContent(xDocument, "bisv3"));
+        await AssertPostFile("<cbc:EndpointID schemeID=\"0106\">12345678</cbc:EndpointID>", new FileContent(xDocument.Root, "bisv3"));
     }
 
     [TestMethod]
@@ -163,6 +164,6 @@ public class PsbClientTests : PsbTestContext
         var xDocument = new XmlDocument();
         xDocument.LoadXml(xmlString);
 
-        await AssertPostFile("<cbc:EndpointID schemeID=\"0106\">12345678</cbc:EndpointID>", xDocument);
+        await AssertPostFile("<cbc:EndpointID schemeID=\"0106\">12345678</cbc:EndpointID>", new FileContent(xDocument, "bisv3"));
     }
 }
