@@ -70,11 +70,8 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/recognize";
 
-        var document = await _psbClient.Post<Document>(
-            requestUri: targetUrl,
-            body: file,
-            cancellation: cancellation
-        ).ConfigureAwait(false);
+        var document = await _psbClient.PostFile<Document>(targetUrl, file, cancellation)
+            .ConfigureAwait(false);
 
         return document;
     }
