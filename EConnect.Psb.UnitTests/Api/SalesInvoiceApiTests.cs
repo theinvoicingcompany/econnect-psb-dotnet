@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using EConnect.Psb.Api;
 using EConnect.Psb.Models;
@@ -50,12 +51,41 @@ public class SalesInvoiceApiTests : PsbTestContext
             var json = "{ \"id\": \"" + expectedId + "\"}";
 
             builder
-                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/send", ensureFileUpload: true)
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/send?receiverId=NL%3AKVK%3ARECEIVER&channel=peppol",
+                    ensureFileUpload: true,
+                    ensureEConnectDocumentId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await SalesInvoiceApi.Send("NL:KVK:SENDER", file);
+        var res = await SalesInvoiceApi.Send("NL:KVK:SENDER", file, "NL:KVK:RECEIVER", "peppol", expectedId, CancellationToken.None);
+
+        // Assert
+        Assert.AreEqual(expectedId, res.Id);
+    }
+
+    [TestMethod]
+    [DeploymentItem("TestData/example.pdf", "TestData")]
+    public async Task RecognizeFileStreamTest()
+    {
+        // Arrange
+        FileContent file = new FileContent(File.OpenRead("TestData/example.pdf"), "bisv3");
+        var expectedId = Guid.NewGuid().ToString();
+
+        SetAccessToken();
+        Configure(builder =>
+        {
+            var json = "{ \"id\": \"" + expectedId + "\"}";
+
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/recognize?channel=idr", 
+                    ensureFileUpload: true,
+                    ensureEConnectDocumentId: true)
+                .Result(json);
+        });
+
+        // Act
+        var res = await SalesInvoiceApi.Recognize("NL:KVK:SENDER", file, "idr", expectedId, CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);

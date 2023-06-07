@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -108,7 +109,9 @@ public class HookApiTests : PsbTestContext
             PublishTopics: new string[] {
                 "*Received"
             },
-            IsActive: true
+            IsActive: true,
+            Filter: "sender == \"0106:sender\"",
+            Init: new Dictionary<string, object>{ {"key1", "value1"} }
         );
 
         SetAccessToken();
@@ -131,7 +134,9 @@ public class HookApiTests : PsbTestContext
                 ""publishTopics"": [
                     ""*Received""
                 ],
-                ""isActive"": true
+                ""isActive"": true,
+                ""filter"": ""sender == \""0106:sender\"""",
+                ""init"": { ""key1"": ""value1"" }
             }";
 
             builder
@@ -155,6 +160,8 @@ public class HookApiTests : PsbTestContext
             Assert.AreEqual(hook.PublishTopics[i], res.PublishTopics[i]);
         }
         Assert.AreEqual(hook.IsActive, res.IsActive);
+        Assert.AreEqual(hook.Filter, res.Filter);
+        Assert.AreEqual(hook.Init!["key1"].ToString(), res.Init!["key1"].ToString());
     }
 
     [TestMethod]
@@ -272,7 +279,9 @@ public class HookApiTests : PsbTestContext
             PublishTopics: new string[] {
                 "*Received"
             },
-            IsActive: true
+            IsActive: true,
+            Filter: "sender == \"0106:sender\"",
+            Init: new Dictionary<string, object>{ {"key1", "value1"} }
         );
 
         SetAccessToken();
@@ -295,7 +304,9 @@ public class HookApiTests : PsbTestContext
                 ""publishTopics"": [
                     ""*Received""
                 ],
-                ""isActive"": true
+                ""isActive"": true,
+                ""filter"": ""sender == \""0106:sender\"""",
+                ""init"": { ""key1"": ""value1"" }
             }";
 
             var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -317,6 +328,8 @@ public class HookApiTests : PsbTestContext
             Assert.AreEqual(hook.Topics[i], res.Topics[i]);
         }
         Assert.AreEqual(hook.IsActive, res.IsActive);
+        Assert.AreEqual(hook.Filter, res.Filter);
+        Assert.AreEqual(hook.Init!["key1"].ToString(), res.Init!["key1"].ToString());
     }
 
     [TestMethod]

@@ -1,14 +1,13 @@
-﻿using EConnect.Psb.Models;
+﻿using System.Collections.Generic;
+using EConnect.Psb.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using EConnect.Psb.Models.Peppol;
 
 namespace EConnect.Psb.Api;
 
-public interface IPsbPeppolApi
+public interface IPsbPeppolApi : IPsbPeppolLookupApi
 {
-    Task<DeliveryOption[]> GetDeliveryOption(CancellationToken cancellation = default);
-
     Task<PeppolConfig> GetEnvironmentConfig(CancellationToken cancellation = default);
 
     Task<PeppolConfig> PutEnvironmentConfig(PeppolConfig config, CancellationToken cancellation = default);

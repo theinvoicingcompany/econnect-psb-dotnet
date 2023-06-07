@@ -90,7 +90,7 @@ public class IndexModel : PageModel
                 SenderPartyId!,
                 new FileContent(MyFile.OpenReadStream(), MyFile.FileName),
                 ReceiverPartyId,
-                HttpContext.RequestAborted
+                cancellation: HttpContext.RequestAborted
             ).ConfigureAwait(false);
             
             ViewData["sendResponse"] = res;

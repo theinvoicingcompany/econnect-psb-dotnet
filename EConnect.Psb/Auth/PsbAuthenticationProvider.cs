@@ -41,6 +41,11 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
             throw new EConnectException("OAUTH01", response.Error);
         }
 
+        if (response.AccessToken == null)
+        {
+            throw new EConnectException("OAUTH02", "Something went wrong authenticating. Could not get access token.");
+        }
+
         return response;
     }
 
@@ -54,8 +59,9 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
 
         var tokenResponse = await RequestAccessToken(scope, cancellation).ConfigureAwait(false);
 
-        _cache[scope] = (TokenExpiresAt: DateTimeOffset.Now.AddSeconds(tokenResponse.ExpiresIn),
-            AccessToken: tokenResponse.AccessToken);
-        return tokenResponse.AccessToken;
+        _cache[scope] = (DateTimeOffset.Now.AddSeconds(tokenResponse.ExpiresIn),
+                 tokenResponse.AccessToken!);
+        
+        return tokenResponse.AccessToken!;
     }
 }

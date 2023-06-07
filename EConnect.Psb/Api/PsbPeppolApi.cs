@@ -7,7 +7,7 @@ using EConnect.Psb.Models.Peppol;
 
 namespace EConnect.Psb.Api;
 
-public class PsbPeppolApi : IPsbPeppolApi
+public class PsbPeppolApi : PsbPeppolLookupApi, IPsbPeppolApi
 {
     private readonly PsbClient _psbClient;
 
@@ -16,11 +16,11 @@ public class PsbPeppolApi : IPsbPeppolApi
         _psbClient = psbClient;
     }
 
-    public async Task<DeliveryOption[]> GetDeliveryOption(CancellationToken cancellation = default)
+    protected override async Task<DeliveryOption[]> GetDeliveryOptions(
+       string requestUri,
+       CancellationToken cancellation)
     {
-        var targetUrl = "/api/v1/peppol/deliveryOption";
-
-        var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(targetUrl, cancellation).ConfigureAwait(false);
+        var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(requestUri, cancellation).ConfigureAwait(false);
 
         return deliveryOptions;
     }

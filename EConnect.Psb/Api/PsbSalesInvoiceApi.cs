@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,25 +22,60 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
             requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
 
-        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation).ConfigureAwait(false);
+        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation: cancellation).ConfigureAwait(false);
         return party.Id;
     }
 
-    public async Task<Document> Send(string senderPartyId, FileContent file, string? receiverPartyId = null, CancellationToken cancellation = default)
+    public async Task<Document> Send(
+        string senderPartyId,
+        FileContent file,
+        string? receiverPartyId = null,
+        string? channel = null,
+        string? documentId = null,
+        CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/send";
-        if (!string.IsNullOrEmpty(receiverPartyId))
-            requestUri += "?receiverId=" + HttpUtility.UrlEncode(receiverPartyId);
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
+        var query = new Dictionary<string, string>();
+
+        if (!string.IsNullOrEmpty(receiverPartyId))
+            query.Add("receiverId", receiverPartyId!);
+
+        if (!string.IsNullOrEmpty(channel))
+            query.Add("channel", channel!);
+
+        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
+
+        if (!string.IsNullOrEmpty(queryString))
+            requestUri += "?" + queryString;
+
+        var res = await _psbClient.PostFile<Document>(
+            requestUri,
+            file,
+            documentId,
+            cancellation).ConfigureAwait(false);
+        
         return res;
     }
 
-    public async Task<Document> Recognize(string senderPartyId, FileContent file, CancellationToken cancellation = default)
+    public async Task<Document> Recognize(
+        string senderPartyId,
+        FileContent file,
+        string? channel = null,
+        string? documentId = null,
+        CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/recognize";
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
+        if (!string.IsNullOrEmpty(channel))
+            requestUri += "?channel=" + HttpUtility.UrlEncode(channel);
+
+        var res = await _psbClient.PostFile<Document>(
+            requestUri,
+            file,
+            documentId,
+            cancellation).ConfigureAwait(false);
+        
         return res;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EConnect.Psb.Hosting;
 using EConnect.Psb.Models;
@@ -34,7 +35,7 @@ namespace EConnect.Psb.ConsoleNet.Example
                            _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
                        }))
                 {
-                    var res = await psb.SalesInvoice.QueryRecipientParty("0106:12345678", new[] { "0106:receiver" }).ConfigureAwait(false);
+                    var res = await psb.SalesInvoice.QueryRecipientParty("0106:12345678", new[] { "0106:12345678" }).ConfigureAwait(false);
                     Console.WriteLine(res);
                 }
             }

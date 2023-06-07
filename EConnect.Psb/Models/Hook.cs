@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace EConnect.Psb.Models;
@@ -10,6 +11,8 @@ public record Hook(
     string[] Topics,
     bool IsActive,
     string[]? PublishTopics = null,
+    string? Filter = null,
+    IDictionary<string, object>? Init = null,
     DateTimeOffset? CreatedOn = null,
     DateTimeOffset? ChangedOn = null)
 {
@@ -18,7 +21,9 @@ public record Hook(
     public string Name { get; } = Name;
     public string[] Topics { get; } = Topics;
     public string[]? PublishTopics { get; } = PublishTopics;
-    public bool IsActive { get; } = IsActive;
+    public IDictionary<string, object>? Init { get; } = Init;
+    public string? Filter { get; } = Filter;
+    public bool IsActive { get; } = IsActive;  
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public DateTimeOffset? CreatedOn { get; private set; } = CreatedOn;

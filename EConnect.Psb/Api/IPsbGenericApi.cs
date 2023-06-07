@@ -7,7 +7,11 @@ namespace EConnect.Psb.Api;
 public interface IPsbGenericApi
 {
     Task<Document> Receive(string receiverPartyId,
-        FileContent file, string? topic = null, string? senderPartyId = null,
+        FileContent file,
+        string? topic = null,
+        string? senderPartyId = null,
+        string? channel = null,
+        string? documentId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Send(
@@ -15,6 +19,8 @@ public interface IPsbGenericApi
         FileContent file,
         string? topic = null,
         string? receiverPartyId = null,
+        string? channel = null,
+        string? documentId = null,
         CancellationToken cancellation = default);
 
     Task<FileContent> Download(

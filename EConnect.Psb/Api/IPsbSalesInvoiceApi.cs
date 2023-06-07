@@ -7,9 +7,24 @@ namespace EConnect.Psb.Api;
 
 public interface IPsbSalesInvoiceApi
 {
-    Task<string> QueryRecipientParty(string senderPartyId, IEnumerable<string> recipientPartyIds, string? preferredDocumentTypeId = null, CancellationToken cancellation = default);
+    Task<string> QueryRecipientParty(
+        string senderPartyId,
+        IEnumerable<string> recipientPartyIds, 
+        string? preferredDocumentTypeId = null, 
+        CancellationToken cancellation = default);
 
-    Task<Document> Send(string senderPartyId, FileContent file, string? receiverPartyId = null, CancellationToken cancellation = default);
+    Task<Document> Send(
+        string senderPartyId,
+        FileContent file,
+        string? receiverPartyId = null,
+        string? channel = null,
+        string? documentId = null, 
+        CancellationToken cancellation = default);
 
-    Task<Document> Recognize(string senderPartyId, FileContent file, CancellationToken cancellation = default);
+    Task<Document> Recognize(
+        string senderPartyId,
+        FileContent file,
+        string? channel = null,
+        string? documentId = null, 
+        CancellationToken cancellation = default);
 }

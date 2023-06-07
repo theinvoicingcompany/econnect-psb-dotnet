@@ -54,16 +54,23 @@ public class PsbClient
     public async Task<TResponseBody> Post<TResponseBody>(
         string? requestUri,
         object body,
+        string? documentId = null,
         CancellationToken cancellation = default
         ) where TResponseBody : class
     {
-        var res = await _httpClient.PostAsJsonAsync(requestUri, body, cancellation).ConfigureAwait(false);
+        var content = JsonContent.Create(body);
+       
+        if(!string.IsNullOrEmpty(documentId))
+            content.Headers.Add("X-EConnect-DocumentId", documentId);
+
+        var res = await _httpClient.PostAsync(requestUri, content, cancellation).ConfigureAwait(false);
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
     public async Task<TResponseBody> PostFile<TResponseBody>(
         string? requestUri,
         FileContent file,
+        string? documentId = null,
         CancellationToken cancellation = default
         ) where TResponseBody : class
     {
@@ -72,6 +79,9 @@ public class PsbClient
             multipart.Add(file.Content, "file");
         else
             multipart.Add(file.Content, "file", file.Filename);
+
+        if(!string.IsNullOrEmpty(documentId))
+            multipart.Headers.Add("X-EConnect-DocumentId", documentId);
 
         var res = await _httpClient.PostAsync(requestUri, multipart, cancellation).ConfigureAwait(false);
         file.Dispose();

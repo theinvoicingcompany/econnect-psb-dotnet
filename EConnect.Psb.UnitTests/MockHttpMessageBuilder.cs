@@ -32,6 +32,11 @@ public class MockHttpMessageBuilder
         return message.Headers.TryGetValues("Subscription-Key", out var keys) && keys.Any();
     }
 
+    private bool HasEConnectDocumentId(HttpRequestMessage message)
+    {
+        return message.Content!.Headers.TryGetValues("X-EConnect-DocumentId", out var keys) && keys.Any();
+    }
+
     private HttpResponseMessage Xml(HttpStatusCode status, string xml) => new(status)
     {
         Content = new StringContent(xml, Encoding.UTF8, "application/xml")
@@ -56,15 +61,17 @@ public class MockHttpMessageBuilder
     public MockHttpMessageBuilder Setup(HttpMethod method, string path,
         bool ensureAuthorizationHeader = true,
         bool ensureSubscriptionHeader = true,
-        bool ensureFileUpload = false)
+        bool ensureFileUpload = false,
+        bool ensureEConnectDocumentId = false)
     {
         return Setup(method, path, message =>
         {
             var auth = !ensureAuthorizationHeader || IsAuthenticated(message);
             var sub = !ensureSubscriptionHeader || HasSubscription(message);
             var file = !ensureFileUpload || message.Content is MultipartFormDataContent;
+            var docId = !ensureEConnectDocumentId || HasEConnectDocumentId(message);
 
-            return auth && sub && file;
+            return auth && sub && file && docId;
         });
     }
 

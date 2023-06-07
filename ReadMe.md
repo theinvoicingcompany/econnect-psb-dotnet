@@ -117,13 +117,13 @@ If you want to know more about Peppol e-procurement or other procurement network
 
 [0]: https://psb.econnect.eu/networks/peppol.html
 [1]: https://psb.econnect.eu/introduction/gettingStarted.html
-[2]: https://github.com/everbinding/econnect-psb-dotnet/blob/master/EConnect.Psb.Web.Example/Pages/ExampleSendInvoice.cshtml.cs
+[2]: https://github.com/theinvoicingcompany/econnect-psb-dotnet/blob/master/EConnect.Psb.Web.Example/Pages/ExampleSendInvoice.cshtml.cs
 [3]: https://www.nuget.org/packages/EConnect.Psb/
 [4]: https://psb.econnect.eu/?urls.primaryName=V1
 [5]: https://psb.econnect.eu/introduction/sendInvoice.html
 [6]: https://psb.econnect.eu/introduction/receiveInvoice.html
 [7]: https://psb.econnect.eu/introduction/overview.html
-[8]: https://github.com/everbinding/econnect-psb-dotnet/tree/master/EConnect.Psb.Web.Example/Controllers/WebhookController.cs
-[9]: https://github.com/everbinding/econnect-psb-dotnet/tree/master/EConnect.Psb.Web.Example
-[10]: https://github.com/everbinding/econnect-psb-dotnet/blob/master/EConnect.Psb.ConsoleNet.Example/Program.cs
+[8]: https://github.com/theinvoicingcompany/econnect-psb-dotnet/tree/master/EConnect.Psb.Web.Example/Controllers/WebhookController.cs
+[9]: https://github.com/theinvoicingcompany/econnect-psb-dotnet/tree/master/EConnect.Psb.Web.Example
+[10]: https://github.com/theinvoicingcompany/econnect-psb-dotnet/blob/master/EConnect.Psb.ConsoleNet.Example/Program.cs
 [11]: https://psb.econnect.eu/endpoints/v1/hook.html#securing-webhook

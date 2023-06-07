@@ -16,8 +16,13 @@ public class PsbGenericApi : IPsbGenericApi
         _psbClient = psbClient;
     }
 
-    public async Task<Document> Receive(string receiverPartyId,
-        FileContent file, string? topic = null, string? senderPartyId = null,
+    public async Task<Document> Receive(
+        string receiverPartyId,
+        FileContent file,
+        string? topic = null,
+        string? senderPartyId = null,
+        string? channel = null,
+        string? documentId = null,
         CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1-beta/{HttpUtility.UrlEncode(receiverPartyId)}/generic/receive";
@@ -29,11 +34,19 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(topic))
             query.Add("topic", topic!);
 
+        if(!string.IsNullOrEmpty(channel))
+            query.Add("channel", channel!);
+
         var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
             requestUri += "?" + queryString;
 
-        var res = await _psbClient.PostFile<Document>(requestUri, file, cancellation).ConfigureAwait(false);
+        var res = await _psbClient.PostFile<Document>(
+            requestUri,
+            file,
+            documentId,
+            cancellation).ConfigureAwait(false);
+
         return res;
     }
 
@@ -42,6 +55,8 @@ public class PsbGenericApi : IPsbGenericApi
         FileContent file,
         string? topic = null,
         string? receiverPartyId = null,
+        string? channel = null,
+        string? documentId = null,
         CancellationToken cancellation = default)
     {
         var encodedSenderPartyId = HttpUtility.UrlEncode(senderPartyId);
@@ -54,6 +69,9 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(topic))
             query.Add("topic", topic!);
 
+        if(!string.IsNullOrEmpty(channel))
+            query.Add("channel", channel!);
+
         var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
             requestUri += "?" + queryString;
@@ -61,6 +79,7 @@ public class PsbGenericApi : IPsbGenericApi
         var res = await _psbClient.PostFile<Document>(
             requestUri,
             file,
+            documentId,
             cancellation).ConfigureAwait(false);
 
         return res;

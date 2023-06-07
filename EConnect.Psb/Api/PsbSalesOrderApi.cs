@@ -27,8 +27,7 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
 
         var file = await _psbClient.Get<FileContent>(
             requestUri: targetUrl,
-            cancellation: cancellation
-        ).ConfigureAwait(false);
+            cancellation: cancellation).ConfigureAwait(false);
 
         return file;
     }
@@ -44,7 +43,26 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
 
         await _psbClient.Delete(
             requestUri: targetUrl,
-            cancellation: cancellation
-        ).ConfigureAwait(false);
+            cancellation: cancellation).ConfigureAwait(false);
+    }
+
+    public async Task<Document> Response(
+        string partyId, 
+        string documentId,
+        OrderResponse orderResponse,
+        string? responseDocumentId = null,
+        CancellationToken cancellation = default)
+    {
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var encodedDocumentId = HttpUtility.UrlEncode(documentId);
+        var targetUrl = $"/api/v1/{encodedPartyId}/salesOrder/{encodedDocumentId}/response";
+
+        var res = await _psbClient.Post<Document>(
+            targetUrl,
+            orderResponse,
+            responseDocumentId,
+            cancellation).ConfigureAwait(false);
+
+        return res;
     }
 }

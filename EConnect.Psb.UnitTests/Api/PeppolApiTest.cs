@@ -24,25 +24,25 @@ public class PeppolApiTest : PsbTestContext
     }
 
     [TestMethod]
-    public async Task GetDeliveryOptionTest()
+    public async Task GetDeliveryOptionsTest()
     {
         // Arrange
         DeliveryOption? deliveryOption = new DeliveryOption(
             PartyId: "0106:5444158",
-            DocumentTypeId: "urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:www.cenbii.eu:transaction:biitrns071:ver2.0:extended:urn:www.peppol.eu:bis:peppol36a:ver1.0::2.1",
+            DocumentTypeId: "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
             ProcessId: "urn:www.cenbii.eu:profile:bii36:ver2.0",
             Protocol: "As4",
             Url: "https://accp-ap.econnect.eu/as4/v1",
             Certificate: "MIIF .... AT00kF4Xw=="
         );
-
         SetAccessToken();
+
         Configure(builder =>
         {
             var json = @"[
                 { 
                     ""partyId"": ""0106:5444158"",
-                    ""documentTypeId"": ""urn:oasis:names:specification:ubl:schema:xsd:ApplicationResponse-2::ApplicationResponse##urn:www.cenbii.eu:transaction:biitrns071:ver2.0:extended:urn:www.peppol.eu:bis:peppol36a:ver1.0::2.1"",
+                    ""documentTypeId"": ""urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1"",
                     ""processId"": ""urn:www.cenbii.eu:profile:bii36:ver2.0"",
                     ""protocol"": ""As4"",
                     ""url"": ""https://accp-ap.econnect.eu/as4/v1"",
@@ -51,12 +51,21 @@ public class PeppolApiTest : PsbTestContext
             ]";
 
             builder
-                .Setup(HttpMethod.Get, "/api/v1/peppol/deliveryOption")
+                .Setup(HttpMethod.Get, "/api/v1/peppol/deliveryOption?partyIds=0106%3A5444158&partyIds=9944%3ANL851306469B01&preferredDocumentTypeId=urn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1&documentTypeIds=urn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1&documentTypeIds=urn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%3A%3A2.1&documentFamily=Invoice&isCredit=False")
                 .Result(json);
         });
 
         // Act
-        var res = await PeppolApi.GetDeliveryOption();
+        var res = await PeppolApi.GetDeliveryOptions(
+            new List<string>(){ "0106:5444158", "9944:NL851306469B01"},
+            "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+            new List<string>()
+            {
+                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1"
+            },
+            "Invoice",
+            false);
 
         // Assert
         Assert.IsNotNull(deliveryOption);

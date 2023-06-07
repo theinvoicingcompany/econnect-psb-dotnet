@@ -7,8 +7,23 @@ namespace EConnect.Psb.Api;
 
 public interface IPsbPurchaseOrderApi
 {
-    Task<Party> QueryRecipientParty(string senderPartyId, IEnumerable<string> recipientPartyIds, string? preferredDocumentTypeId = null, CancellationToken cancellation = default);
+    Task<Party> QueryRecipientParty(
+        string senderPartyId,
+        IEnumerable<string> recipientPartyIds,
+        string? preferredDocumentTypeId = null,
+        CancellationToken cancellation = default);
 
-    Task<Document> Send(string senderPartyId, FileContent file, string? receiverId = null, CancellationToken cancellation = default);
+    Task<Document> Send(string partyId,
+        FileContent file,
+        string? receiverId = null,
+        string? channel = null,
+        string? documentId = null,
+        CancellationToken cancellation = default);
 
+    Task<Document> Cancel(
+        string partyId,
+        string documentId,
+        OrderCancellation message,
+        string? cancelDocumentId = null,
+        CancellationToken cancellation = default);
 }

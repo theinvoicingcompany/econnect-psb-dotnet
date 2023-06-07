@@ -9,7 +9,7 @@
     <Description>The offical .NET C# API client for the eConnect Procurement Service Bus (PSB)</Description>
     <PackageProjectUrl>https://psb.econnect.eu</PackageProjectUrl>
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/everbinding/econnect-psb-dotnet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/theinvoicingcompany/econnect-psb-dotnet</RepositoryUrl>
     <PackageTags>econnect;psb;api;client;dotnet;csharp;peppol;einvoicing;efacturatie</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -34,10 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+    <PackageReference Include="IdentityModel" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+    <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
   </ItemGroup>
 
 </Project>

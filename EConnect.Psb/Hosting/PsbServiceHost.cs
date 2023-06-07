@@ -56,7 +56,6 @@ public class PsbServiceHost : PsbServiceProvider, IDisposable
         return Create<PsbHttpMessageHandlerFactory>(configureOptions);
     }
 
-
     public void Dispose()
     {
         _serviceProvider.Dispose();

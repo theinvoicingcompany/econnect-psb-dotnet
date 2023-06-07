@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using EConnect.Psb.Api;
@@ -29,12 +30,15 @@ public class GenericApiTests : PsbTestContext
             var json = "{ \"id\": \"" + expectedId + "\"}";
 
             builder
-                .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aRECEIVER/generic/receive?topic=SalesInvoiceReceived", ensureFileUpload: true)
+                .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aRECEIVER/generic/receive?senderId=NL%3AKVK%3ASENDER&topic=SalesInvoiceReceived&channel=peppol",
+                    ensureFileUpload: true,
+                    ensureEConnectDocumentId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await GenericApi.Receive("NL:KVK:RECEIVER", file, topic: "SalesInvoiceReceived");
+        var res = await GenericApi.Receive("NL:KVK:RECEIVER", file,
+             "SalesInvoiceReceived", "NL:KVK:SENDER", "peppol", expectedId, CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);
@@ -54,12 +58,15 @@ public class GenericApiTests : PsbTestContext
             var json = "{ \"id\": \"" + expectedId + "\"}";
 
             builder
-                .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aSENDER/generic/send?topic=SalesInvoiceReceived", ensureFileUpload: true)
+                .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aSENDER/generic/send?receiverId=NL%3AKVK%3ARECEIVER&topic=SalesInvoiceReceived&channel=peppol",
+                    ensureFileUpload: true,
+                    ensureEConnectDocumentId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await GenericApi.Send("NL:KVK:SENDER", file, topic: "SalesInvoiceReceived");
+        var res = await GenericApi.Send("NL:KVK:SENDER", file, "SalesInvoiceReceived",
+            "NL:KVK:RECEIVER", "peppol", expectedId, CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);

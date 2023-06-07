@@ -32,6 +32,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         string partyId,
         string documentId,
         InvoiceResponse purchaseInvoice,
+        string? responseDocumentId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -39,9 +40,10 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}/response";
 
         var invoiceResponse = await _psbClient.Post<Document>(
-            requestUri: targetUrl,
-            body: purchaseInvoice,
-            cancellation: cancellation
+            targetUrl,
+            purchaseInvoice,
+            responseDocumentId,
+            cancellation
         ).ConfigureAwait(false);
 
         return invoiceResponse;
@@ -65,12 +67,21 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
     public async Task<Document> Recognize(
         string partyId,
         FileContent file,
+        string? channel = null,
+        string? documentId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
-        var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/recognize";
+        var requestUri = $"/api/v1/{encodedPartyId}/purchaseInvoice/recognize";
 
-        var document = await _psbClient.PostFile<Document>(targetUrl, file, cancellation)
+        if (!string.IsNullOrEmpty(channel))
+            requestUri += "?channel=" + HttpUtility.UrlEncode(channel);
+
+        var document = await _psbClient.PostFile<Document>(
+                requestUri,
+                file,
+                documentId,
+                cancellation)
             .ConfigureAwait(false);
 
         return document;
