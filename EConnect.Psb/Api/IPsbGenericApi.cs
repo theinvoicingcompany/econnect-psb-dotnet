@@ -11,7 +11,10 @@ public interface IPsbGenericApi
         string? topic = null,
         string? senderPartyId = null,
         string? channel = null,
+        bool disablePlugins = false,
         string? documentId = null,
+        string? sourceFormat = null,
+        string? targetFormat = null,
         CancellationToken cancellation = default);
 
     Task<Document> Send(
@@ -20,7 +23,10 @@ public interface IPsbGenericApi
         string? topic = null,
         string? receiverPartyId = null,
         string? channel = null,
+        bool disablePlugins = false,
         string? documentId = null,
+        string? sourceFormat = null,
+        string? targetFormat = null,
         CancellationToken cancellation = default);
 
     Task<FileContent> Download(

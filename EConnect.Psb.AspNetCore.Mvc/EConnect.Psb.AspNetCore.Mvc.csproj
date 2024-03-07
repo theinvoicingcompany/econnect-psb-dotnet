@@ -1,45 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>10</LangVersion>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
-    <Authors>ThiemeNL, roeland.krijgsman</Authors>
-    <Description>The offical .NET C# API client for the eConnect Procurement Service Bus (PSB) for Asp.NetCore MVC</Description>
-    <PackageProjectUrl>https://psb.econnect.eu</PackageProjectUrl>
-    <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/theinvoicingcompany/econnect-psb-dotnet</RepositoryUrl>
-    <PackageTags>econnect;psb;api;client;dotnet;csharp;peppol;einvoicing;efacturatie</PackageTags>
-    <NeutralLanguage>en</NeutralLanguage>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageIcon>logo.png</PackageIcon>
-    <Company>eConnect-International</Company>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>10</LangVersion>
+		<ApplicationIcon>logo.ico</ApplicationIcon>
+		<Authors>ThiemeNL, roeland.krijgsman</Authors>
+		<Description>The offical .NET C# API client for the eConnect Procurement Service Bus (PSB) for Asp.NetCore MVC</Description>
+		<PackageProjectUrl>https://psb.econnect.eu</PackageProjectUrl>
+		<PackageReadmeFile>ReadMe.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/theinvoicingcompany/econnect-psb-dotnet</RepositoryUrl>
+		<PackageTags>econnect;psb;api;client;dotnet;csharp;peppol;einvoicing;efacturatie</PackageTags>
+		<NeutralLanguage>en</NeutralLanguage>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageIcon>logo.png</PackageIcon>
+		<Company>eConnect-International</Company>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="logo.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="logo.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\ReadMe.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="logo.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EConnect.Psb\EConnect.Psb.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\ReadMe.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\EConnect.Psb\EConnect.Psb.csproj" />
+	</ItemGroup>
 
 </Project>

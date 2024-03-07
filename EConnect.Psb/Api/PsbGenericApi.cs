@@ -22,7 +22,10 @@ public class PsbGenericApi : IPsbGenericApi
         string? topic = null,
         string? senderPartyId = null,
         string? channel = null,
+        bool disablePlugins = false,
         string? documentId = null,
+        string? sourceFormat = null,
+        string? targetFormat = null,
         CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1-beta/{HttpUtility.UrlEncode(receiverPartyId)}/generic/receive";
@@ -36,6 +39,15 @@ public class PsbGenericApi : IPsbGenericApi
 
         if(!string.IsNullOrEmpty(channel))
             query.Add("channel", channel!);
+
+        if(disablePlugins)
+            query.Add("disablePlugins", disablePlugins.ToString());
+
+        if(!string.IsNullOrEmpty(sourceFormat))
+            query.Add("sourceFormat", sourceFormat!);
+
+        if(!string.IsNullOrEmpty(targetFormat))
+            query.Add("targetFormat", targetFormat!);
 
         var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
@@ -56,7 +68,10 @@ public class PsbGenericApi : IPsbGenericApi
         string? topic = null,
         string? receiverPartyId = null,
         string? channel = null,
+        bool disablePlugins = false,
         string? documentId = null,
+        string? sourceFormat = null,
+        string? targetFormat = null,
         CancellationToken cancellation = default)
     {
         var encodedSenderPartyId = HttpUtility.UrlEncode(senderPartyId);
@@ -71,6 +86,15 @@ public class PsbGenericApi : IPsbGenericApi
 
         if(!string.IsNullOrEmpty(channel))
             query.Add("channel", channel!);
+
+        if(disablePlugins)
+            query.Add("disablePlugins", disablePlugins.ToString());
+
+        if(!string.IsNullOrEmpty(sourceFormat))
+            query.Add("sourceFormat", sourceFormat!);
+
+        if(!string.IsNullOrEmpty(targetFormat))
+            query.Add("targetFormat", targetFormat!);
 
         var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
         if (!string.IsNullOrEmpty(queryString))
