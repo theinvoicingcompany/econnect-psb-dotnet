@@ -81,7 +81,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
                 requestUri,
                 file,
                 documentId,
-                cancellation)
+                cancellation: cancellation)
             .ConfigureAwait(false);
 
         return document;

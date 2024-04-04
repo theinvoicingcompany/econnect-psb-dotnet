@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using EConnect.Psb.Client.Extensions;
@@ -71,6 +74,7 @@ public class PsbClient
         string? requestUri,
         FileContent file,
         string? documentId = null,
+        IDictionary<string, string>? metaAttributes = null,
         CancellationToken cancellation = default
         ) where TResponseBody : class
     {
@@ -79,6 +83,12 @@ public class PsbClient
             multipart.Add(file.Content, "file");
         else
             multipart.Add(file.Content, "file", file.Filename);
+
+        if (metaAttributes?.Any() == true)
+        {
+            var json = JsonSerializer.Serialize(metaAttributes);
+            multipart.Add(new StringContent(json), "metaAttributes");
+        }
 
         if(!string.IsNullOrEmpty(documentId))
             multipart.Headers.Add("X-EConnect-DocumentId", documentId);

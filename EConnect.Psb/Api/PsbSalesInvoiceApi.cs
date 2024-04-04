@@ -53,7 +53,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
             requestUri,
             file,
             documentId,
-            cancellation).ConfigureAwait(false);
+            cancellation: cancellation).ConfigureAwait(false);
         
         return res;
     }
@@ -74,7 +74,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
             requestUri,
             file,
             documentId,
-            cancellation).ConfigureAwait(false);
+            cancellation: cancellation).ConfigureAwait(false);
         
         return res;
     }

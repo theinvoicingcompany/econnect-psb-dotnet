@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using EConnect.Psb.Models;
 
@@ -15,6 +16,7 @@ public interface IPsbGenericApi
         string? documentId = null,
         string? sourceFormat = null,
         string? targetFormat = null,
+        IDictionary<string, string>? metaAttributes = null,
         CancellationToken cancellation = default);
 
     Task<Document> Send(
@@ -27,6 +29,7 @@ public interface IPsbGenericApi
         string? documentId = null,
         string? sourceFormat = null,
         string? targetFormat = null,
+        IDictionary<string, string>? metaAttributes = null,
         CancellationToken cancellation = default);
 
     Task<FileContent> Download(

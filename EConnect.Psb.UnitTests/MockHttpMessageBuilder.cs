@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using EConnect.Psb.Models;
 using Moq;
 using Moq.Contrib.HttpClient;
 using Moq.Language.Flow;
@@ -30,6 +31,12 @@ public class MockHttpMessageBuilder
     private bool HasSubscription(HttpRequestMessage message)
     {
         return message.Headers.TryGetValues("Subscription-Key", out var keys) && keys.Any();
+    }
+
+    public bool HasMultipartFormDataContent<TType>(HttpRequestMessage message)
+    {
+        return message.Content is MultipartFormDataContent multipart &&
+               multipart.FirstOrDefault(m => m is TType) != default;
     }
 
     private bool HasEConnectDocumentId(HttpRequestMessage message)
@@ -62,16 +69,18 @@ public class MockHttpMessageBuilder
         bool ensureAuthorizationHeader = true,
         bool ensureSubscriptionHeader = true,
         bool ensureFileUpload = false,
+        bool ensureMetaAttributes = false,
         bool ensureEConnectDocumentId = false)
     {
         return Setup(method, path, message =>
         {
             var auth = !ensureAuthorizationHeader || IsAuthenticated(message);
             var sub = !ensureSubscriptionHeader || HasSubscription(message);
-            var file = !ensureFileUpload || message.Content is MultipartFormDataContent;
+            var file = !ensureFileUpload || HasMultipartFormDataContent<StreamContent>(message);
+            var meta = !ensureMetaAttributes || HasMultipartFormDataContent<StringContent>(message);
             var docId = !ensureEConnectDocumentId || HasEConnectDocumentId(message);
 
-            return auth && sub && file && docId;
+            return auth && sub && file && meta && docId;
         });
     }
 

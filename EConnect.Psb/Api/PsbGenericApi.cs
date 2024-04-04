@@ -26,6 +26,7 @@ public class PsbGenericApi : IPsbGenericApi
         string? documentId = null,
         string? sourceFormat = null,
         string? targetFormat = null,
+        IDictionary<string, string>? metaAttributes = null,
         CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1-beta/{HttpUtility.UrlEncode(receiverPartyId)}/generic/receive";
@@ -57,6 +58,7 @@ public class PsbGenericApi : IPsbGenericApi
             requestUri,
             file,
             documentId,
+            metaAttributes,
             cancellation).ConfigureAwait(false);
 
         return res;
@@ -72,6 +74,7 @@ public class PsbGenericApi : IPsbGenericApi
         string? documentId = null,
         string? sourceFormat = null,
         string? targetFormat = null,
+        IDictionary<string, string>? metaAttributes = null,
         CancellationToken cancellation = default)
     {
         var encodedSenderPartyId = HttpUtility.UrlEncode(senderPartyId);
@@ -104,6 +107,7 @@ public class PsbGenericApi : IPsbGenericApi
             requestUri,
             file,
             documentId,
+            metaAttributes,
             cancellation).ConfigureAwait(false);
 
         return res;
