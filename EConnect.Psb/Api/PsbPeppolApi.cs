@@ -45,11 +45,11 @@ public class PsbPeppolApi : PsbPeppolLookupApi, IPsbPeppolApi
         return peppolPartyConfig;
     }
 
-    public async Task<Party[]> GetParties(CancellationToken cancellation = default)
+    public async Task<ListResult<Party>> GetParties(CancellationToken cancellation = default)
     {
         var targetUrl = "/api/v1/peppol/config/party";
 
-        var partyPagedResult = await _psbClient.Get<Party[]>(targetUrl, cancellation).ConfigureAwait(false);
+        var partyPagedResult = await _psbClient.Get<ListResult<Party>>(targetUrl, cancellation).ConfigureAwait(false);
         return partyPagedResult;
     }
 

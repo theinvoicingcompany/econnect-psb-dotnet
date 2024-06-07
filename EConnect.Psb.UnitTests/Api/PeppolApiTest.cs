@@ -348,76 +348,23 @@ public class PeppolApiTest : PsbTestContext
     public async Task GetPartiesTest()
     {
         // Arrange
-        string partyId = "NL:KVK:12345678";
-
-        Dictionary<string, PeppolCapability> peppolCapabilities = new Dictionary<string, PeppolCapability>() {
+        var listResult = new ListResult<Party>(
+            new List<Party>()
             {
-                "invoices",
-                new PeppolCapability(
-                    State: "inherited => on",
-                    Description: "SI 1.2, SI 2.0, SI 2.0 CreditNote, BIS Billing V3, BIS Billing V3 CreditNote, BIS Billing V3 CII"
-                )
-            },
-            {
-                "invoiceResponse",
-                new PeppolCapability(
-                    State: "inherited => off",
-                    Description: "PEPPOL IMR"
-                )
-            },
-            {
-                "orders",
-                new PeppolCapability(
-                    State: "inherited => off",
-                    Description: "SI Order 1.2, PEPPOL Order transaction 3.0"
-                )
-            }
-        };
-
-        PeppolBusinessCard peppolBusinessCard = new PeppolBusinessCard(
-            Names: new PeppolBusinessCardProperty(
-                Value: "eVerbinding, eConnect",
-                State: "on",
-                Description: "Business names."
-            ),
-            Address: new PeppolBusinessCardProperty(
-                Value: "Pelmolenlaan 16A, 3447 GW, Woerden, NL",
-                State: "on",
-                Description: "Geographic information."
-            ),
-            EmailAddress: new PeppolBusinessCardProperty(
-                Value: "techsupport@econnect.eu",
-                State: "inherited => on",
-                Description: "Technical contact"
-            ),
-            State: "on"
-        );
-
-        DateTimeOffset.TryParse("2022-02-28T16:02:52.8478308+00:00", out var verifiedOnDateTime);
-        PeppolPartyVerification? peppolPartyVerification = new PeppolPartyVerification(
-             Notes: "Contract agreement C21345",
-             VerifiedOn: verifiedOnDateTime
-         );
-
-        PeppolConfig peppolPartyConfig = new PeppolConfig(
-            Id: "1",
-            Capabilities: peppolCapabilities,
-            BusinessCard: peppolBusinessCard,
-            Verification: peppolPartyVerification,
-            CreatedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00"),
-            ChangedOn: DateTime.Parse("2022-02-26T21:59:43.8217536+00:00")
-        );
-
-        Party[] partyPageResult = new Party[] {
-            new Party(partyId)
-        };
+                new("0106:123"),
+                new("0106:456")
+            });
 
         SetAccessToken();
         Configure(builder =>
         {
-            var json = @"[
-                { ""Id"": ""NL:KVK:12345678"" }
-            ]";
+            var json = @"{
+                           
+                            ""items"": [
+                                { ""id"": ""0106:123"" },
+                                { ""id"": ""0106:456"" }
+                            ]
+                         }";
 
             builder
                 .Setup(HttpMethod.Get, $"/api/v1/peppol/config/party")
@@ -428,16 +375,13 @@ public class PeppolApiTest : PsbTestContext
         var res = await PeppolApi.GetParties();
 
         // Assert
-        Assert.IsNotNull(peppolPartyConfig);
         Assert.IsNotNull(res);
-
-        var partyArray = res;
-
-        Assert.IsNotNull(partyArray[0]);
-        Assert.AreEqual(partyPageResult.Length, partyArray.Length);
-        for (int i = 0; i < partyPageResult.Length; i++)
+        
+        Assert.IsNotNull(res.Items[0]);
+        Assert.AreEqual(listResult.Items.Count, res.Items.Count);
+        for (int i = 0; i < listResult.Items.Count; i++)
         {
-            Assert.AreEqual(partyPageResult[i], partyArray[i]);
+            Assert.AreEqual(listResult.Items[i], res.Items[i]);
         }
     }
 

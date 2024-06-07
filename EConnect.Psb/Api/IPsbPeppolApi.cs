@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EConnect.Psb.Models;
+﻿using EConnect.Psb.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using EConnect.Psb.Models.Peppol;
@@ -12,7 +11,7 @@ public interface IPsbPeppolApi : IPsbPeppolLookupApi
 
     Task<PeppolConfig> PutEnvironmentConfig(PeppolConfig config, CancellationToken cancellation = default);
 
-    Task<Party[]> GetParties(CancellationToken cancellation = default);
+    Task<ListResult<Party>> GetParties(CancellationToken cancellation = default);
 
     Task<PeppolConfig> GetConfig(string partyId, CancellationToken cancellation = default);
 
