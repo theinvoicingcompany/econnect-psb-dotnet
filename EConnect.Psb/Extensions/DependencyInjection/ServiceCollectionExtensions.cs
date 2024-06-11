@@ -45,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IPsbPeppolApi, PsbPeppolApi>();
         services.AddSingleton<IPsbPurchaseInvoiceApi, PsbPurchaseInvoiceApi>();
         services.AddSingleton<IPsbGenericApi, PsbGenericApi>();
+        services.AddSingleton<IPsbUserApi, PsbUserApi>();
 
         return services;
     }

@@ -15,7 +15,7 @@ namespace EConnect.Psb.ConsoleNet.Example
             const string psbUrl = "https://accp-psb.econnect.eu";
             const string identityUrl = "https://accp-identity.econnect.eu";
             const string subscriptionKey = "eConnectInternalApaasSubscription";
-            const string username = "flowtestuser1";
+            const string username = "flowtestapmanager";
             const string password = "eConnect#!12";
             const string clientId = "8deb9b756f2f4620";
             const string clientSecret = "z8461xo2rpi5oyuzk6ore5dwtpog07bliuft";
@@ -59,7 +59,7 @@ namespace EConnect.Psb.ConsoleNet.Example
 
                     // Send the file using GenericApi.Send
                     // Be aware that the correct Hook is available in the account
-                    var response = await psb.GenericApi.Receive(
+                    var response = await psb.Generic.Receive(
                         "0106:flowtestuser1p2",
                         content,
                         "ReceiveInvoice",

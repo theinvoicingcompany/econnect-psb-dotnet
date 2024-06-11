@@ -13,9 +13,10 @@ public class PsbServiceProvider
         Peppol = serviceProvider.GetRequiredService<IPsbPeppolApi>();
         PurchaseInvoice = serviceProvider.GetRequiredService<IPsbPurchaseInvoiceApi>();
         SalesInvoice = serviceProvider.GetRequiredService<IPsbSalesInvoiceApi>();
-        SalesOrderApi = serviceProvider.GetRequiredService<IPsbSalesOrderApi>();
-        PurchaseOrderApi = serviceProvider.GetRequiredService<IPsbPurchaseOrderApi>();
-        GenericApi = serviceProvider.GetRequiredService<IPsbGenericApi>();
+        SalesOrder = serviceProvider.GetRequiredService<IPsbSalesOrderApi>();
+        PurchaseOrder = serviceProvider.GetRequiredService<IPsbPurchaseOrderApi>();
+        Generic = serviceProvider.GetRequiredService<IPsbGenericApi>();
+        User = serviceProvider.GetRequiredService<IPsbUserApi>();
     }
 
     public IPsbMeApi Me { get; }
@@ -23,7 +24,8 @@ public class PsbServiceProvider
     public IPsbPeppolApi Peppol { get; }
     public IPsbPurchaseInvoiceApi PurchaseInvoice { get; }
     public IPsbSalesInvoiceApi SalesInvoice { get; }
-    public IPsbGenericApi GenericApi { get; }
-    public IPsbSalesOrderApi SalesOrderApi { get; }
-    public IPsbPurchaseOrderApi PurchaseOrderApi { get; }
+    public IPsbGenericApi Generic { get; }
+    public IPsbSalesOrderApi SalesOrder { get; }
+    public IPsbPurchaseOrderApi PurchaseOrder { get; }
+    public IPsbUserApi User { get; }
 }
