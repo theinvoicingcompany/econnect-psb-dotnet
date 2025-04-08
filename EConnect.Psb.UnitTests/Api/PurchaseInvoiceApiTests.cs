@@ -73,12 +73,13 @@ public class PurchaseInvoiceApiTests : PsbTestContext
 
             builder
                 .Setup(HttpMethod.Post, $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}/response",
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true, 
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await PurchaseInvoiceApi.Response(partyId, docId, response, responseDocId, CancellationToken.None).ConfigureAwait(false);
+        var res = await PurchaseInvoiceApi.Response(partyId, docId, response, responseDocId, "domain1", CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         Assert.AreEqual(responseDocId, res.Id);
@@ -125,12 +126,13 @@ public class PurchaseInvoiceApiTests : PsbTestContext
 
             builder
                 .Setup(HttpMethod.Post, $"/api/v1/{encodedPartyId}/purchaseInvoice/recognize?channel=idr",
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true,
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await PurchaseInvoiceApi.Recognize(partyId, pdf, "idr", docId, CancellationToken.None);
+        var res = await PurchaseInvoiceApi.Recognize(partyId, pdf, "idr", docId, "domain1", CancellationToken.None);
 
         // Assert
         Assert.IsNotNull(res);

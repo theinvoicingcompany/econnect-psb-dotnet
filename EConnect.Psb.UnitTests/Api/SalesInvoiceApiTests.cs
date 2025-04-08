@@ -53,12 +53,14 @@ public class SalesInvoiceApiTests : PsbTestContext
             builder
                 .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/send?receiverId=NL%3AKVK%3ARECEIVER&channel=peppol",
                     ensureFileUpload: true,
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true,
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await SalesInvoiceApi.Send("NL:KVK:SENDER", file, "NL:KVK:RECEIVER", "peppol", expectedId, CancellationToken.None);
+        var res = await SalesInvoiceApi.Send("NL:KVK:SENDER", file, "NL:KVK:RECEIVER",
+            "peppol", expectedId, "domain1", CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);
@@ -80,12 +82,14 @@ public class SalesInvoiceApiTests : PsbTestContext
             builder
                 .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/recognize?channel=idr", 
                     ensureFileUpload: true,
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true,
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await SalesInvoiceApi.Recognize("NL:KVK:SENDER", file, "idr", expectedId, CancellationToken.None);
+        var res = await SalesInvoiceApi.Recognize("NL:KVK:SENDER", file, "idr",
+            expectedId, "domain1", CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);

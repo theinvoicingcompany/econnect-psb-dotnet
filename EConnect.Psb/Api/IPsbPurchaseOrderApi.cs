@@ -11,6 +11,7 @@ public interface IPsbPurchaseOrderApi
         string senderPartyId,
         IEnumerable<string> recipientPartyIds,
         string? preferredDocumentTypeId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Send(string partyId,
@@ -18,6 +19,7 @@ public interface IPsbPurchaseOrderApi
         string? receiverId = null,
         string? channel = null,
         string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Cancel(
@@ -25,5 +27,6 @@ public interface IPsbPurchaseOrderApi
         string documentId,
         OrderCancellation message,
         string? cancelDocumentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 }

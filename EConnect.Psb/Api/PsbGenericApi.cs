@@ -27,6 +27,7 @@ public class PsbGenericApi : IPsbGenericApi
         string? sourceFormat = null,
         string? targetFormat = null,
         IDictionary<string, string>? metaAttributes = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1-beta/{HttpUtility.UrlEncode(receiverPartyId)}/generic/receive";
@@ -38,16 +39,16 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(topic))
             query.Add("topic", topic!);
 
-        if(!string.IsNullOrEmpty(channel))
+        if (!string.IsNullOrEmpty(channel))
             query.Add("channel", channel!);
 
-        if(disablePlugins)
+        if (disablePlugins)
             query.Add("disablePlugins", disablePlugins.ToString());
 
-        if(!string.IsNullOrEmpty(sourceFormat))
+        if (!string.IsNullOrEmpty(sourceFormat))
             query.Add("sourceFormat", sourceFormat!);
 
-        if(!string.IsNullOrEmpty(targetFormat))
+        if (!string.IsNullOrEmpty(targetFormat))
             query.Add("targetFormat", targetFormat!);
 
         var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
@@ -58,6 +59,7 @@ public class PsbGenericApi : IPsbGenericApi
             requestUri,
             file,
             documentId,
+            domainId,
             metaAttributes,
             cancellation).ConfigureAwait(false);
 
@@ -75,6 +77,7 @@ public class PsbGenericApi : IPsbGenericApi
         string? sourceFormat = null,
         string? targetFormat = null,
         IDictionary<string, string>? metaAttributes = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedSenderPartyId = HttpUtility.UrlEncode(senderPartyId);
@@ -87,16 +90,16 @@ public class PsbGenericApi : IPsbGenericApi
         if (!string.IsNullOrEmpty(topic))
             query.Add("topic", topic!);
 
-        if(!string.IsNullOrEmpty(channel))
+        if (!string.IsNullOrEmpty(channel))
             query.Add("channel", channel!);
 
-        if(disablePlugins)
+        if (disablePlugins)
             query.Add("disablePlugins", disablePlugins.ToString());
 
-        if(!string.IsNullOrEmpty(sourceFormat))
+        if (!string.IsNullOrEmpty(sourceFormat))
             query.Add("sourceFormat", sourceFormat!);
 
-        if(!string.IsNullOrEmpty(targetFormat))
+        if (!string.IsNullOrEmpty(targetFormat))
             query.Add("targetFormat", targetFormat!);
 
         var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
@@ -107,6 +110,7 @@ public class PsbGenericApi : IPsbGenericApi
             requestUri,
             file,
             documentId,
+            domainId,
             metaAttributes,
             cancellation).ConfigureAwait(false);
 
@@ -117,6 +121,7 @@ public class PsbGenericApi : IPsbGenericApi
         string partyId,
         string documentId,
         string? targetFormat = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -134,6 +139,7 @@ public class PsbGenericApi : IPsbGenericApi
 
         var file = await _psbClient.Get<FileContent>(
             requestUri,
+            domainId,
             cancellation).ConfigureAwait(false);
 
         return file;

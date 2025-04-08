@@ -18,71 +18,76 @@ public class PsbPeppolApi : PsbPeppolLookupApi, IPsbPeppolApi
 
     protected override async Task<DeliveryOption[]> GetDeliveryOptions(
        string requestUri,
+       string? domainId,
        CancellationToken cancellation)
     {
-        var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(requestUri, cancellation).ConfigureAwait(false);
+        var deliveryOptions = await _psbClient.Get<DeliveryOption[]>(requestUri, domainId, cancellation).ConfigureAwait(false);
 
         return deliveryOptions;
     }
 
-    public async Task<PeppolConfig> GetEnvironmentConfig(CancellationToken cancellation = default)
+    public async Task<PeppolConfig> GetEnvironmentConfig(string? domainId = null, CancellationToken cancellation = default)
     {
         var targetUrl = "/api/v1/peppol/config";
 
-        var peppolPartyConfig = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation).ConfigureAwait(false);
+        var peppolPartyConfig = await _psbClient.Get<PeppolConfig>(targetUrl, domainId, cancellation).ConfigureAwait(false);
 
         return peppolPartyConfig;
     }
 
     public async Task<PeppolConfig> PutEnvironmentConfig(
         PeppolConfig config,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var targetUrl = "/api/v1/peppol/config";
 
-        var peppolPartyConfig = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation).ConfigureAwait(false);
+        var peppolPartyConfig = await _psbClient.Put<PeppolConfig>(targetUrl, config, domainId, cancellation).ConfigureAwait(false);
 
         return peppolPartyConfig;
     }
 
-    public async Task<ListResult<Party>> GetParties(CancellationToken cancellation = default)
+    public async Task<ListResult<Party>> GetParties(string? domainId = null, CancellationToken cancellation = default)
     {
         var targetUrl = "/api/v1/peppol/config/party";
 
-        var partyPagedResult = await _psbClient.Get<ListResult<Party>>(targetUrl, cancellation).ConfigureAwait(false);
+        var partyPagedResult = await _psbClient.Get<ListResult<Party>>(targetUrl, domainId, cancellation).ConfigureAwait(false);
         return partyPagedResult;
     }
 
     public async Task<PeppolConfig> GetConfig(
         string partyId,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        var res = await _psbClient.Get<PeppolConfig>(targetUrl, cancellation).ConfigureAwait(false);
+        var res = await _psbClient.Get<PeppolConfig>(targetUrl, domainId, cancellation).ConfigureAwait(false);
         return res;
     }
 
     public async Task<PeppolConfig> PutConfig(
         string partyId,
         PeppolConfig config,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        var res = await _psbClient.Put<PeppolConfig>(targetUrl, config, cancellation).ConfigureAwait(false);
+        var res = await _psbClient.Put<PeppolConfig>(targetUrl, config, domainId, cancellation).ConfigureAwait(false);
         return res;
     }
 
     public async Task DeleteConfig(
         string partyId,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var targetUrl = $"/api/v1/peppol/config/party/{encodedPartyId}";
 
-        await _psbClient.Delete(targetUrl, cancellation).ConfigureAwait(false);
+        await _psbClient.Delete(targetUrl, domainId, cancellation).ConfigureAwait(false);
     }
 }

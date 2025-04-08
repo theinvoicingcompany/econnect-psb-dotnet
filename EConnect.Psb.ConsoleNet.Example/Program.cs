@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using EConnect.Psb.Hosting;
 using EConnect.Psb.Models;
@@ -12,68 +9,42 @@ namespace EConnect.Psb.ConsoleNet.Example
     {
         static async Task Main(string[] args)
         {
-            const string psbUrl = "https://accp-psb.econnect.eu";
-            const string identityUrl = "https://accp-identity.econnect.eu";
-            const string subscriptionKey = "eConnectInternalApaasSubscription";
-            const string username = "flowtestapmanager";
-            const string password = "eConnect#!12";
-            const string clientId = "8deb9b756f2f4620";
-            const string clientSecret = "z8461xo2rpi5oyuzk6ore5dwtpog07bliuft";
+            Console.WriteLine("Enter username:");
+            var username = Console.ReadLine();
+            Console.WriteLine("Enter password:");
+            var password = Console.ReadLine();
 
-            using var psb = PsbServiceHost.Create(_ =>
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                _.PsbUrl = psbUrl;
-                _.IdentityUrl = identityUrl;
-                _.SubscriptionKey = subscriptionKey;
-                _.Username = username;
-                _.Password = password;
-                _.ClientId = clientId;
-                _.ClientSecret = clientSecret;
-            });
-
-            // Specify the path to the folder containing the files
-            const string folderPath = @"C:\Users\JochemVanWageningen\OneDrive - eVerbinding\Desktop\nuget test";
+                Console.WriteLine("No username or password provided.");
+                return;
+            }
 
             try
             {
-                // Get all files in the folder
-                var files = Directory.GetFiles(folderPath);
-
-                var count = 0;
-
-                // Loop through each file
-                foreach (var filePath in files.Where(s => s.EndsWith(".xml")))
+                // Example how to use psb services without HostBuilder
+                using (var psb = PsbServiceHost.Create(_ =>
+                       {
+                           _.Username = username;
+                           _.Password = password;
+                           _.PsbUrl = "https://accp-psb.econnect.eu";
+                           _.IdentityUrl = "https://accp-identity.econnect.eu";
+                           _.ClientId = "5fac195439284072";
+                           _.ClientSecret = "7608f01a7b1d4d6d8b5c909527f30569";
+                           _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
+                       }))
                 {
-                    count++;
-                    // Extract information from the filename
-                    var fileName = Path.GetFileNameWithoutExtension(filePath);
-
-                    var docId = fileName.Split('_');
-                    //  var metaData = File.ReadAllText($"{folderPath}/42_{docId[1]}_0106%3A24135941_meta.json");
-
-                    // Read the file content
-                    var content = new FileContent(File.ReadAllBytes(filePath), fileName);
-
-                    Console.WriteLine(count);
-                    Console.WriteLine(fileName);
-
-                    // Send the file using GenericApi.Send
-                    // Be aware that the correct Hook is available in the account
-                    var response = await psb.Generic.Receive(
-                        "0106:flowtestuser1p2",
-                        content,
-                        "ReceiveInvoice",
-                        metaAttributes: new Dictionary<string, string>() { { "test1", "value1" }, { "test2", "value2" } });
-
-                    //// Process the response as needed
-                    Console.WriteLine($"File {filePath} sent. Response Code: {response.Id}. Count: {count}");
+                    var res = await psb.SalesInvoice.QueryRecipientParty("0106:12345678", new[] { "0106:12345678" }).ConfigureAwait(false);
+                    Console.WriteLine(res);
                 }
             }
-            catch (Exception ex)
+            catch (EConnectException ex)
             {
-                // Handle any exceptions
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("ERROR: [" + ex.Code + "] " + ex.Message);
             }
+
+            Console.WriteLine("Done");
+            Console.ReadLine();
         }
     }
 }

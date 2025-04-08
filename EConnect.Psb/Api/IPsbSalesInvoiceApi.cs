@@ -9,8 +9,9 @@ public interface IPsbSalesInvoiceApi
 {
     Task<string> QueryRecipientParty(
         string senderPartyId,
-        IEnumerable<string> recipientPartyIds, 
-        string? preferredDocumentTypeId = null, 
+        IEnumerable<string> recipientPartyIds,
+        string? preferredDocumentTypeId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Send(
@@ -18,13 +19,15 @@ public interface IPsbSalesInvoiceApi
         FileContent file,
         string? receiverPartyId = null,
         string? channel = null,
-        string? documentId = null, 
+        string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Recognize(
         string senderPartyId,
         FileContent file,
         string? channel = null,
-        string? documentId = null, 
+        string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 }

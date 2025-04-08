@@ -7,15 +7,15 @@ namespace EConnect.Psb.Api;
 
 public interface IPsbPeppolApi : IPsbPeppolLookupApi
 {
-    Task<PeppolConfig> GetEnvironmentConfig(CancellationToken cancellation = default);
+    Task<PeppolConfig> GetEnvironmentConfig(string? domainId = null, CancellationToken cancellation = default);
 
-    Task<PeppolConfig> PutEnvironmentConfig(PeppolConfig config, CancellationToken cancellation = default);
+    Task<PeppolConfig> PutEnvironmentConfig(PeppolConfig config, string? domainId = null, CancellationToken cancellation = default);
 
-    Task<ListResult<Party>> GetParties(CancellationToken cancellation = default);
+    Task<ListResult<Party>> GetParties(string? domainId = null, CancellationToken cancellation = default);
 
-    Task<PeppolConfig> GetConfig(string partyId, CancellationToken cancellation = default);
+    Task<PeppolConfig> GetConfig(string partyId, string? domainId = null, CancellationToken cancellation = default);
 
-    Task<PeppolConfig> PutConfig(string partyId, PeppolConfig config, CancellationToken cancellation = default);
+    Task<PeppolConfig> PutConfig(string partyId, PeppolConfig config, string? domainId = null, CancellationToken cancellation = default);
 
-    Task DeleteConfig(string partyId, CancellationToken cancellation = default);
+    Task DeleteConfig(string partyId, string? domainId = null, CancellationToken cancellation = default);
 }

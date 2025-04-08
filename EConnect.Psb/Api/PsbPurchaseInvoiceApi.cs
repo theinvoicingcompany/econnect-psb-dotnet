@@ -18,13 +18,14 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
     public async Task<FileContent> Download(
         string partyId,
         string documentId,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}/download";
 
-        var file = await _psbClient.Get<FileContent>(targetUrl, cancellation).ConfigureAwait(false);
+        var file = await _psbClient.Get<FileContent>(targetUrl, domainId, cancellation).ConfigureAwait(false);
         return file;
     }
 
@@ -33,6 +34,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         string documentId,
         InvoiceResponse purchaseInvoice,
         string? responseDocumentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -43,6 +45,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
             targetUrl,
             purchaseInvoice,
             responseDocumentId,
+            domainId,
             cancellation
         ).ConfigureAwait(false);
 
@@ -52,6 +55,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
     public async Task Delete(
         string partyId,
         string documentId,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -59,8 +63,9 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         var targetUrl = $"/api/v1/{encodedPartyId}/purchaseInvoice/{encodedDocumentId}";
 
         await _psbClient.Delete(
-            requestUri: targetUrl,
-            cancellation: cancellation
+            targetUrl,
+            domainId,
+            cancellation
         ).ConfigureAwait(false);
     }
 
@@ -69,6 +74,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
         FileContent file,
         string? channel = null,
         string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -81,6 +87,7 @@ public class PsbPurchaseInvoiceApi : IPsbPurchaseInvoiceApi
                 requestUri,
                 file,
                 documentId,
+                domainId,
                 cancellation: cancellation)
             .ConfigureAwait(false);
 

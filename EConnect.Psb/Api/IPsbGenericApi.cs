@@ -17,6 +17,7 @@ public interface IPsbGenericApi
         string? sourceFormat = null,
         string? targetFormat = null,
         IDictionary<string, string>? metaAttributes = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Send(
@@ -30,11 +31,13 @@ public interface IPsbGenericApi
         string? sourceFormat = null,
         string? targetFormat = null,
         IDictionary<string, string>? metaAttributes = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<FileContent> Download(
         string partyId,
         string documentId,
         string? targetFormat = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 }

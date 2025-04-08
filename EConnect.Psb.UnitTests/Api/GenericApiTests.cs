@@ -34,7 +34,8 @@ public class GenericApiTests : PsbTestContext
                 .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aRECEIVER/generic/receive?senderId=NL%3AKVK%3ASENDER&topic=SalesInvoiceReceived&channel=peppol&sourceFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0&targetFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%23conformant%23urn%3Afdc%3Anen.nl%3Agaccount%3Av1.0",
                     ensureFileUpload: true,
                     ensureMetaAttributes: true,
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true, 
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
@@ -50,6 +51,7 @@ public class GenericApiTests : PsbTestContext
             "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
             "urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0#conformant#urn:fdc:nen.nl:gaccount:v1.0",
             new Dictionary<string, string>() { {"key1", "value1"} },
+            "domain1",
             CancellationToken.None);
 
         // Assert
@@ -73,7 +75,8 @@ public class GenericApiTests : PsbTestContext
                 .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aSENDER/generic/send?receiverId=NL%3AKVK%3ARECEIVER&topic=SalesInvoiceReceived&channel=peppol&disablePlugins=True&sourceFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0&targetFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%23conformant%23urn%3Afdc%3Anen.nl%3Agaccount%3Av1.0",
                     ensureFileUpload: true,
                     ensureMetaAttributes: true,
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true,
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
@@ -89,6 +92,7 @@ public class GenericApiTests : PsbTestContext
             "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
             "urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0#conformant#urn:fdc:nen.nl:gaccount:v1.0",
             new Dictionary<string, string>() { {"key1", "value1"} },
+            "domain1",
             CancellationToken.None);
 
         // Assert

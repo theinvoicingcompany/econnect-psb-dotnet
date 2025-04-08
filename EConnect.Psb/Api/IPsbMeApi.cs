@@ -6,7 +6,7 @@ namespace EConnect.Psb.Api;
 
 public interface IPsbMeApi
 {
-    Task<Me> Me(CancellationToken cancellation = default);
+    Task<Me> Me(string? domainId = null, CancellationToken cancellation = default);
 
-    Task<UserParty[]> MeParties(CancellationToken cancellation = default);
+    Task<UserParty[]> MeParties(string? domainId = null, CancellationToken cancellation = default);
 }

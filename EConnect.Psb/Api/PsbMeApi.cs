@@ -14,13 +14,13 @@ public class PsbMeApi : IPsbMeApi
         _psbClient = psbClient;
     }
 
-    public Task<Me> Me(CancellationToken cancellation = default)
+    public Task<Me> Me(string? domainId = null, CancellationToken cancellation = default)
     {
-        return _psbClient.Get<Me>("/api/v1/me", cancellation);
+        return _psbClient.Get<Me>("/api/v1/me", domainId, cancellation);
     }
-        
-    public Task<UserParty[]> MeParties(CancellationToken cancellation = default)
+
+    public Task<UserParty[]> MeParties(string? domainId = null, CancellationToken cancellation = default)
     {
-        return _psbClient.Get<UserParty[]>("/api/v1/me/party", cancellation);
+        return _psbClient.Get<UserParty[]>("/api/v1/me/party", domainId, cancellation);
     }
 }

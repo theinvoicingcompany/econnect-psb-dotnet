@@ -13,5 +13,6 @@ public interface IPsbPeppolLookupApi
         List<string>? documentTypeIds = null,
         string? documentFamily = null,
         bool? isCredit = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 }

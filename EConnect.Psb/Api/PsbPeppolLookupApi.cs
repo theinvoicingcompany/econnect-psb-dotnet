@@ -29,7 +29,7 @@ namespace EConnect.Psb.Api
             };
         }
 
-        private async Task<string> CreateRequestUri(
+        private static async Task<string> CreateRequestUri(
             List<string> partyIds,
             string? preferredDocumentTypeId = null,
             List<string>? documentTypeIds = null,
@@ -37,7 +37,7 @@ namespace EConnect.Psb.Api
             bool? isCredit = null)
         {
             var requestUri = "/api/v1/peppol/deliveryOption";
-            var query = new List<KeyValuePair<string,string>>();
+            var query = new List<KeyValuePair<string, string>>();
 
             query.AddRange(partyIds.Select(partyId =>
                 new KeyValuePair<string, string>("partyIds", partyId)));
@@ -45,8 +45,8 @@ namespace EConnect.Psb.Api
             if (!string.IsNullOrEmpty(preferredDocumentTypeId))
                 query.Add(new KeyValuePair<string, string>("preferredDocumentTypeId", preferredDocumentTypeId!));
 
-            if(documentTypeIds != null) 
-                query.AddRange(documentTypeIds.Select(documentTypeId => 
+            if (documentTypeIds != null)
+                query.AddRange(documentTypeIds.Select(documentTypeId =>
                     new KeyValuePair<string, string>("documentTypeIds", documentTypeId)));
 
             if (!string.IsNullOrEmpty(documentFamily))
@@ -54,7 +54,7 @@ namespace EConnect.Psb.Api
 
             if (isCredit != null)
                 query.Add(new KeyValuePair<string, string>("isCredit", isCredit.ToString()));
-        
+
             var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
             if (!string.IsNullOrEmpty(queryString))
                 requestUri += "?" + queryString;
@@ -64,12 +64,13 @@ namespace EConnect.Psb.Api
 
         protected virtual async Task<DeliveryOption[]> GetDeliveryOptions(
            string requestUri,
+           string? domainId,
            CancellationToken cancellation)
         {
             var res = await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
 
             var deliveryOptions = await res.Read<DeliveryOption[]>(cancellation).ConfigureAwait(false);
-           
+
             return deliveryOptions;
         }
 
@@ -79,12 +80,13 @@ namespace EConnect.Psb.Api
             List<string>? documentTypeIds = null,
             string? documentFamily = null,
             bool? isCredit = null,
+            string? domainId = null,
             CancellationToken cancellation = default)
         {
             var requestUri = await CreateRequestUri(partyIds, preferredDocumentTypeId,
                 documentTypeIds, documentFamily, isCredit);
 
-            return await GetDeliveryOptions(requestUri, cancellation);
+            return await GetDeliveryOptions(requestUri, domainId, cancellation);
         }
 
         public void Dispose()

@@ -14,7 +14,7 @@ namespace EConnect.Psb.UnitTests.Api;
 public class SalesOrderApiTest : PsbTestContext
 {
     public IPsbSalesOrderApi SalesOrderApi => GetRequiredService<IPsbSalesOrderApi>();
-    
+
     [TestMethod]
     [DeploymentItem("TestData/bisv3Order.xml", "TestData")]
     public async Task DownloadTest()
@@ -62,7 +62,7 @@ public class SalesOrderApiTest : PsbTestContext
 
         // Act
         await SalesOrderApi.Delete(partyId, documentId);
-        
+
         // Assert
         VerifyDeleteRequest(Times.Once());
     }
@@ -91,7 +91,7 @@ public class SalesOrderApiTest : PsbTestContext
         });
 
         // Act
-        var res = await SalesOrderApi.Response(partyId, docId, response, expectedDocId, CancellationToken.None).ConfigureAwait(false);
+        var res = await SalesOrderApi.Response(partyId, docId, response, expectedDocId, "domain1", CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         Assert.AreEqual(expectedDocId, res.Id);

@@ -62,13 +62,16 @@ public class PurchaseOrderApiTests : PsbTestContext
             var requestUri = $"/api/v1/NL%3aKVK%3aSENDER/purchaseOrder/send?receiverId=NL%3AKVK%3ARECEIVER&channel=peppol";
 
             builder
-                .Setup(HttpMethod.Post, requestUri, ensureFileUpload: true, ensureEConnectDocumentId: true)
+                .Setup(HttpMethod.Post, requestUri, 
+                    ensureFileUpload: true, 
+                    ensureEConnectDocumentId: true,
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
         // Act
         var res = await PsbPurchaseOrderApi.Send(
-            partyId: senderPartyId, file, "NL:KVK:RECEIVER", "peppol", expectedId, CancellationToken.None);
+            partyId: senderPartyId, file, "NL:KVK:RECEIVER", "peppol", expectedId, "domain1", CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedId, res.Id);
@@ -94,12 +97,13 @@ public class PurchaseOrderApiTests : PsbTestContext
 
             builder
                 .Setup(HttpMethod.Post, $"/api/v1/{encodedPartyId}/purchaseOrder/{encodedDocumentId}/cancel",
-                    ensureEConnectDocumentId: true)
+                    ensureEConnectDocumentId: true, 
+                    ensureEConnectDomainId: true)
                 .Result(json);
         });
 
         // Act
-        var res = await PsbPurchaseOrderApi.Cancel(partyId, docId, response, expectedDocId, CancellationToken.None).ConfigureAwait(false);
+        var res = await PsbPurchaseOrderApi.Cancel(partyId, docId, response, expectedDocId, "domain1", CancellationToken.None).ConfigureAwait(false);
 
         // Assert
         Assert.AreEqual(expectedDocId, res.Id);

@@ -9,17 +9,20 @@ public interface IPsbSalesOrderApi
     Task<FileContent> Download(
         string partyId,
         string documentId,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task Delete(
         string partyId,
         string documentId,
+        string? domainId = null,
         CancellationToken cancellation = default);
 
     Task<Document> Response(
         string partyId,
-        string documentId, 
+        string documentId,
         OrderResponse orderResponse,
         string? responseDocumentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default);
 }

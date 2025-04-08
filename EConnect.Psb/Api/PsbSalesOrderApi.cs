@@ -18,7 +18,8 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
     public async Task<FileContent> Download(
         string partyId,
         string documentId,
-        CancellationToken cancellation)
+        string? domainId = null,
+        CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
@@ -26,8 +27,9 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
         var targetUrl = $"/api/v1/{encodedPartyId}/salesOrder/{encodedDocumentId}/download";
 
         var file = await _psbClient.Get<FileContent>(
-            requestUri: targetUrl,
-            cancellation: cancellation).ConfigureAwait(false);
+            targetUrl,
+            domainId,
+            cancellation).ConfigureAwait(false);
 
         return file;
     }
@@ -35,22 +37,25 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
     public async Task Delete(
         string partyId,
         string documentId,
-        CancellationToken cancellation)
+        string? domainId = null,
+        CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var targetUrl = $"/api/v1/{encodedPartyId}/salesOrder/{encodedDocumentId}";
 
         await _psbClient.Delete(
-            requestUri: targetUrl,
-            cancellation: cancellation).ConfigureAwait(false);
+            targetUrl,
+            domainId,
+            cancellation).ConfigureAwait(false);
     }
 
     public async Task<Document> Response(
-        string partyId, 
+        string partyId,
         string documentId,
         OrderResponse orderResponse,
         string? responseDocumentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -61,6 +66,7 @@ public class PsbSalesOrderApi : IPsbSalesOrderApi
             targetUrl,
             orderResponse,
             responseDocumentId,
+            domainId,
             cancellation).ConfigureAwait(false);
 
         return res;

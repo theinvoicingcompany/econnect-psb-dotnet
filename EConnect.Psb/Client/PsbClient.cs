@@ -29,12 +29,23 @@ public class PsbClient
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
+    private Task<HttpResponseMessage> Send(HttpRequestMessage request, string? domainId, CancellationToken cancellation)
+    {
+        if (!string.IsNullOrEmpty(domainId))
+            request.Headers.Add("X-EConnect-DomainId", domainId);
+
+        return _httpClient.SendAsync(request, cancellation);
+    }
+
     public async Task<TResponseBody> Get<TResponseBody>(
         string? requestUri,
+        string? domainId = null,
         CancellationToken cancellation = default
         ) where TResponseBody : class
     {
-        var res = await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+
+        var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
 
         if (typeof(TResponseBody) == typeof(FileContent) && new FileContent(res.Content, "file") is TResponseBody body)
         {
@@ -47,10 +58,15 @@ public class PsbClient
     public async Task<TResponseBody> Put<TResponseBody>(
         string? requestUri,
         object body,
-        CancellationToken cancellation = default
-        ) where TResponseBody : class
+        string? domainId = null,
+        CancellationToken cancellation = default) where TResponseBody : class
     {
-        var res = await _httpClient.PutAsJsonAsync(requestUri, body, cancellation).ConfigureAwait(false);
+        var request = new HttpRequestMessage(HttpMethod.Put, requestUri)
+        {
+            Content = JsonContent.Create(body)
+        };
+
+        var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
@@ -58,15 +74,19 @@ public class PsbClient
         string? requestUri,
         object body,
         string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default
         ) where TResponseBody : class
     {
-        var content = JsonContent.Create(body);
-       
-        if(!string.IsNullOrEmpty(documentId))
-            content.Headers.Add("X-EConnect-DocumentId", documentId);
+        var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
+        {
+            Content = JsonContent.Create(body)
+        };
 
-        var res = await _httpClient.PostAsync(requestUri, content, cancellation).ConfigureAwait(false);
+        if (!string.IsNullOrEmpty(documentId))
+            request.Headers.Add("X-EConnect-DocumentId", documentId);
+
+        var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
     }
 
@@ -74,6 +94,7 @@ public class PsbClient
         string? requestUri,
         FileContent file,
         string? documentId = null,
+        string? domainId = null,
         IDictionary<string, string>? metaAttributes = null,
         CancellationToken cancellation = default
         ) where TResponseBody : class
@@ -90,10 +111,15 @@ public class PsbClient
             multipart.Add(new StringContent(json), "metaAttributes");
         }
 
-        if(!string.IsNullOrEmpty(documentId))
-            multipart.Headers.Add("X-EConnect-DocumentId", documentId);
+        var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
+        {
+            Content = multipart
+        };
 
-        var res = await _httpClient.PostAsync(requestUri, multipart, cancellation).ConfigureAwait(false);
+        if (!string.IsNullOrEmpty(documentId))
+            request.Headers.Add("X-EConnect-DocumentId", documentId);
+
+        var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
         file.Dispose();
 
         return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
@@ -101,9 +127,12 @@ public class PsbClient
 
     public async Task Delete(
         string? requestUri,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
-        var res = await _httpClient.DeleteAsync(requestUri, cancellation).ConfigureAwait(false);
+        var request = new HttpRequestMessage(HttpMethod.Delete, requestUri);
+
+        var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
 
         if (!res.IsSuccessStatusCode)
             await res.ThrowError(cancellation).ConfigureAwait(false);

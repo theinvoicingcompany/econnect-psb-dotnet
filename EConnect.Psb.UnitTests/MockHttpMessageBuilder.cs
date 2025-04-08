@@ -23,25 +23,30 @@ public class MockHttpMessageBuilder
         _baseUrl = baseUrl;
     }
 
-    private bool IsAuthenticated(HttpRequestMessage message)
+    private static bool IsAuthenticated(HttpRequestMessage message)
     {
         return message.Headers.Authorization?.ToString() == "Bearer valid_token";
     }
 
-    private bool HasSubscription(HttpRequestMessage message)
+    private static bool HasSubscription(HttpRequestMessage message)
     {
         return message.Headers.TryGetValues("Subscription-Key", out var keys) && keys.Any();
     }
 
-    public bool HasMultipartFormDataContent<TType>(HttpRequestMessage message)
+    public static bool HasMultipartFormDataContent<TType>(HttpRequestMessage message)
     {
         return message.Content is MultipartFormDataContent multipart &&
                multipart.FirstOrDefault(m => m is TType) != default;
     }
 
-    private bool HasEConnectDocumentId(HttpRequestMessage message)
+    private static bool HasEConnectDocumentId(HttpRequestMessage message)
     {
-        return message.Content!.Headers.TryGetValues("X-EConnect-DocumentId", out var keys) && keys.Any();
+        return message.Headers.TryGetValues("X-EConnect-DocumentId", out var keys) && keys.Any();
+    }
+
+    private static bool HasEConnectDomainId(HttpRequestMessage message)
+    {
+        return message.Headers.TryGetValues("X-EConnect-DomainId", out var keys) && keys.Any();
     }
 
     private HttpResponseMessage Xml(HttpStatusCode status, string xml) => new(status)
@@ -70,7 +75,8 @@ public class MockHttpMessageBuilder
         bool ensureSubscriptionHeader = true,
         bool ensureFileUpload = false,
         bool ensureMetaAttributes = false,
-        bool ensureEConnectDocumentId = false)
+        bool ensureEConnectDocumentId = false,
+        bool ensureEConnectDomainId = false)
     {
         return Setup(method, path, message =>
         {
@@ -79,8 +85,9 @@ public class MockHttpMessageBuilder
             var file = !ensureFileUpload || HasMultipartFormDataContent<StreamContent>(message);
             var meta = !ensureMetaAttributes || HasMultipartFormDataContent<StringContent>(message);
             var docId = !ensureEConnectDocumentId || HasEConnectDocumentId(message);
+            var domain = !ensureEConnectDomainId || HasEConnectDomainId(message);
 
-            return auth && sub && file && meta && docId;
+            return auth && sub && file && meta && docId && domain;
         });
     }
 

@@ -16,7 +16,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
     {
         _psbClient = psbClient;
     }
-    public async Task<string> QueryRecipientParty(string senderPartyId, IEnumerable<string> recipientPartyIds, string? preferredDocumentTypeId = null, CancellationToken cancellation = default)
+    public async Task<string> QueryRecipientParty(string senderPartyId, IEnumerable<string> recipientPartyIds, string? preferredDocumentTypeId = null, string? domainId = null, CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/queryRecipientParty";
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
@@ -32,6 +32,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         string? receiverPartyId = null,
         string? channel = null,
         string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/send";
@@ -53,8 +54,9 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
             requestUri,
             file,
             documentId,
+            domainId,
             cancellation: cancellation).ConfigureAwait(false);
-        
+
         return res;
     }
 
@@ -63,6 +65,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         FileContent file,
         string? channel = null,
         string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var requestUri = $"/api/v1/{HttpUtility.UrlEncode(senderPartyId)}/salesInvoice/recognize";
@@ -74,8 +77,9 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
             requestUri,
             file,
             documentId,
+            domainId,
             cancellation: cancellation).ConfigureAwait(false);
-        
+
         return res;
     }
 }

@@ -21,6 +21,7 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         string senderPartyId,
         IEnumerable<string> recipientPartyIds,
         string? preferredDocumentTypeId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(senderPartyId);
@@ -29,7 +30,7 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
             requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
 
-        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation: cancellation).ConfigureAwait(false);
+        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, domainId: domainId, cancellation: cancellation).ConfigureAwait(false);
 
         return party;
     }
@@ -40,6 +41,7 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         string? receiverPartyId = null,
         string? channel = null,
         string? documentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
@@ -59,28 +61,31 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
             requestUri += "?" + queryString;
 
         var res = await _psbClient.PostFile<Document>(
-            requestUri, 
-            file, 
+            requestUri,
+            file,
             documentId,
+            domainId,
             cancellation: cancellation).ConfigureAwait(false);
         return res;
     }
 
     public async Task<Document> Cancel(
         string partyId,
-        string documentId, 
+        string documentId,
         OrderCancellation message,
         string? cancelDocumentId = null,
+        string? domainId = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(partyId);
         var encodedDocumentId = HttpUtility.UrlEncode(documentId);
         var requestUri = $"/api/v1/{encodedPartyId}/purchaseOrder/{encodedDocumentId}/cancel";
-        
+
         var res = await _psbClient.Post<Document>(
                 requestUri,
                 message,
                 cancelDocumentId,
+                domainId,
                 cancellation).ConfigureAwait(false);
 
         return res;

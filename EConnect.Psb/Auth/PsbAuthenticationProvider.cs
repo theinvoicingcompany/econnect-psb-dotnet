@@ -21,7 +21,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         _httpClientFactory = httpClientFactory;
     }
 
-    private async Task<TokenResponse> RequestAccessToken(string scope, CancellationToken cancellation)
+    private Task<TokenResponse> RequestPasswordToken(string scope, CancellationToken cancellation)
     {
         using var request = new PasswordTokenRequest
         {
@@ -34,7 +34,28 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         };
 
         var httpClient = _httpClientFactory.CreateClient(nameof(PsbAuthenticationProvider));
-        var response = await httpClient.RequestPasswordTokenAsync(request, cancellation).ConfigureAwait(false);
+        return httpClient.RequestPasswordTokenAsync(request, cancellation);
+    }
+
+    private Task<TokenResponse> RequestClientCredentialsToken(string scope, CancellationToken cancellation)
+    {
+        using var request = new ClientCredentialsTokenRequest()
+        {
+            Address = _options.IdentityUrl + "/connect/token",
+            ClientId = _options.ClientId,
+            ClientSecret = _options.ClientSecret,
+            Scope = scope,
+        };
+
+        var httpClient = _httpClientFactory.CreateClient(nameof(PsbAuthenticationProvider));
+        return httpClient.RequestClientCredentialsTokenAsync(request, cancellation);
+    }
+
+    private async Task<TokenResponse> RequestAccessToken(string scope, CancellationToken cancellation)
+    {
+        var response = await (!string.IsNullOrWhiteSpace(_options.Password)
+            ? RequestPasswordToken(scope, cancellation)
+            : RequestClientCredentialsToken(scope, cancellation)).ConfigureAwait(false);
 
         if (response.IsError)
         {
