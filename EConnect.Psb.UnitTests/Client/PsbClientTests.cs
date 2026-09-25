@@ -31,7 +31,7 @@ public class PsbClientTests : PsbTestContext
         });
 
         // Assert
-        var ex = await Assert.ThrowsExceptionAsync<EConnectException>(async () =>
+        var ex = await Assert.ThrowsExactlyAsync<EConnectException>(async () =>
         {
             // Act
             await MeApi.Me();
@@ -61,7 +61,7 @@ public class PsbClientTests : PsbTestContext
         });
 
         // Assert
-        var ex = await Assert.ThrowsExceptionAsync<EConnectException>(async () =>
+        var ex = await Assert.ThrowsExactlyAsync<EConnectException>(async () =>
         {
             // Act
             await MeApi.Me();

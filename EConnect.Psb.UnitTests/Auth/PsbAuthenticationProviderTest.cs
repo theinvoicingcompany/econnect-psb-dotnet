@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using EConnect.Psb.Auth;
+using EConnect.Psb.Config;
+using EConnect.Psb.Models;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -55,5 +59,31 @@ public class PsbAuthenticationProviderTest : PsbTestContext
         Assert.AreEqual("token1", token1);
         Assert.AreEqual("token2", token2);
         VerifyAnyRequest(Times.Exactly(2));
+    }
+
+    [TestMethod]
+    [DataRow(null, "user", "pass", "ClientId")]
+    [DataRow("", "user", "pass", "ClientId")]
+    [DataRow("client_id", null, "pass", "Username")]
+    [DataRow(null, null, null, "ClientId")]
+    public async Task MissingOptionShouldThrowTest(string? clientId, string? username, string? password, string expectedOption)
+    {
+        // Arrange
+        var options = Options.Create(new PsbOptions
+        {
+            IdentityUrl = "https://identity.econnect.mock",
+            ClientId = clientId,
+            ClientSecret = "client_secret",
+            Username = username,
+            Password = password
+        });
+        var authentication = new PsbAuthenticationProvider(options, Mock.Of<IHttpClientFactory>());
+
+        // Act
+        var ex = await Assert.ThrowsExactlyAsync<EConnectException>(() => authentication.GetAccessToken("ap"));
+
+        // Assert
+        Assert.AreEqual("OAUTH03", ex.Code);
+        StringAssert.Contains(ex.Message, expectedOption);
     }
 }

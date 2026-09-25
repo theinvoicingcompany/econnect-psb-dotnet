@@ -81,9 +81,12 @@ public class HookApiTests : PsbTestContext
         {
             Assert.AreEqual(hook.Topics[i], res[0].Topics[i]);
         }
+        Assert.IsNotNull(hook.PublishTopics);
+        var publishTopics = res[0].PublishTopics;
+        Assert.IsNotNull(publishTopics);
         for (int i = 0; i < hook.PublishTopics.Length; i++)
         {
-            Assert.AreEqual(hook.PublishTopics[i], res[0].PublishTopics[i]);
+            Assert.AreEqual(hook.PublishTopics[i], publishTopics[i]);
         }
         Assert.AreEqual(hook.IsActive, res[0].IsActive);
     }
@@ -155,6 +158,8 @@ public class HookApiTests : PsbTestContext
         {
             Assert.AreEqual(hook.Topics[i], res.Topics[i]);
         }
+        Assert.IsNotNull(hook.PublishTopics);
+        Assert.IsNotNull(res.PublishTopics);
         for (int i = 0; i < hook.PublishTopics.Length; i++)
         {
             Assert.AreEqual(hook.PublishTopics[i], res.PublishTopics[i]);

@@ -21,15 +21,23 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         _httpClientFactory = httpClientFactory;
     }
 
+    private static string RequireOption(string? value, string name)
+    {
+        if (string.IsNullOrEmpty(value))
+            throw new EConnectException("OAUTH03", $"The '{name}' option is required to request an access token.");
+
+        return value!;
+    }
+
     private Task<TokenResponse> RequestPasswordToken(string scope, CancellationToken cancellation)
     {
         using var request = new PasswordTokenRequest
         {
             Address = _options.IdentityUrl + "/connect/token",
-            ClientId = _options.ClientId,
+            ClientId = RequireOption(_options.ClientId, nameof(PsbOptions.ClientId)),
             ClientSecret = _options.ClientSecret,
             Scope = scope,
-            UserName = _options.Username,
+            UserName = RequireOption(_options.Username, nameof(PsbOptions.Username)),
             Password = _options.Password
         };
 
@@ -42,7 +50,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         using var request = new ClientCredentialsTokenRequest()
         {
             Address = _options.IdentityUrl + "/connect/token",
-            ClientId = _options.ClientId,
+            ClientId = RequireOption(_options.ClientId, nameof(PsbOptions.ClientId)),
             ClientSecret = _options.ClientSecret,
             Scope = scope,
         };
@@ -59,7 +67,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
 
         if (response.IsError)
         {
-            throw new EConnectException("OAUTH01", response.Error);
+            throw new EConnectException("OAUTH01", response.Error ?? response.ErrorDescription ?? "Something went wrong authenticating.");
         }
 
         if (response.AccessToken == null)

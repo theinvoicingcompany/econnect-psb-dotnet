@@ -33,7 +33,7 @@ namespace EConnect.Psb.AspNetCore.Mvc.UnitTests
             
             // Act
             var res = attr.IsValid(webhook);
-            var message = attr.GetValidationResult(webhook, new ValidationContext(webhook)).ErrorMessage;
+            var message = attr.GetValidationResult(webhook, new ValidationContext(webhook))?.ErrorMessage;
 
             // Assert
             Assert.IsFalse(res);

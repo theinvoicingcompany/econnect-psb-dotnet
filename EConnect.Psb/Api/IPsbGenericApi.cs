@@ -40,4 +40,17 @@ public interface IPsbGenericApi
         string? targetFormat = null,
         string? domainId = null,
         CancellationToken cancellation = default);
+
+    Task<ValidationOption[]> GetValidationOptions(
+        string? domainId = null,
+        CancellationToken cancellation = default);
+
+    Task<DocumentValidationResult> Validate(
+        FileContent file,
+        string? sourceFormat = null,
+        string? optionId = null,
+        string? languageCode = null,
+        IDictionary<string, string>? metaAttributes = null,
+        string? domainId = null,
+        CancellationToken cancellation = default);
 }

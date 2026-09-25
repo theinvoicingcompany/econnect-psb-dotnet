@@ -17,36 +17,36 @@ public class FileContent : IDisposable
     public FileContent(HttpContent content, string? filename = null)
     {
         Content = content;
-        EnsureAndSetFilename(filename);
+        Filename = EnsureFilename(filename);
     }
 
     public FileContent(Stream contents, string? filename = null)
     {
         Content = new StreamContent(contents);
-        EnsureAndSetFilename(filename);
+        Filename = EnsureFilename(filename);
     }
 
     public FileContent(FileStream contents, string? filename = null)
     {
         Content = new StreamContent(contents);
-        EnsureAndSetFilename(filename ?? contents.Name);
+        Filename = EnsureFilename(filename ?? contents.Name);
     }
 
     public FileContent(byte[] contents, string? filename = null)
     {
         Content = new ByteArrayContent(contents);
-        EnsureAndSetFilename(filename);
+        Filename = EnsureFilename(filename);
     }
 
     public FileContent(string contents, string? filename = null)
     {
         Content = new StringContent(contents);
-        EnsureAndSetFilename(filename);
+        Filename = EnsureFilename(filename);
     }
 
-    private void EnsureAndSetFilename(string? filename = null)
+    private static string EnsureFilename(string? filename)
     {
-        Filename = string.IsNullOrEmpty(filename) ? DefaultFileName : filename;
+        return string.IsNullOrEmpty(filename) ? DefaultFileName : filename!;
     }
 
     private static byte[] CreateWriter(Action<XmlWriter> onWrite)

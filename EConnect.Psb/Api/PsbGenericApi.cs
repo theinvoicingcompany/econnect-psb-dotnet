@@ -61,7 +61,7 @@ public class PsbGenericApi : IPsbGenericApi
             documentId,
             domainId,
             metaAttributes,
-            cancellation).ConfigureAwait(false);
+            cancellation: cancellation).ConfigureAwait(false);
 
         return res;
     }
@@ -112,7 +112,7 @@ public class PsbGenericApi : IPsbGenericApi
             documentId,
             domainId,
             metaAttributes,
-            cancellation).ConfigureAwait(false);
+            cancellation: cancellation).ConfigureAwait(false);
 
         return res;
     }
@@ -143,5 +143,53 @@ public class PsbGenericApi : IPsbGenericApi
             cancellation).ConfigureAwait(false);
 
         return file;
+    }
+
+    public Task<ValidationOption[]> GetValidationOptions(
+        string? domainId = null,
+        CancellationToken cancellation = default)
+    {
+        return _psbClient.Get<ValidationOption[]>(
+            "/api/v1/generic/validate/options",
+            domainId,
+            cancellation);
+    }
+
+    public async Task<DocumentValidationResult> Validate(
+        FileContent file,
+        string? sourceFormat = null,
+        string? optionId = null,
+        string? languageCode = null,
+        IDictionary<string, string>? metaAttributes = null,
+        string? domainId = null,
+        CancellationToken cancellation = default)
+    {
+        var requestUri = "/api/v1/generic/validate";
+        var query = new Dictionary<string, string>();
+
+        if (!string.IsNullOrEmpty(sourceFormat))
+            query.Add("sourceFormat", sourceFormat!);
+
+        if (!string.IsNullOrEmpty(optionId))
+            query.Add("optionId", optionId!);
+
+        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
+        if (!string.IsNullOrEmpty(queryString))
+            requestUri += "?" + queryString;
+
+        var headers = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(languageCode))
+            headers.Add("X-EConnect-Language", languageCode!);
+
+        var res = await _psbClient.PostFile<DocumentValidationResult>(
+            requestUri,
+            file,
+            null,
+            domainId,
+            metaAttributes,
+            headers,
+            cancellation).ConfigureAwait(false);
+
+        return res;
     }
 }
