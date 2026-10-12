@@ -16,7 +16,7 @@ builder.Services.AddPsbService(_ =>
     _.IdentityUrl = "https://accp-identity.econnect.eu";
     _.ClientId = "2210f77eed3a4ab2";
     _.ClientSecret = "ddded83702534a6c9cadde3d1bf3e94a";
-    _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
+    _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA"; // Optional
 });
 
 // Secret from config

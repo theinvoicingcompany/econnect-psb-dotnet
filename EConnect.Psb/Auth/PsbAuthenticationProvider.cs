@@ -35,10 +35,10 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         {
             Address = _options.IdentityUrl + "/connect/token",
             ClientId = RequireOption(_options.ClientId, nameof(PsbOptions.ClientId)),
-            ClientSecret = _options.ClientSecret,
+            ClientSecret = RequireOption(_options.ClientSecret, nameof(PsbOptions.ClientSecret)),
             Scope = scope,
             UserName = RequireOption(_options.Username, nameof(PsbOptions.Username)),
-            Password = _options.Password
+            Password = RequireOption(_options.Password, nameof(PsbOptions.Password))
         };
 
         var httpClient = _httpClientFactory.CreateClient(nameof(PsbAuthenticationProvider));
@@ -51,7 +51,7 @@ public class PsbAuthenticationProvider : IPsbAuthenticationProvider
         {
             Address = _options.IdentityUrl + "/connect/token",
             ClientId = RequireOption(_options.ClientId, nameof(PsbOptions.ClientId)),
-            ClientSecret = _options.ClientSecret,
+            ClientSecret = RequireOption(_options.ClientSecret, nameof(PsbOptions.ClientSecret)),
             Scope = scope,
         };
 

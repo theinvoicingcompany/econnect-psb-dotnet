@@ -7,7 +7,9 @@ using System.Xml;
 using System.Xml.Linq;
 using EConnect.Psb.Api;
 using EConnect.Psb.Client;
+using EConnect.Psb.Config;
 using EConnect.Psb.Models;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EConnect.Psb.UnitTests.Client;
@@ -69,6 +71,28 @@ public class PsbClientTests : PsbTestContext
 
         Assert.AreEqual("API403", ex.Code);
         Assert.AreEqual("Access forbidden. Please check PartyId authorization and make sure the Subscription-Key is valid.", ex.Message);
+    }
+
+    [TestMethod]
+    [DataRow("Subscription.Mock", true)]
+    [DataRow(null, false)]
+    [DataRow("", false)]
+    [DataRow(" ", false)]
+    public void SubscriptionKeyHeaderShouldBeOptionalTest(string? subscriptionKey, bool expectedHeader)
+    {
+        // Arrange
+        using var httpClient = new HttpClient();
+        var options = Options.Create(new PsbOptions
+        {
+            PsbUrl = "https://psb.econnect.mock",
+            SubscriptionKey = subscriptionKey
+        });
+
+        // Act
+        _ = new PsbClient(httpClient, options);
+
+        // Assert
+        Assert.AreEqual(expectedHeader, httpClient.DefaultRequestHeaders.Contains("Subscription-Key"));
     }
 
     private PsbClient PsbClient => GetRequiredService<PsbClient>();

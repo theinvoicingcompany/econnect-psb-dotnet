@@ -31,7 +31,7 @@ namespace EConnect.Psb.ConsoleNet.Example
                            _.IdentityUrl = "https://accp-identity.econnect.eu";
                            _.ClientId = "5fac195439284072";
                            _.ClientSecret = "7608f01a7b1d4d6d8b5c909527f30569";
-                           _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA";
+                           _.SubscriptionKey = "Sandbox.Accp.W2NmWFRINXokdA"; // Optional
                        }))
                 {
                     var res = await psb.SalesInvoice.QueryRecipientParty("0106:12345678", new[] { "0106:12345678" }).ConfigureAwait(false);

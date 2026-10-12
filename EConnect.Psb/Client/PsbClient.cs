@@ -25,7 +25,9 @@ public class PsbClient
         _httpClient = httpClient;
 
         httpClient.BaseAddress = new Uri($"{options.Value.PsbUrl}");
-        httpClient.DefaultRequestHeaders.Add("Subscription-Key", options.Value.SubscriptionKey);
+        if (!string.IsNullOrWhiteSpace(options.Value.SubscriptionKey))
+            httpClient.DefaultRequestHeaders.Add("Subscription-Key", options.Value.SubscriptionKey);
+
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 

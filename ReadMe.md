@@ -21,19 +21,27 @@ For an explanation of the API please refer to the following [documentation][4].
 ## Setup
 Make sure to initialise the service and setup the proper authentication.
 
+### Authentication
+The client supports two OAuth flows. When a `Password` is configured the Resource Owner Password flow is used, otherwise the Client Credentials flow.
+
+| Flow | Required options | Remarks |
+|---|---|---|
+| Client Credentials | `ClientId`, `ClientSecret` | **Recommended.** Request a client from [eConnect Tech Support](mailto:techsupport@econnect.eu). See [Authentication](https://psb.econnect.eu/introduction/authentication.html). |
+| Resource Owner Password | `ClientId`, `ClientSecret`, `Username`, `Password` | Still supported for existing integrations. |
+
+The `SubscriptionKey` is optional. When it is not set, no `Subscription-Key` header is sent.
+
 ### Hostbuilder
 The recommended way to setup the PSB APIs is to use a hostbuilder, enabling dependency injection.
 
 ```csharp
 builder.Services.AddPsbService(_ =>
 {
-    _.Username = "{username}";
-    _.Password = "{password}";
     _.PsbUrl = "{psbUrl}";
     _.IdentityUrl = "{identityUrl}";
     _.ClientId = "{clientId}";
     _.ClientSecret = "{clientSecret}";
-    _.SubscriptionKey = "{SubscriptionKey}";
+    _.SubscriptionKey = "{SubscriptionKey}"; // Optional
 });
 ```
 
@@ -71,13 +79,11 @@ Use the PsbServiceHost when it is not possible to use a dependency framework.
 ```csharp
 using (var psb = PsbServiceHost.Create(_ =>
     {
-    _.Username = "{username}";
-    _.Password = "{password}";
     _.PsbUrl = "{psbUrl}";
     _.IdentityUrl = "{identityUrl}";
     _.ClientId = "{clientId}";
     _.ClientSecret = "{clientSecret}";
-    _.SubscriptionKey = "{SubscriptionKey}";
+    _.SubscriptionKey = "{SubscriptionKey}"; // Optional
     }
 ))
 {
