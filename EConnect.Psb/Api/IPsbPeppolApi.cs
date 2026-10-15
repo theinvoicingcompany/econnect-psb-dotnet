@@ -18,4 +18,6 @@ public interface IPsbPeppolApi : IPsbPeppolLookupApi
     Task<PeppolConfig> PutConfig(string partyId, PeppolConfig config, string? domainId = null, CancellationToken cancellation = default);
 
     Task DeleteConfig(string partyId, string? domainId = null, CancellationToken cancellation = default);
+
+    Task<PrepareToMigrateResponse> PrepareToMigrate(string partyId, string? domainId = null, CancellationToken cancellation = default);
 }

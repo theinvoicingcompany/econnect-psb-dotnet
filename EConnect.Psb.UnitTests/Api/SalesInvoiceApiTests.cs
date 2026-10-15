@@ -38,6 +38,25 @@ public class SalesInvoiceApiTests : PsbTestContext
     }
 
     [TestMethod]
+    public async Task QueryRecipientPartyShouldSendDomainIdTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/salesInvoice/queryRecipientParty", ensureEConnectDomainId: true)
+                .Result(@"{ ""id"": ""NL:KVK:12345678"" }");
+        });
+
+        // Act
+        var advisedPartyId = await SalesInvoiceApi.QueryRecipientParty("NL:KVK:SENDER", new[] { "NL:KVK:RECEIVER_1" }, domainId: "domain1");
+
+        // Assert
+        Assert.AreEqual("NL:KVK:12345678", advisedPartyId);
+    }
+
+    [TestMethod]
     [DeploymentItem("TestData/bisv3.xml", "TestData")]
     public async Task SendFileStreamTest()
     {

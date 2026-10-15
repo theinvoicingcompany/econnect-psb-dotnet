@@ -55,6 +55,7 @@ After the PsbService is initialised the following APIs can be used:
 - IPsbSalesInvoiceApi
 - IPsbSalesOrderApi
 - IPsbGenericApi
+- IPsbEnrollmentApi
 
 For example, it's now possible to inject the sales invoice API into your controller:
 

@@ -39,6 +39,18 @@ public class PsbClient
         return _httpClient.SendAsync(request, cancellation);
     }
 
+    private static async Task<TResponseBody> ReadResponse<TResponseBody>(HttpResponseMessage res, CancellationToken cancellation)
+        where TResponseBody : class
+    {
+        if (typeof(TResponseBody) != typeof(FileContent))
+            return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
+
+        if (!res.IsSuccessStatusCode)
+            await res.ThrowError(cancellation).ConfigureAwait(false);
+
+        return (new FileContent(res.Content, "file") as TResponseBody)!;
+    }
+
     public async Task<TResponseBody> Get<TResponseBody>(
         string? requestUri,
         string? domainId = null,
@@ -49,12 +61,7 @@ public class PsbClient
 
         var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
 
-        if (typeof(TResponseBody) == typeof(FileContent) && new FileContent(res.Content, "file") is TResponseBody body)
-        {
-            return body;
-        }
-
-        return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
+        return await ReadResponse<TResponseBody>(res, cancellation).ConfigureAwait(false);
     }
 
     public async Task<TResponseBody> Put<TResponseBody>(
@@ -131,7 +138,7 @@ public class PsbClient
         var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
         file.Dispose();
 
-        return await res.Read<TResponseBody>(cancellation).ConfigureAwait(false);
+        return await ReadResponse<TResponseBody>(res, cancellation).ConfigureAwait(false);
     }
 
     public async Task Delete(
@@ -145,5 +152,17 @@ public class PsbClient
 
         if (!res.IsSuccessStatusCode)
             await res.ThrowError(cancellation).ConfigureAwait(false);
+    }
+
+    public async Task<TResponseBody> Delete<TResponseBody>(
+        string? requestUri,
+        string? domainId = null,
+        CancellationToken cancellation = default) where TResponseBody : class
+    {
+        var request = new HttpRequestMessage(HttpMethod.Delete, requestUri);
+
+        var res = await Send(request, domainId, cancellation).ConfigureAwait(false);
+
+        return await ReadResponse<TResponseBody>(res, cancellation).ConfigureAwait(false);
     }
 }

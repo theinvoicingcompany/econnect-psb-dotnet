@@ -17,6 +17,7 @@ public class PsbServiceProvider
         PurchaseOrder = serviceProvider.GetRequiredService<IPsbPurchaseOrderApi>();
         Generic = serviceProvider.GetRequiredService<IPsbGenericApi>();
         User = serviceProvider.GetRequiredService<IPsbUserApi>();
+        Enrollment = serviceProvider.GetRequiredService<IPsbEnrollmentApi>();
     }
 
     public IPsbMeApi Me { get; }
@@ -28,4 +29,5 @@ public class PsbServiceProvider
     public IPsbSalesOrderApi SalesOrder { get; }
     public IPsbPurchaseOrderApi PurchaseOrder { get; }
     public IPsbUserApi User { get; }
+    public IPsbEnrollmentApi Enrollment { get; }
 }

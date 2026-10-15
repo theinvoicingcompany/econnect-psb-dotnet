@@ -44,6 +44,53 @@ public class SalesOrderApiTest : PsbTestContext
     }
 
     [TestMethod]
+    public async Task DownloadWithTargetFormatTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Get, "/api/v1/NL%3aKVK%3a12345678/salesOrder/doc1/download?targetFormat=pdf", ensureEConnectDomainId: true)
+                .Result("pdf", contentType: "plain");
+        });
+
+        // Act
+        var res = await SalesOrderApi.Download("NL:KVK:12345678", "doc1", "domain1", "pdf");
+
+        // Assert
+        Assert.AreEqual("pdf", await res.Content.ReadAsStringAsync());
+    }
+
+    [TestMethod]
+    public async Task QueryRecipientPartyTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            var json = @"{ ""id"": ""0106:12345678"", ""channel"": ""peppol"", ""description"": ""Peppol participant"" }";
+
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSELLER/salesOrder/queryRecipientParty?preferredDocumentTypeId=doc%23type",
+                    ensureEConnectDomainId: true)
+                .Result(json);
+        });
+
+        // Act
+        var party = await SalesOrderApi.QueryRecipientParty(
+            "NL:KVK:SELLER",
+            new[] { "NL:KVK:BUYER", "GLN:BUYER_GLN" },
+            "doc#type",
+            "domain1");
+
+        // Assert
+        Assert.AreEqual("0106:12345678", party.Id);
+        Assert.AreEqual("peppol", party.Channel);
+        Assert.AreEqual("Peppol participant", party.Description);
+    }
+
+    [TestMethod]
     public async Task DeleteTest()
     {
         // Arrange

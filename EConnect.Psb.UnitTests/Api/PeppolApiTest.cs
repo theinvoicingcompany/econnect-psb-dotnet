@@ -681,4 +681,23 @@ public class PeppolApiTest : PsbTestContext
         // Assert
         VerifyDeleteRequest(Times.Once());
     }
+
+    [TestMethod]
+    public async Task PrepareToMigrateTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Get, "/api/v1/peppol/0106%3a12345678/prepareToMigrate", ensureEConnectDomainId: true)
+                .Result(@"{ ""migrationKey"": ""ABC-123"" }");
+        });
+
+        // Act
+        var res = await PeppolApi.PrepareToMigrate("0106:12345678", "domain1");
+
+        // Assert
+        Assert.AreEqual("ABC-123", res.MigrationKey);
+    }
 }

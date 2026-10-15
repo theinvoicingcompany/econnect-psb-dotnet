@@ -22,7 +22,7 @@ public class PsbSalesInvoiceApi : IPsbSalesInvoiceApi
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
             requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
 
-        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, cancellation: cancellation).ConfigureAwait(false);
+        var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, domainId: domainId, cancellation: cancellation).ConfigureAwait(false);
         return party.Id;
     }
 

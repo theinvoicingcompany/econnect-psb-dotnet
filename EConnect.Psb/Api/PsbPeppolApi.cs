@@ -90,4 +90,16 @@ public class PsbPeppolApi : PsbPeppolLookupApi, IPsbPeppolApi
 
         await _psbClient.Delete(targetUrl, domainId, cancellation).ConfigureAwait(false);
     }
+
+    public async Task<PrepareToMigrateResponse> PrepareToMigrate(
+        string partyId,
+        string? domainId = null,
+        CancellationToken cancellation = default)
+    {
+        var encodedPartyId = HttpUtility.UrlEncode(partyId);
+        var targetUrl = $"/api/v1/peppol/{encodedPartyId}/prepareToMigrate";
+
+        var res = await _psbClient.Get<PrepareToMigrateResponse>(targetUrl, domainId, cancellation).ConfigureAwait(false);
+        return res;
+    }
 }

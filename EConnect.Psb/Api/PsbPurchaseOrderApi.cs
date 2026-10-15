@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,18 +23,37 @@ public class PsbPurchaseOrderApi : IPsbPurchaseOrderApi
         IEnumerable<string> recipientPartyIds,
         string? preferredDocumentTypeId = null,
         string? domainId = null,
+        string? documentFamily = null,
         CancellationToken cancellation = default)
     {
         var encodedPartyId = HttpUtility.UrlEncode(senderPartyId);
         var requestUri = $"/api/v1/{encodedPartyId}/purchaseOrder/queryRecipientParty";
+        var query = new Dictionary<string, string>();
 
         if (!string.IsNullOrEmpty(preferredDocumentTypeId))
-            requestUri += "?preferredDocumentTypeId=" + HttpUtility.UrlEncode(preferredDocumentTypeId);
+            query.Add("preferredDocumentTypeId", preferredDocumentTypeId!);
+
+        if (!string.IsNullOrEmpty(documentFamily))
+            query.Add("documentFamily", documentFamily!);
+
+        var queryString = await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false);
+
+        if (!string.IsNullOrEmpty(queryString))
+            requestUri += "?" + queryString;
 
         var party = await _psbClient.Post<Party>(requestUri, recipientPartyIds, domainId: domainId, cancellation: cancellation).ConfigureAwait(false);
 
         return party;
     }
+
+    [Obsolete("Use the QueryRecipientParty overload that takes documentFamily.")]
+    public Task<Party> QueryRecipientParty(
+        string senderPartyId,
+        IEnumerable<string> recipientPartyIds,
+        string? preferredDocumentTypeId,
+        string? domainId,
+        CancellationToken cancellation)
+        => QueryRecipientParty(senderPartyId, recipientPartyIds, preferredDocumentTypeId, domainId, null, cancellation);
 
     public async Task<Document> Send(
         string partyId,

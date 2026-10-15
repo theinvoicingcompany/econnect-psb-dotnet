@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ public class GenericApiTests : PsbTestContext
             var json = "{ \"id\": \"" + expectedId + "\"}";
 
             builder
-                .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aRECEIVER/generic/receive?senderId=NL%3AKVK%3ASENDER&topic=SalesInvoiceReceived&channel=peppol&sourceFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0&targetFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%23conformant%23urn%3Afdc%3Anen.nl%3Agaccount%3Av1.0",
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aRECEIVER/generic/receive?senderId=NL%3AKVK%3ASENDER&topic=SalesInvoiceReceived&channel=peppol&sourceFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0&targetFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%23conformant%23urn%3Afdc%3Anen.nl%3Agaccount%3Av1.0&flow=flow1",
                     ensureFileUpload: true,
                     ensureMetaAttributes: true,
                     ensureEConnectDocumentId: true, 
@@ -44,14 +45,18 @@ public class GenericApiTests : PsbTestContext
         var res = await GenericApi.Receive(
             "NL:KVK:RECEIVER",
             file,
-            "SalesInvoiceReceived",
-            "NL:KVK:SENDER",
-            "peppol",
-            false,
-            expectedId,
-            "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
-            "urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0#conformant#urn:fdc:nen.nl:gaccount:v1.0",
-            new Dictionary<string, string>() { {"key1", "value1"} },
+            new GenericReceiveOptions
+            {
+                Topic = "SalesInvoiceReceived",
+                SenderPartyId = "NL:KVK:SENDER",
+                Channel = "peppol",
+                DisablePlugins = false,
+                DocumentId = expectedId,
+                SourceFormat = "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
+                TargetFormat = "urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0#conformant#urn:fdc:nen.nl:gaccount:v1.0",
+                MetaAttributes = new Dictionary<string, string>() { { "key1", "value1" } },
+                Flow = "flow1"
+            },
             "domain1",
             CancellationToken.None);
 
@@ -73,7 +78,7 @@ public class GenericApiTests : PsbTestContext
             var json = "{ \"id\": \"" + expectedId + "\"}";
 
             builder
-                .Setup(HttpMethod.Post, "/api/v1-beta/NL%3aKVK%3aSENDER/generic/send?receiverId=NL%3AKVK%3ARECEIVER&topic=SalesInvoiceReceived&channel=peppol&disablePlugins=True&sourceFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0&targetFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%23conformant%23urn%3Afdc%3Anen.nl%3Agaccount%3Av1.0",
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/generic/send?receiverId=NL%3AKVK%3ARECEIVER&topic=SalesInvoiceReceived&channel=peppol&disablePlugins=True&sourceFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0&targetFormat=urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Anen.nl%3Anlcius%3Av1.0%23conformant%23urn%3Afdc%3Anen.nl%3Agaccount%3Av1.0&flow=flow1",
                     ensureFileUpload: true,
                     ensureMetaAttributes: true,
                     ensureEConnectDocumentId: true,
@@ -85,14 +90,18 @@ public class GenericApiTests : PsbTestContext
         var res = await GenericApi.Send(
             "NL:KVK:SENDER",
             file,
-            "SalesInvoiceReceived",
-            "NL:KVK:RECEIVER",
-            "peppol",
-            true,
-            expectedId,
-            "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
-            "urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0#conformant#urn:fdc:nen.nl:gaccount:v1.0",
-            new Dictionary<string, string>() { {"key1", "value1"} },
+            new GenericSendOptions
+            {
+                Topic = "SalesInvoiceReceived",
+                ReceiverPartyId = "NL:KVK:RECEIVER",
+                Channel = "peppol",
+                DisablePlugins = true,
+                DocumentId = expectedId,
+                SourceFormat = "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0",
+                TargetFormat = "urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0#conformant#urn:fdc:nen.nl:gaccount:v1.0",
+                MetaAttributes = new Dictionary<string, string>() { { "key1", "value1" } },
+                Flow = "flow1"
+            },
             "domain1",
             CancellationToken.None);
 
@@ -117,7 +126,7 @@ public class GenericApiTests : PsbTestContext
             var encodedPartyId = HttpUtility.UrlEncode(partyId);
 
             builder
-                .Setup(HttpMethod.Get, $"/api/v1-beta/{encodedPartyId}/generic/{encodedDocumentId}/download?targetFormat=xml")
+                .Setup(HttpMethod.Get, $"/api/v1/{encodedPartyId}/generic/{encodedDocumentId}/download?targetFormat=xml")
                 .Result(xml, contentType: "xml");
         });
 
@@ -127,6 +136,92 @@ public class GenericApiTests : PsbTestContext
         // Assert
         Assert.IsNotNull(res);
         Assert.AreEqual(xml, await res.Content.ReadAsStringAsync());
+    }
+
+    [TestMethod]
+    public async Task DownloadWithOptionsTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Get, "/api/v1/NL%3aKVK%3a12345678/generic/doc1/download?targetFormat=pdf&disablePlugins=True&ignoreValidationErrors=True",
+                    ensureEConnectDomainId: true)
+                .Result("pdf", contentType: "plain");
+        });
+
+        // Act
+        var res = await GenericApi.Download("NL:KVK:12345678", "doc1", "pdf", "domain1",
+            disablePlugins: true, ignoreValidationErrors: true);
+
+        // Assert
+        Assert.AreEqual("pdf", await res.Content.ReadAsStringAsync());
+    }
+
+    [TestMethod]
+    public async Task DownloadErrorShouldThrowTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Get, "/api/v1/NL%3aKVK%3a12345678/generic/doc1/download")
+                .Result(@"{ ""code"": ""API404"", ""message"": ""Document not found."" }", HttpStatusCode.NotFound);
+        });
+
+        // Act
+        var ex = await Assert.ThrowsExactlyAsync<EConnectException>(() => GenericApi.Download("NL:KVK:12345678", "doc1"));
+
+        // Assert
+        Assert.AreEqual("API404", ex.Code);
+    }
+
+    [TestMethod]
+    [DeploymentItem("TestData/bisv3.xml", "TestData")]
+    public async Task TransformTest()
+    {
+        // Arrange
+        FileContent file = new(File.OpenRead("TestData/bisv3.xml"), "bisv3");
+
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/generic/transform?sourceFormat=source%23format&targetFormat=target%23format",
+                    ensureFileUpload: true,
+                    ensureEConnectDomainId: true)
+                .Result("<transformed />", contentType: "xml");
+        });
+
+        // Act
+        var res = await GenericApi.Transform(file, "target#format", "source#format", "domain1");
+
+        // Assert
+        Assert.AreEqual("<transformed />", await res.Content.ReadAsStringAsync());
+    }
+
+    [TestMethod]
+    [DeploymentItem("TestData/bisv3.xml", "TestData")]
+    public async Task TransformWithoutSourceFormatTest()
+    {
+        // Arrange
+        FileContent file = new(File.OpenRead("TestData/bisv3.xml"), "bisv3");
+
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/generic/transform?targetFormat=target%23format", ensureFileUpload: true)
+                .Result("<transformed />", contentType: "xml");
+        });
+
+        // Act
+        var res = await GenericApi.Transform(file, "target#format");
+
+        // Assert
+        Assert.AreEqual("<transformed />", await res.Content.ReadAsStringAsync());
     }
 
     [TestMethod]

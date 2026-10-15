@@ -47,6 +47,31 @@ public class PurchaseOrderApiTests : PsbTestContext
     }
 
     [TestMethod]
+    public async Task QueryRecipientPartyWithDocumentFamilyTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aSENDER/purchaseOrder/queryRecipientParty?preferredDocumentTypeId=doc%23type&documentFamily=OrderCancellation",
+                    ensureEConnectDomainId: true)
+                .Result(@"{ ""id"": ""0106:12345678"" }");
+        });
+
+        // Act
+        var advisedParty = await PsbPurchaseOrderApi.QueryRecipientParty(
+            "NL:KVK:SENDER",
+            new[] { "NL:KVK:RECEIVER_1" },
+            "doc#type",
+            "domain1",
+            "OrderCancellation");
+
+        // Assert
+        Assert.AreEqual("0106:12345678", advisedParty.Id);
+    }
+
+    [TestMethod]
     [DeploymentItem("TestData/bisv3.xml", "TestData")]
     public async Task SendFileStreamTest()
     {

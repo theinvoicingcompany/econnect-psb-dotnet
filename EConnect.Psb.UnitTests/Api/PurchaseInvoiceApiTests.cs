@@ -46,6 +46,48 @@ public class PurchaseInvoiceApiTests : PsbTestContext
     }
 
     [TestMethod]
+    public async Task DownloadWithTargetFormatTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Get, "/api/v1/NL%3aKVK%3a12345678/purchaseInvoice/doc1/download?targetFormat=pdf", ensureEConnectDomainId: true)
+                .Result("pdf", contentType: "plain");
+        });
+
+        // Act
+        var res = await PurchaseInvoiceApi.Download("NL:KVK:12345678", "doc1", "domain1", "pdf");
+
+        // Assert
+        Assert.AreEqual("pdf", await res.Content.ReadAsStringAsync());
+    }
+
+    [TestMethod]
+    public async Task QueryRecipientPartyTest()
+    {
+        // Arrange
+        SetAccessToken();
+        Configure(builder =>
+        {
+            builder
+                .Setup(HttpMethod.Post, "/api/v1/NL%3aKVK%3aBUYER/purchaseInvoice/queryRecipientParty", ensureEConnectDomainId: true)
+                .Result(@"{ ""id"": ""0106:87654321"" }");
+        });
+
+        // Act
+        var party = await PurchaseInvoiceApi.QueryRecipientParty(
+            "NL:KVK:BUYER",
+            new[] { "NL:KVK:SELLER" },
+            domainId: "domain1");
+
+        // Assert
+        Assert.AreEqual("0106:87654321", party.Id);
+        Assert.IsNull(party.Channel);
+    }
+
+    [TestMethod]
     public async Task ResponseTest()
     {
         // Arrange
